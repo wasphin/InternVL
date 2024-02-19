@@ -138,6 +138,10 @@ class ModelArguments:
         default=0.0,
         metadata={'help': 'Set the drop path rate for the ViT model. Default is 0.'},
     )
+    image_fold: int = field(
+        default=None,
+        metadata={'help': 'Specify the fold number for the high-resolution image. Default is None.'},
+    )
 
 
 @dataclass
@@ -412,7 +416,10 @@ class LazySupervisedDataset(Dataset):
         if '<image>' not in data_item['conversations'][0]['value']:
             data_item['conversations'][0]['value'] = '<image>\n' + data_item['conversations'][0]['value']
 
-        image_path = os.path.join(self.root, data_item['image'])
+        if data_item['image'].startswith('s3://'):
+            image_path = self.root + data_item['image']
+        else:
+            image_path = os.path.join(self.root, data_item['image'])
         if self.tcs_loader is not None:
             image = self.tcs_loader(image_path)
         else:
@@ -470,8 +477,11 @@ class LazySupervisedDataset(Dataset):
                 logger.info(e)
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item:
-                    data_path = os.path.join(self.root, data_item['image'])
-                    print(f'Failed to load image: {data_path}')
+                    if data_item['image'].startswith('s3://'):
+                        data_path = self.root + data_item['image']
+                    else:
+                        data_path = os.path.join(self.root, data_item['image'])
+                    print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
                 i = random.randint(0, len(self.raw_data) - 1)
         return ret
 
@@ -589,6 +599,7 @@ def main():
         config.llm_config.attn_implementation = 'flash_attention_2'
         config.template = data_args.conv_style
         config.select_layer = model_args.vision_select_layer
+        config.image_fold = model_args.image_fold
         model = InternVLChatModel.from_pretrained(
             model_args.model_name_or_path, torch_dtype=torch.bfloat16, config=config)
     else:
@@ -608,7 +619,8 @@ def main():
                                                   downsample_ratio=data_args.down_sample_ratio,
                                                   pad2square=data_args.pad2square,
                                                   template=data_args.conv_style,
-                                                  select_layer=model_args.vision_select_layer)
+                                                  select_layer=model_args.vision_select_layer,
+                                                  image_fold=model_args.image_fold)
         internvl_chat_config.force_image_size = data_args.force_image_size
         logger.info('Building InternVLChatModel...')
         model = InternVLChatModel(internvl_chat_config, vision_model, llm)
@@ -630,16 +642,17 @@ def main():
         model.config.vision_config.image_size = data_args.force_image_size
     model.config.force_image_size = data_args.force_image_size
     model.num_image_token = int((data_args.force_image_size // patch_size) ** 2 * (data_args.down_sample_ratio ** 2))
+
     if num_new_tokens > 0:
         model.language_model.resize_token_embeddings(len(tokenizer))
         output_embeddings = model.language_model.get_output_embeddings().weight.data
         output_embeddings_avg = output_embeddings[:-num_new_tokens].mean(dim=0, keepdim=True)
         output_embeddings[-num_new_tokens:] = output_embeddings_avg
 
-    model.config.llm_config.vocab_size = len(tokenizer)
-    model.language_model.config.vocab_size = len(tokenizer)
-    model.language_model.config.use_cache = False
+        model.config.llm_config.vocab_size = len(tokenizer)
+        model.language_model.config.vocab_size = len(tokenizer)
 
+    model.language_model.config.use_cache = False
     model.vision_model.gradient_checkpointing = True
     model.vision_model.encoder.gradient_checkpointing = True
     if model_args.grad_checkpoint:
