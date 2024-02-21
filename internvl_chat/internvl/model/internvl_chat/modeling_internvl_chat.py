@@ -79,7 +79,7 @@ class InternVLChatModel(PreTrainedModel):
         if language_model is not None:
             self.language_model = language_model
         else:
-            self.language_model = AutoModel(config.llm_config)
+            self.language_model = AutoModel(config.llm_config, trust_remote_code=True)
         vit_hidden_size = config.vision_config.hidden_size
         llm_hidden_size = config.llm_config.hidden_size
 

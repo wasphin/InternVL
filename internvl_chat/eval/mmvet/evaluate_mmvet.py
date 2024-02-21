@@ -115,7 +115,7 @@ if __name__ == '__main__':
     print('datasets:', args.datasets)
     assert args.batch_size == 1, 'Only batch size 1 is supported'
 
-    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint, trust_remote_code=True)
 
     if 'qllama' in args.checkpoint.lower():
         from internvl.model.internvl_chat_with_qllama import InternVLChatModel

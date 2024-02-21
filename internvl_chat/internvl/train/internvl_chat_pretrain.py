@@ -29,10 +29,10 @@ from internvl.train.dataset import (TCSLoader, WeightedConcatDataset,
                                     build_transform)
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
-from transformers import (AutoModel, AutoTokenizer, HfArgumentParser,
-                          LlamaConfig, LlamaForCausalLM, LlamaTokenizer,
-                          Trainer, TrainingArguments, default_data_collator,
-                          set_seed)
+from transformers import (AutoConfig, AutoModel, AutoTokenizer,
+                          HfArgumentParser, LlamaConfig, LlamaForCausalLM,
+                          LlamaTokenizer, Trainer, TrainingArguments,
+                          default_data_collator, set_seed)
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils.logging import (enable_default_handler,
                                         enable_explicit_format, set_verbosity)
@@ -570,7 +570,7 @@ def main():
     tokenizer_path = model_args.model_name_or_path or model_args.llm_path
     logger.info(f'Loading Tokenizer: {tokenizer_path}')
     tokenizer = AutoTokenizer.from_pretrained(
-        tokenizer_path, add_eos_token=False)
+        tokenizer_path, add_eos_token=False, trust_remote_code=True)
     tokenizer.tokenizer_path = tokenizer_path
     tokenizer.model_max_length = data_args.max_seq_length
     token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
@@ -597,11 +597,11 @@ def main():
         vision_model = InternVisionModel.from_pretrained(
             model_args.vision_path, torch_dtype=torch.bfloat16, config=vision_config)
         logger.info('Loading LLaMA...')
-        llm_config = LlamaConfig.from_pretrained(model_args.llm_path)
+        llm_config = AutoConfig.from_pretrained(model_args.llm_path, trust_remote_code=True)
         llm_config.attn_implementation = 'flash_attention_2'
         llm = AutoModel.from_pretrained(
             model_args.llm_path, torch_dtype=torch.bfloat16,
-            use_flash_attention_2=True, config=llm_config)
+            use_flash_attention_2=True, config=llm_config, trust_remote_code=True)
         logger.info('Building InternVLChatConfig...')
         internvl_chat_config = InternVLChatConfig(vision_config.to_dict(), llm_config.to_dict(),
                                                   downsample_ratio=data_args.down_sample_ratio,
