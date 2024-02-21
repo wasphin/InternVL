@@ -12,7 +12,7 @@ from internvl.train.dataset import build_transform
 from PIL import Image
 from torchvision.ops.boxes import box_area
 from tqdm import tqdm
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 
 ds_collections = {
     'refcoco_val': 'data/refcoco/refcoco_val.jsonl',
@@ -236,7 +236,7 @@ if __name__ == '__main__':
 
     torch.cuda.set_device(int(os.getenv('LOCAL_RANK', 0)))
 
-    tokenizer = LlamaTokenizer.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
     PATTERN = re.compile(r'\[*\[(.*?),(.*?),(.*?),(.*?)\]\]*')
 
     if 'qllama' in args.checkpoint.lower():

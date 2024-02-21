@@ -12,7 +12,7 @@ from datasets import concatenate_datasets, load_dataset
 from internvl.train.dataset import build_transform
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 
 ds_collections = {
     'MMMU_validation': {
@@ -260,7 +260,7 @@ if __name__ == '__main__':
 
     torch.cuda.set_device(int(os.getenv('LOCAL_RANK', 0)))
 
-    tokenizer = LlamaTokenizer.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
 
     if 'qllama' in args.checkpoint.lower():
         from internvl.model.internvl_chat_with_qllama import InternVLChatModel

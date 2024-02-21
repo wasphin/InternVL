@@ -6,7 +6,7 @@ import torch
 from internvl.train.dataset import build_transform, expand2square
 from PIL import Image
 from tqdm import tqdm
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 
 
 def load_image(image_file, input_size=224, pad2square=False):
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     prompt = 'Answer the question using a single word or phrase.'
-    tokenizer = LlamaTokenizer.from_pretrained(args.checkpoint)
+    tokenizer = AutoTokenizer.from_pretrained(args.checkpoint)
 
     if 'qllama' in args.checkpoint.lower():
         from internvl.model.internvl_chat_with_qllama import InternVLChatModel
