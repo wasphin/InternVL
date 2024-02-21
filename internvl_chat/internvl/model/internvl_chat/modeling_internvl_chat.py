@@ -68,6 +68,7 @@ class InternVLChatModel(PreTrainedModel):
         self.select_layer = config.select_layer
         self.template = config.template
         self.num_image_token = int((image_size // patch_size) ** 2 * (config.downsample_ratio ** 2))
+        self.downsample_ratio = config.downsample_ratio
         self.image_fold = config.image_fold
         logger.info(f'num_image_token: {self.num_image_token}')
         if vision_model is not None:
@@ -222,8 +223,8 @@ class InternVLChatModel(PreTrainedModel):
             vit_embeds = self.vision_model(
                 pixel_values=pixel_values,
                 output_hidden_states=True,
-                return_dict=True).hidden_states[-4]
-        vit_embeds = vit_embeds[:, 1:, :]  # 4B, N, C
+                return_dict=True).hidden_states[self.select_layer]
+        vit_embeds = vit_embeds[:, 1:, :]
 
         if self.image_fold:
             vit_embeds = window_reverse(vit_embeds, window_size=image_size // (self.image_fold * self.patch_size),
@@ -233,7 +234,7 @@ class InternVLChatModel(PreTrainedModel):
         #     print("before pixel shuffle:", vit_embeds.shape)
         h = w = int(vit_embeds.shape[1] ** 0.5)
         vit_embeds = vit_embeds.reshape(vit_embeds.shape[0], h, w, -1)
-        vit_embeds = self.pixel_shuffle(vit_embeds, scale_factor=0.5)
+        vit_embeds = self.pixel_shuffle(vit_embeds, scale_factor=self.downsample_ratio)
         vit_embeds = vit_embeds.reshape(vit_embeds.shape[0], -1, vit_embeds.shape[-1])
         # if torch.distributed.get_rank() == 0:
         #     print("after pixel shuffle:", vit_embeds.shape)
