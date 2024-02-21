@@ -9,7 +9,8 @@ import torch.utils.checkpoint
 from peft import LoraConfig, get_peft_model
 from torch import nn
 from torch.nn import CrossEntropyLoss
-from transformers import GenerationConfig, LlamaForCausalLM, LlamaTokenizer
+from transformers import (AutoModel, GenerationConfig, LlamaForCausalLM,
+                          LlamaTokenizer)
 from transformers.modeling_outputs import CausalLMOutputWithPast
 from transformers.modeling_utils import PreTrainedModel
 from transformers.utils import ModelOutput, logging
@@ -78,7 +79,7 @@ class InternVLChatModel(PreTrainedModel):
         if language_model is not None:
             self.language_model = language_model
         else:
-            self.language_model = LlamaForCausalLM(config.llm_config)
+            self.language_model = AutoModel(config.llm_config)
         vit_hidden_size = config.vision_config.hidden_size
         llm_hidden_size = config.llm_config.hidden_size
 

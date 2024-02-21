@@ -31,9 +31,10 @@ from internvl.train.dataset import (TCSLoader, WeightedConcatDataset,
                                     build_transform)
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
-from transformers import (HfArgumentParser, LlamaConfig, LlamaForCausalLM,
-                          LlamaTokenizer, Trainer, TrainingArguments,
-                          default_data_collator, set_seed)
+from transformers import (AutoModel, AutoTokenizer, HfArgumentParser,
+                          LlamaConfig, LlamaForCausalLM, LlamaTokenizer,
+                          Trainer, TrainingArguments, default_data_collator,
+                          set_seed)
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils.logging import (enable_default_handler,
                                         enable_explicit_format, set_verbosity)
@@ -582,7 +583,7 @@ def main():
     # Load pretrained model, tokenizer, and image processor
     tokenizer_path = model_args.model_name_or_path or model_args.llm_path
     logger.info(f'Loading Tokenizer: {tokenizer_path}')
-    tokenizer = LlamaTokenizer.from_pretrained(
+    tokenizer = AutoTokenizer.from_pretrained(
         tokenizer_path, add_eos_token=False)
     tokenizer.tokenizer_path = tokenizer_path
     tokenizer.model_max_length = data_args.max_seq_length
@@ -612,7 +613,7 @@ def main():
         logger.info('Loading LLaMA...')
         llm_config = LlamaConfig.from_pretrained(model_args.llm_path)
         llm_config.attn_implementation = 'flash_attention_2'
-        llm = LlamaForCausalLM.from_pretrained(
+        llm = AutoModel.from_pretrained(
             model_args.llm_path, torch_dtype=torch.bfloat16,
             use_flash_attention_2=True, config=llm_config)
         logger.info('Building InternVLChatConfig...')
