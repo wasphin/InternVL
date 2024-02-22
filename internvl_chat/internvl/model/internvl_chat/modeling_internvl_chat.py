@@ -107,10 +107,10 @@ class InternVLChatModel(PreTrainedModel):
         self.img_context_token_id = None
 
         if config.use_backbone_lora:
-            self.wrap_backbone_lora(r=config.use_backbone_lora)
+            self.wrap_backbone_lora(r=config.use_backbone_lora, lora_alpha=2 * config.use_backbone_lora)
 
         if config.use_llm_lora:
-            self.wrap_llm_lora(r=config.use_llm_lora)
+            self.wrap_llm_lora(r=config.use_llm_lora, lora_alpha=2 * config.use_llm_lora)
 
     def wrap_backbone_lora(self, r=128, lora_alpha=256, lora_dropout=0.05):
         lora_config = LoraConfig(
@@ -132,6 +132,7 @@ class InternVLChatModel(PreTrainedModel):
             task_type='CAUSAL_LM'
         )
         self.language_model = get_peft_model(self.language_model, lora_config)
+        self.language_model.enable_input_require_grads()
         self.language_model.print_trainable_parameters()
 
     def forward(
