@@ -6,6 +6,7 @@
 from typing import Any, List, Optional, Tuple, Union
 
 import torch.utils.checkpoint
+from internvl.model.internlm2.modeling_internlm2 import InternLM2ForCausalLM
 from peft import LoraConfig, get_peft_model
 from torch import nn
 from torch.nn import CrossEntropyLoss
@@ -79,7 +80,13 @@ class InternVLChatModel(PreTrainedModel):
         if language_model is not None:
             self.language_model = language_model
         else:
-            self.language_model = AutoModel(config.llm_config, trust_remote_code=True)
+            if config.llm_config.architectures[0] == 'LlamaForCausalLM':
+                self.language_model = LlamaForCausalLM(config.llm_config)
+            elif config.llm_config.architectures[0] == 'InternLM2ForCausalLM':
+                self.language_model = InternLM2ForCausalLM(config.llm_config)
+            else:
+                raise NotImplementedError(f'{config.llm_config.architectures[0]} is not implemented.')
+
         vit_hidden_size = config.vision_config.hidden_size
         llm_hidden_size = config.llm_config.hidden_size
 

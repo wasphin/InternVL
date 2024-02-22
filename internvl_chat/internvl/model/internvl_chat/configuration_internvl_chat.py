@@ -6,7 +6,8 @@
 
 import copy
 
-from transformers import LlamaConfig
+from internvl.model.internlm2.configuration_internlm2 import InternLM2Config
+from transformers import AutoConfig, LlamaConfig
 from transformers.configuration_utils import PretrainedConfig
 from transformers.utils import logging
 
@@ -43,7 +44,12 @@ class InternVLChatConfig(PretrainedConfig):
             logger.info('llm_config is None. Initializing the LlamaConfig config with default values (`LlamaConfig`).')
 
         self.vision_config = InternVisionConfig(**vision_config)
-        self.llm_config = LlamaConfig(**llm_config)
+        if llm_config['architectures'][0] == 'LlamaForCausalLM':
+            self.llm_config = LlamaConfig(**llm_config)
+        elif llm_config['architectures'][0] == 'InternLM2ForCausalLM':
+            self.llm_config = InternLM2Config(**llm_config)
+        else:
+            raise ValueError('Unsupported architecture: {}'.format(llm_config['architectures'][0]))
         self.use_backbone_lora = use_backbone_lora
         self.use_llm_lora = use_llm_lora
         self.pad2square = pad2square
