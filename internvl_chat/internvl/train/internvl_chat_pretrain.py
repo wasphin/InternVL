@@ -24,8 +24,14 @@ from internvl.model.internvl_chat import (InternVisionConfig,
                                           InternVLChatModel)
 from internvl.patch import (replace_llama2_attn_with_flash_attn,
                             replace_llama_rmsnorm_with_fused_rmsnorm)
+from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
+                                      IMG_CONTEXT_TOKEN, IMG_END_TOKEN,
+                                      IMG_START_TOKEN, QUAD_END_TOKEN,
+                                      QUAD_START_TOKEN, REF_END_TOKEN,
+                                      REF_START_TOKEN)
 from internvl.train.dataset import (TCSLoader, WeightedConcatDataset,
-                                    build_transform)
+                                    build_transform, preprocess,
+                                    preprocess_internlm, preprocess_mpt)
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
 from transformers import (AutoConfig, AutoModel, AutoTokenizer,
@@ -35,11 +41,6 @@ from transformers import (AutoConfig, AutoModel, AutoTokenizer,
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils.logging import (enable_default_handler,
                                         enable_explicit_format, set_verbosity)
-
-from .constants import (BOX_END_TOKEN, BOX_START_TOKEN, IMG_CONTEXT_TOKEN,
-                        IMG_END_TOKEN, IMG_START_TOKEN, QUAD_END_TOKEN,
-                        QUAD_START_TOKEN, REF_END_TOKEN, REF_START_TOKEN)
-from .dataset import preprocess, preprocess_internlm, preprocess_mpt
 
 # Upgrade transformers to v4.36.2, we don't need it anymore
 # replace_llama2_attn_with_flash_attn()
