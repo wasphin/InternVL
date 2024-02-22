@@ -8,7 +8,6 @@ import warnings
 from copy import deepcopy
 from typing import Dict, Optional
 
-from internvl.conversation import get_conv_template
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from transformers.trainer_pt_utils import LabelSmoother
 
@@ -37,6 +36,11 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils.logging import (enable_default_handler,
                                         enable_explicit_format, set_verbosity)
 
+from .constants import (BOX_END_TOKEN, BOX_START_TOKEN, IMG_CONTEXT_TOKEN,
+                        IMG_END_TOKEN, IMG_START_TOKEN, QUAD_END_TOKEN,
+                        QUAD_START_TOKEN, REF_END_TOKEN, REF_START_TOKEN)
+from .dataset import preprocess, preprocess_internlm, preprocess_mpt
+
 # Upgrade transformers to v4.36.2, we don't need it anymore
 # replace_llama2_attn_with_flash_attn()
 replace_llama_rmsnorm_with_fused_rmsnorm()
@@ -55,15 +59,6 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 MaximumDecompressedSize = 1024
 MegaByte = 2 ** 20
 PngImagePlugin.MAX_TEXT_CHUNK = MaximumDecompressedSize * MegaByte
-IMG_CONTEXT_TOKEN = '<IMG_CONTEXT>'
-IMG_START_TOKEN = '<img>'
-IMG_END_TOKEN = '</img>'
-QUAD_START_TOKEN = '<quad>'
-QUAD_END_TOKEN = '</quad>'
-REF_START_TOKEN = '<ref>'
-REF_END_TOKEN = '</ref>'
-BOX_START_TOKEN = '<box>'
-BOX_END_TOKEN = '</box>'
 
 warnings.filterwarnings('ignore')
 logger = logging.getLogger(__name__)
@@ -181,194 +176,6 @@ class DataTrainingArguments:
     )
 
 
-def preprocess(
-        template_name,
-        sources,
-        tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
-        text_only: bool = False,
-) -> Dict:
-    conv = get_conv_template(template_name)
-    roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
-
-    # Apply prompt templates
-    conversations = []
-    for i, source in enumerate(sources):
-        if roles[source[0]['from']] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
-
-        conv.messages = []
-        for j, sentence in enumerate(source):
-            role = roles[sentence['from']]
-            assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
-            conv.append_message(role, sentence['value'])
-        conversations.append(conv.get_prompt())
-
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
-
-    # Tokenize conversations
-    input_ids = tokenizer(
-        conversations,
-        return_tensors='pt',
-        padding='max_length',
-        max_length=tokenizer.model_max_length,
-        truncation=True,
-    ).input_ids
-    targets = input_ids.clone()
-
-    # assert conv.sep_style == SeparatorStyle.ADD_COLON_TWO
-
-    # Mask targets. Only compute loss on the assistant outputs.
-    sep = conv.sep + conv.roles[1] + ': '
-    for conversation, target in zip(conversations, targets):
-        total_len = int(target.ne(tokenizer.pad_token_id).sum())
-
-        turns = conversation.split(conv.sep2)
-        cur_len = 1
-        target[:cur_len] = IGNORE_TOKEN_ID
-        for i, turn in enumerate(turns):
-            if turn == '':
-                break
-            turn_len = len(tokenizer(turn).input_ids)
-
-            parts = turn.split(sep)
-            if len(parts) != 2:
-                break
-            parts[0] += sep
-            # "-2" is hardcoded for the Llama tokenizer to make the offset correct.
-            instruction_len = len(tokenizer(parts[0]).input_ids) - 2
-
-            if i != 0 and not tokenizer.legacy:
-                # The legacy and non-legacy modes handle special tokens differently
-                instruction_len -= 1
-
-            # Ignore the user instructions
-            target[cur_len: cur_len + instruction_len] = IGNORE_TOKEN_ID
-            cur_len += turn_len
-
-            if i != 0 and not tokenizer.legacy:
-                # The legacy and non-legacy modes handle special tokens differently
-                cur_len -= 1
-
-        target[cur_len:] = IGNORE_TOKEN_ID
-
-        if False:  # Inspect and check the correctness of masking
-            z = target.clone()
-            z = torch.where(z == IGNORE_TOKEN_ID, tokenizer.unk_token_id, z)
-            logger.info(tokenizer.decode(z))
-            exit()
-
-        if cur_len < tokenizer.model_max_length:
-            if cur_len != total_len:
-                target[:] = IGNORE_TOKEN_ID
-                print(
-                    f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.'
-                    f' #turn = {len(turns) - 1}. (ignored)'
-                )
-                sys.stdout.flush()
-
-    return dict(
-        input_ids=input_ids,
-        labels=targets,
-        attention_mask=input_ids.ne(tokenizer.pad_token_id),
-    )
-
-
-def preprocess_mpt(
-        template_name,
-        sources,
-        tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
-        text_only: bool = False,
-) -> Dict:
-    conv = get_conv_template(template_name)
-    roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
-
-    # Apply prompt templates
-    conversations = []
-    for i, source in enumerate(sources):
-        if roles[source[0]['from']] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
-
-        conv.messages = []
-        for j, sentence in enumerate(source):
-            role = roles[sentence['from']]
-            assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
-            conv.append_message(role, sentence['value'])
-        conversations.append(conv.get_prompt())
-
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
-
-    # Tokenize conversations
-    input_ids = tokenizer(
-        conversations,
-        return_tensors='pt',
-        padding='max_length',
-        max_length=tokenizer.model_max_length,
-        truncation=True,
-    ).input_ids
-    targets = input_ids.clone()
-
-    # Mask targets. Only compute loss on the assistant outputs.
-    sep = conv.sep + conv.roles[1]  # <|im_end|><|im_start|>assistant\n
-    for conversation, target in zip(conversations, targets):
-        total_len = int(target.ne(tokenizer.pad_token_id).sum())
-
-        turns = conversation.split(conv.sep)
-        re_turns = [conv.sep.join(turns[:3])]  # system + user + gpt
-        for conv_idx in range(3, len(turns), 2):
-            re_turns.append(conv.sep.join(turns[conv_idx:conv_idx + 2]))  # user + gpt
-        cur_len = 0
-        target[:cur_len] = IGNORE_TOKEN_ID
-        for i, turn in enumerate(re_turns):
-            if turn == '':
-                break
-            turn_len = len(tokenizer(turn).input_ids) + 1
-
-            parts = turn.split(sep)
-            if len(parts) != 2:
-                break
-            parts[0] += sep
-            instruction_len = len(tokenizer(parts[0]).input_ids)
-
-            # Ignore the user instructions
-            target[cur_len: cur_len + instruction_len] = IGNORE_TOKEN_ID
-            cur_len += turn_len
-
-        target[cur_len:] = IGNORE_TOKEN_ID
-
-        if cur_len < tokenizer.model_max_length:
-            if cur_len != total_len:
-                target[:] = IGNORE_TOKEN_ID
-                print(
-                    f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.'
-                    f' #turn = {len(turns) - 1}. (ignored)'
-                )
-                sys.stdout.flush()
-
-    return dict(
-        input_ids=input_ids,
-        labels=targets,
-        attention_mask=input_ids.ne(tokenizer.pad_token_id),
-    )
-
-
 class LazySupervisedDataset(Dataset):
     """Dataset for supervised fine-tuning."""
 
@@ -416,8 +223,10 @@ class LazySupervisedDataset(Dataset):
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square)
         pixel_values = transform(image)
-        if self.template_name == 'Hermes-2' or self.template_name == 'internlm2-chat':
+        if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
+        elif self.template_name == 'internlm2-chat':
+            preprocess_function = preprocess_internlm
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
@@ -436,8 +245,10 @@ class LazySupervisedDataset(Dataset):
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square)
         pixel_values = transform(image)
-        if self.template_name == 'Hermes-2' or self.template_name == 'internlm2-chat':
+        if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
+        elif self.template_name == 'internlm2-chat':
+            preprocess_function = preprocess_internlm
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
@@ -601,7 +412,7 @@ def main():
         llm_config.attn_implementation = 'flash_attention_2'
         llm = AutoModel.from_pretrained(
             model_args.llm_path, torch_dtype=torch.bfloat16,
-            use_flash_attention_2=True, config=llm_config, trust_remote_code=True)
+            config=llm_config, trust_remote_code=True)
         logger.info('Building InternVLChatConfig...')
         internvl_chat_config = InternVLChatConfig(vision_config.to_dict(), llm_config.to_dict(),
                                                   downsample_ratio=data_args.down_sample_ratio,

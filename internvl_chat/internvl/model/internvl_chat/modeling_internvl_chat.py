@@ -161,7 +161,7 @@ class InternVLChatModel(PreTrainedModel):
 
         input_embeds = input_embeds.reshape(B, N, C)
 
-        outputs = self.language_model.model(
+        outputs = self.language_model(
             inputs_embeds=input_embeds,
             attention_mask=attention_mask,
             position_ids=position_ids,
@@ -171,8 +171,7 @@ class InternVLChatModel(PreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict,
         )
-        hidden_states = outputs[0]
-        logits = self.language_model.lm_head(hidden_states)
+        logits = outputs.logits
 
         loss = None
         if labels is not None:
