@@ -382,7 +382,7 @@ def main():
     tokenizer_path = model_args.model_name_or_path or model_args.llm_path
     logger.info(f'Loading Tokenizer: {tokenizer_path}')
     tokenizer = AutoTokenizer.from_pretrained(
-        tokenizer_path, add_eos_token=False, trust_remote_code=True)
+        tokenizer_path, add_eos_token=False, trust_remote_code=True, use_fast=False)
     tokenizer.tokenizer_path = tokenizer_path
     tokenizer.model_max_length = data_args.max_seq_length
     token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
