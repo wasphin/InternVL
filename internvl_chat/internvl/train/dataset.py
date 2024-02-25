@@ -108,6 +108,7 @@ def preprocess(
         num_image_token: int,
         text_only: bool = False,
         group_by_length: bool = False,
+        ds_name: str = None
 ) -> Dict:
     conv = get_conv_template(template_name)
     roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
@@ -192,7 +193,7 @@ def preprocess(
                 target[:] = IGNORE_TOKEN_ID
                 print(
                     f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.'
-                    f' #turn = {len(turns) - 1}. (ignored)'
+                    f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
                 )
                 sys.stdout.flush()
 
@@ -210,6 +211,7 @@ def preprocess_mpt(
         num_image_token: int,
         text_only: bool = False,
         group_by_length: bool = False,
+        ds_name: str = None
 ) -> Dict:
     conv = get_conv_template(template_name)
     roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
@@ -280,7 +282,7 @@ def preprocess_mpt(
                 target[:] = IGNORE_TOKEN_ID
                 print(
                     f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.'
-                    f' #turn = {len(turns) - 1}. (ignored)'
+                    f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
                 )
                 sys.stdout.flush()
 
@@ -298,6 +300,7 @@ def preprocess_internlm(
         num_image_token: int,
         text_only: bool = False,
         group_by_length: bool = False,
+        ds_name: str = None
 ) -> Dict:
     conv = get_conv_template(template_name)
     roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
@@ -315,6 +318,9 @@ def preprocess_internlm(
             assert role == conv.roles[j % 2], f'{i}'
             if text_only:
                 sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
+            sentence['value'] = sentence['value'].strip()
+            if sentence['value'][0] == '\n':
+                sentence['value'] = sentence['value'][1:]
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
@@ -367,7 +373,7 @@ def preprocess_internlm(
         if cur_len < tokenizer.model_max_length:
             if cur_len != total_len:
                 target[:] = IGNORE_TOKEN_ID
-                print(f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.')
+                print(f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}. This dataset is {ds_name}.')
                 sys.stdout.flush()
 
     return dict(
