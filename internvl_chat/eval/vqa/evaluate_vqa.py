@@ -123,6 +123,13 @@ ds_collections = {
         'test': 'data/ai2diagram/test.jsonl',
         'metric': 'accuracy',
         'max_new_tokens': 10,
+    },
+    'infographicsvqa': {
+        'train': 'data/infographicsvqa/train.jsonl',
+        'test': 'data/infographicsvqa/val.jsonl',
+        'annotation': 'data/infographicsvqa/infographicsVQA_val_v1.0_withQT.json',
+        'metric': 'anls',
+        'max_new_tokens': 100,
     }
 }
 
