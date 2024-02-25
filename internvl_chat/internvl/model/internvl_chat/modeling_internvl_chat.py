@@ -254,6 +254,10 @@ class InternVLChatModel(PreTrainedModel):
 
         img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         self.img_context_token_id = img_context_token_id
+        if tokenizer.convert_tokens_to_ids('<|im_end|>') != 0:
+            eos_token_id = tokenizer.convert_tokens_to_ids('<|im_end|>')  # 92542, InternLM2
+        else:
+            eos_token_id = tokenizer.eos_token_id
 
         from internvl.conversation import get_conv_template
 
@@ -265,7 +269,7 @@ class InternVLChatModel(PreTrainedModel):
         model_inputs = tokenizer(query, return_tensors='pt')
         input_ids = model_inputs['input_ids'].cuda()
         attention_mask = model_inputs['attention_mask'].cuda()
-
+        generation_config['eos_token_id'] = eos_token_id
         generation_output = self.generate(
             pixel_values=pixel_values,
             input_ids=input_ids,

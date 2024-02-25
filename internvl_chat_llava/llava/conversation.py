@@ -421,6 +421,15 @@ hermes2 = Conversation(
     sep="<|im_end|>",
 )
 
+internlm2_chat = Conversation(
+    system='<|im_start|>system\nYou are an AI assistant whose name is InternLM (书生·浦语).',
+    roles=("<|im_start|>user\n", "<|im_start|>assistant\n"),
+    version="mpt",
+    messages=(),
+    offset=0,
+    sep_style=SeparatorStyle.MPT,
+    sep="<|im_end|>",
+)
 
 default_conversation = conv_vicuna_v0
 conv_templates = {
@@ -439,7 +448,8 @@ conv_templates = {
     "mpt": conv_mpt,
     "internlm": conv_internlm,
     "internvl_zh": internvl_zh,
-    "Hermes-2": hermes2
+    "Hermes-2": hermes2,
+    'internlm2-chat': internlm2_chat
 }
 
 
