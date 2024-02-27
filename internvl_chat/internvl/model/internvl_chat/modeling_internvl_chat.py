@@ -277,6 +277,7 @@ class InternVLChatModel(PreTrainedModel):
             **generation_config
         )
         response = tokenizer.batch_decode(generation_output, skip_special_tokens=True)[0]
+        response = response.split('<|im_end|>')[0].strip()  # for InternLM2
         query_to_print = query.replace(image_tokens, '<image>')
         print(query_to_print, response)
         return response
