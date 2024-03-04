@@ -67,6 +67,7 @@ class InternVLChatConfig(PretrainedConfig):
 
         logger.info(f'vision_select_layer: {self.select_layer}')
         logger.info(f'image_fold: {self.image_fold}')
+        logger.info(f'ps_version: {self.ps_version}')
 
     def to_dict(self):
         """
