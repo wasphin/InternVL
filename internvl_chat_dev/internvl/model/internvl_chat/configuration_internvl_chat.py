@@ -34,6 +34,7 @@ class InternVLChatConfig(PretrainedConfig):
             image_fold=False,
             dynamic_image_size=False,
             use_thumbnail=False,
+            ps_version='v1',
             **kwargs):
         super().__init__(**kwargs)
 
@@ -62,6 +63,7 @@ class InternVLChatConfig(PretrainedConfig):
         self.image_fold = image_fold
         self.dynamic_image_size = dynamic_image_size
         self.use_thumbnail = use_thumbnail
+        self.ps_version = ps_version  # pixel shuffle version
 
         logger.info(f'vision_select_layer: {self.select_layer}')
         logger.info(f'image_fold: {self.image_fold}')
@@ -87,5 +89,6 @@ class InternVLChatConfig(PretrainedConfig):
         output['image_fold'] = self.image_fold
         output['dynamic_image_size'] = self.dynamic_image_size
         output['use_thumbnail'] = self.use_thumbnail
+        output['ps_version'] = self.ps_version
 
         return output

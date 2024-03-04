@@ -3,6 +3,7 @@
 # Copyright (c) 2023 OpenGVLab
 # Licensed under The MIT License [see LICENSE for details]
 # --------------------------------------------------------
+import warnings
 from typing import Any, List, Optional, Tuple, Union
 
 import torch.utils.checkpoint
@@ -72,7 +73,10 @@ class InternVLChatModel(PreTrainedModel):
         self.num_image_token = int((image_size // patch_size) ** 2 * (config.downsample_ratio ** 2))
         self.downsample_ratio = config.downsample_ratio
         self.image_fold = config.image_fold
+        self.ps_version = config.ps_version
+
         logger.info(f'num_image_token: {self.num_image_token}')
+        logger.info(f'ps_version: {self.ps_version}')
         if vision_model is not None:
             self.vision_model = vision_model
         else:
@@ -219,6 +223,11 @@ class InternVLChatModel(PreTrainedModel):
         # N, H * scale, W, C // scale --> N, H * scale, W * scale, C // (scale ** 2)
         x = x.view(n, int(h * scale_factor), int(w * scale_factor),
                    int(c / (scale_factor * scale_factor)))
+        if self.ps_version == 'v1':
+            warnings.warn("In ps_version 'v1', the height and width have not been swapped back, "
+                          'which results in a transposed image.')
+        else:
+            x = x.permute(0, 2, 1, 3).contiguous()
         return x
 
     def extract_feature(self, pixel_values):

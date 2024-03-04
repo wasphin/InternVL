@@ -9,6 +9,7 @@ from copy import deepcopy
 from typing import Dict, Optional
 
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
+from tqdm import tqdm
 from transformers.trainer_pt_utils import LabelSmoother
 
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
@@ -139,6 +140,11 @@ class ModelArguments:
         default=None,
         metadata={'help': 'Specify the fold number for the high-resolution image. Default is None.'},
     )
+    ps_version: str = field(
+        default='v1',
+        metadata={'help': 'Specify the version of pixel shuffle implementation. Default is `v1`.'
+                          'Please use `v2` to fix the bug of transposed image.'}
+    )
 
 
 @dataclass
@@ -225,7 +231,7 @@ class LazySupervisedDataset(Dataset):
         if self.group_by_length:
             self.conv2length = {}
             self.length = []
-            for data_item in self.raw_data:
+            for data_item in tqdm(self.raw_data):
                 conversations = ''.join(data_item.split('conversations')[1:])
                 str_length = len(conversations)
                 if str_length not in self.conv2length:
@@ -509,6 +515,7 @@ def main():
         config.image_fold = model_args.image_fold
         config.dynamic_image_size = data_args.dynamic_image_size
         config.use_thumbnail = data_args.use_thumbnail
+        config.ps_version = model_args.ps_version
         model = InternVLChatModel.from_pretrained(
             model_args.model_name_or_path, torch_dtype=torch.bfloat16, config=config)
     else:
@@ -528,7 +535,8 @@ def main():
             vision_config.to_dict(), llm_config.to_dict(), downsample_ratio=data_args.down_sample_ratio,
             pad2square=data_args.pad2square, template=data_args.conv_style,
             select_layer=model_args.vision_select_layer, image_fold=model_args.image_fold,
-            dynamic_image_size=data_args.dynamic_image_size, use_thumbnail=data_args.use_thumbnail)
+            dynamic_image_size=data_args.dynamic_image_size, use_thumbnail=data_args.use_thumbnail,
+            ps_version=model_args.ps_version)
         internvl_chat_config.force_image_size = data_args.force_image_size
         logger.info('Building InternVLChatModel...')
         model = InternVLChatModel(internvl_chat_config, vision_model, llm)
