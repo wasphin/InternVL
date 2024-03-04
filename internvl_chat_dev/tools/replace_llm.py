@@ -2,7 +2,7 @@ import argparse
 
 import torch
 from internvl.model.internvl_chat import InternVLChatModel
-from transformers import LlamaForCausalLM, LlamaTokenizer
+from transformers import AutoModel, AutoTokenizer
 
 argparse = argparse.ArgumentParser()
 argparse.add_argument('model_path', type=str, default='')
@@ -15,8 +15,10 @@ if args.model_path[-1] == '/':
 
 model = InternVLChatModel.from_pretrained(args.model_path)
 
-llm = LlamaForCausalLM.from_pretrained(args.llm_path)
-tokenizer = LlamaTokenizer.from_pretrained(args.llm_path)
+llm = AutoModel.from_pretrained(
+    args.llm_path, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(
+    args.llm_path, trust_remote_code=True)
 model.language_model = llm
 model.config.llm_config = llm.config
 model.to(torch.bfloat16)
