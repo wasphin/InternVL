@@ -3,17 +3,22 @@ import os
 import re
 
 import torch
-from internvl.train.dataset import build_transform, expand2square
+from internvl.train.dataset import build_transform, dynamic_preprocess
 from PIL import Image
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
 
-def load_image(image_file, input_size=224, pad2square=False):
+def load_image(image_file, input_size=224, pad2square=False, dynamic_image_size=False, use_thumbnail=False):
     image = Image.open(image_file).convert('RGB')
     transform = build_transform(is_train=False, input_size=input_size, pad2square=pad2square)
-    image = transform(image)
-    return image
+    if dynamic_image_size:
+        images = dynamic_preprocess(image, image_size=input_size, use_thumbnail=use_thumbnail)
+    else:
+        images = [image]
+    pixel_values = [transform(image) for image in images]
+    pixel_values = torch.stack(pixel_values)
+    return pixel_values
 
 
 def post_processing(response):
@@ -33,7 +38,7 @@ if __name__ == '__main__':
     parser.add_argument('--top-p', type=float, default=0.9)
     parser.add_argument('--sample', type=bool, default=True)
     parser.add_argument('--temperature', type=float, default=1.0)
-
+    parser.add_argument('--dynamic', action='store_true')
     args = parser.parse_args()
 
     prompt = 'Answer the question using a single word or phrase.'
@@ -51,6 +56,7 @@ if __name__ == '__main__':
             args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16).cuda().eval()
         image_size = model.config.force_image_size or model.config.vision_config.image_size
         pad2square = model.config.pad2square
+        use_thumbnail = model.config.use_thumbnail
 
     total_params = sum(p.numel() for p in model.parameters()) / 1e9
     if total_params > 30:
@@ -61,6 +67,8 @@ if __name__ == '__main__':
     print(f'[test] image_size: {image_size}')
     print(f'[test] pad2square: {pad2square}')
     print(f'[test] template: {model.config.template}')
+    print(f'[test] dynamic_image_size: {args.dynamic}')
+    print(f'[test] use_thumbnail: {use_thumbnail}')
 
     output = os.path.basename(args.checkpoint)
     os.makedirs(output, exist_ok=True)
@@ -75,7 +83,7 @@ if __name__ == '__main__':
             question = question + ' ' + prompt
             img_path = os.path.join('images', filename, img)
             assert os.path.exists(img_path), img_path
-            pixel_values = load_image(img_path, image_size, pad2square).unsqueeze(0).cuda().to(torch.bfloat16)
+            pixel_values = load_image(img_path, image_size, pad2square).cuda().to(torch.bfloat16)
             generation_config = dict(
                 do_sample=args.sample,
                 top_k=args.top_k,
@@ -91,6 +99,8 @@ if __name__ == '__main__':
                 pixel_values=pixel_values,
                 question=question,
                 generation_config=generation_config,
+                dynamic_image_size=args.dynamic,
+                use_thumbnail=use_thumbnail,
             )
             response = post_processing(response)
             print(img, question, gt, response, sep='\t', file=fout)

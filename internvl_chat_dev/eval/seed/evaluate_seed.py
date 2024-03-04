@@ -7,7 +7,7 @@ import time
 from functools import partial
 
 import torch
-from internvl.train.dataset import build_transform
+from internvl.train.dataset import build_transform, dynamic_preprocess
 from PIL import Image
 from torch.utils.data import Dataset
 from tqdm import tqdm
@@ -33,10 +33,14 @@ def collate_fn(batches, tokenizer):
 
 class MultipleChoiceDataset(torch.utils.data.Dataset):
 
-    def __init__(self, root, annotation, input_size=224, pad2square=False):
+    def __init__(self, root, annotation, input_size=224, pad2square=False,
+                 dynamic_image_size=False, use_thumbnail=False):
         f = open(annotation, 'r', encoding='utf-8')
         self.data = [json.loads(line) for line in f.readlines()]
         self.root = root
+        self.input_size = input_size
+        self.dynamic_image_size = dynamic_image_size
+        self.use_thumbnail = use_thumbnail
         self.transform = build_transform(is_train=False, input_size=input_size, pad2square=pad2square)
 
     def __len__(self):
@@ -47,7 +51,12 @@ class MultipleChoiceDataset(torch.utils.data.Dataset):
         question = data['text']
         image_path = os.path.join(self.root, data['image'])
         image = Image.open(image_path).convert('RGB')
-        pixel_values = self.transform(image).unsqueeze(0)
+        if self.dynamic_image_size:
+            images = dynamic_preprocess(image, image_size=self.input_size, use_thumbnail=self.use_thumbnail)
+        else:
+            images = [image]
+        pixel_values = [self.transform(image) for image in images]
+        pixel_values = torch.stack(pixel_values)
         answer = data['answer'] if 'answer' in data else None
         return {
             'question': question,
@@ -106,7 +115,9 @@ def evaluate_chat_model():
             root=ds_collections[ds_name]['root'],
             annotation=ds_collections[ds_name]['annotation'],
             input_size=image_size,
-            pad2square=pad2square
+            pad2square=pad2square,
+            dynamic_image_size=args.dynamic,
+            use_thumbnail=use_thumbnail
         )
         dataloader = torch.utils.data.DataLoader(
             dataset=dataset,
@@ -133,6 +144,8 @@ def evaluate_chat_model():
                 pixel_values=pixel_values,
                 question=questions[0],
                 generation_config=generation_config,
+                dynamic_image_size=args.dynamic,
+                use_thumbnail=use_thumbnail,
             )
             preds = [pred]
 
@@ -187,6 +200,7 @@ if __name__ == '__main__':
     parser.add_argument('--temperature', type=float, default=0.0)
     parser.add_argument('--out-dir', type=str, default='results')
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--dynamic', action='store_true')
     args = parser.parse_args()
 
     if not os.path.exists(args.out_dir):
@@ -218,6 +232,7 @@ if __name__ == '__main__':
             args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16).cuda().eval()
         image_size = model.config.force_image_size or model.config.vision_config.image_size
         pad2square = model.config.pad2square
+        use_thumbnail = model.config.use_thumbnail
 
     total_params = sum(p.numel() for p in model.parameters()) / 1e9
     if total_params > 30:
@@ -228,5 +243,7 @@ if __name__ == '__main__':
     print(f'[test] image_size: {image_size}')
     print(f'[test] pad2square: {pad2square}')
     print(f'[test] template: {model.config.template}')
+    print(f'[test] dynamic_image_size: {args.dynamic}')
+    print(f'[test] use_thumbnail: {use_thumbnail}')
 
     evaluate_chat_model()

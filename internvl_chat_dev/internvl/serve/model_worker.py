@@ -15,6 +15,7 @@ import torch
 import uvicorn
 from fastapi import BackgroundTasks, FastAPI, Request
 from fastapi.responses import StreamingResponse
+from internvl.train.dataset import dynamic_preprocess
 from transformers import TextIteratorStreamer
 
 from ..model.internvl_chat import InternVLChatModel
@@ -62,9 +63,9 @@ class ModelWorker:
 
         self.device = device
         logger.info(f'Loading the model {self.model_name} on worker {worker_id} ...')
-        from transformers import CLIPImageProcessor, LlamaTokenizer
+        from transformers import AutoTokenizer, CLIPImageProcessor
 
-        self.tokenizer = LlamaTokenizer.from_pretrained(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
         self.model = InternVLChatModel.from_pretrained(
             model_path, load_in_8bit=False, torch_dtype=torch.float16).cuda().eval()
         self.image_size = self.model.config.force_image_size
@@ -72,7 +73,7 @@ class ModelWorker:
             crop_size=self.image_size, do_center_crop=True, do_normalize=True, do_resize=True,
             image_mean=[0.485, 0.456, 0.406], image_std=[0.229, 0.224, 0.225], size=self.image_size
         )
-        self.context_len = 2048
+        self.context_len = 8192
         self.is_multimodal = True
 
         if not no_register:
@@ -140,8 +141,12 @@ class ModelWorker:
             if len(images) > 0:
                 if len(images) != prompt.count(DEFAULT_IMAGE_TOKEN):
                     raise ValueError('Number of images does not match number of <image> tokens in prompt')
-
+                logger.info(f'dynamic_image_size: {model.config.dynamic_image_size}')
+                logger.info(f'use_thumbnail: {model.config.use_thumbnail}')
                 images = [load_image_from_base64(image) for image in images]
+                if model.config.dynamic_image_size:
+                    images = dynamic_preprocess(
+                        images[0], image_size=self.image_size, use_thumbnail=model.config.use_thumbnail)
                 images = [item.resize((self.image_size, self.image_size)) for item in images]
                 logger.info(f'Resize images to {self.image_size}x{self.image_size}')
                 images = process_images(images, image_processor, model.config)
@@ -150,13 +155,15 @@ class ModelWorker:
                     images = [image.to(self.model.device, dtype=torch.float16) for image in images]
                 else:
                     images = images.to(self.model.device, dtype=torch.float16)
+                # images = torch.concat(images)
+                logger.info(f'Split images to {images.shape}')
 
                 replace_token = DEFAULT_IMAGE_TOKEN
                 # if getattr(self.model.config, 'mm_use_im_start_end', False):
                 replace_token = DEFAULT_IM_START_TOKEN + replace_token + DEFAULT_IM_END_TOKEN
                 prompt = prompt.replace(DEFAULT_IMAGE_TOKEN, replace_token)
                 logger.info(prompt)
-                num_image_tokens = model.num_image_token
+                num_image_tokens = model.num_image_token * images.size(0)
                 model.img_context_token_id = self.tokenizer.convert_tokens_to_ids(DEFAULT_IMAGE_PATCH_TOKEN)
             else:
                 images = None

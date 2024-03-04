@@ -263,8 +263,8 @@ class InternVLChatModel(PreTrainedModel):
         return vit_embeds
 
     def chat(self, tokenizer, pixel_values, question, generation_config,
-             IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>'):
-
+             IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>',
+             dynamic_image_size=False, use_thumbnail=False):
         img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         self.img_context_token_id = img_context_token_id
         if tokenizer.convert_tokens_to_ids('<|im_end|>') != 0:
@@ -275,7 +275,12 @@ class InternVLChatModel(PreTrainedModel):
         from internvl.conversation import get_conv_template
 
         template = get_conv_template(self.template)
-        image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token + IMG_END_TOKEN
+        if not dynamic_image_size:
+            image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token + IMG_END_TOKEN
+        else:
+            image_bs = pixel_values.shape[0]
+            image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * image_bs + IMG_END_TOKEN
+            print(f'dynamic ViT batch size: {image_bs}')
         template.append_message(template.roles[0], image_tokens + '\n' + question)
         template.append_message(template.roles[1], None)
         query = template.get_prompt()

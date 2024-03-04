@@ -9,7 +9,7 @@ from functools import partial
 from typing import Optional
 
 import torch
-from internvl.train.dataset import build_transform
+from internvl.train.dataset import build_transform, dynamic_preprocess
 from PIL import Image
 from tqdm import tqdm
 from transformers import AutoTokenizer
@@ -215,10 +215,13 @@ def collate_fn(batches, tokenizer):
 
 class VQADataset(torch.utils.data.Dataset):
 
-    def __init__(self, train, test, prompt, few_shot, input_size=224, pad2square=False):
+    def __init__(self, train, test, prompt, few_shot, input_size=224, pad2square=False,
+                 dynamic_image_size=False, use_thumbnail=False):
         self.test = open(test).readlines()
         self.prompt = prompt
-
+        self.input_size = input_size
+        self.dynamic_image_size = dynamic_image_size
+        self.use_thumbnail = use_thumbnail
         self.few_shot = few_shot
         if few_shot > 0:
             self.train = open(train).readlines()
@@ -242,7 +245,12 @@ class VQADataset(torch.utils.data.Dataset):
                     sample['question']) + f" {sample['answer']}"
 
         image = Image.open(image).convert('RGB')
-        pixel_values = self.transform(image).unsqueeze(0)
+        if self.dynamic_image_size:
+            images = dynamic_preprocess(image, image_size=self.input_size, use_thumbnail=self.use_thumbnail)
+        else:
+            images = [image]
+        pixel_values = [self.transform(image) for image in images]
+        pixel_values = torch.stack(pixel_values)
         if len(self.prompt) != 0:
             question = question + ' ' + self.prompt
         return {
@@ -319,7 +327,9 @@ def evaluate_chat_model():
             prompt=input_prompt,
             few_shot=args.few_shot,
             input_size=image_size,
-            pad2square=pad2square
+            pad2square=pad2square,
+            dynamic_image_size=args.dynamic,
+            use_thumbnail=use_thumbnail
         )
         dataloader = torch.utils.data.DataLoader(
             dataset=dataset,
@@ -347,6 +357,8 @@ def evaluate_chat_model():
                 pixel_values=pixel_values,
                 question=questions[0],
                 generation_config=generation_config,
+                dynamic_image_size=args.dynamic,
+                use_thumbnail=use_thumbnail,
             )
             answers = [pred]
 
@@ -475,6 +487,7 @@ if __name__ == '__main__':
     parser.add_argument('--out-dir', type=str, default='results')
     parser.add_argument('--few-shot', type=int, default=0)
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--dynamic', action='store_true')
     args = parser.parse_args()
 
     if not os.path.exists(args.out_dir):
@@ -506,6 +519,7 @@ if __name__ == '__main__':
             args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16).cuda().eval()
         image_size = model.config.force_image_size or model.config.vision_config.image_size
         pad2square = model.config.pad2square
+        use_thumbnail = model.config.use_thumbnail
 
     total_params = sum(p.numel() for p in model.parameters()) / 1e9
     if total_params > 30:
@@ -516,5 +530,7 @@ if __name__ == '__main__':
     print(f'[test] image_size: {image_size}')
     print(f'[test] pad2square: {pad2square}')
     print(f'[test] template: {model.config.template}')
+    print(f'[test] dynamic_image_size: {args.dynamic}')
+    print(f'[test] use_thumbnail: {use_thumbnail}')
 
     evaluate_chat_model()
