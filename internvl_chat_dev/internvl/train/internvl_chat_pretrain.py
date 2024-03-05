@@ -213,14 +213,29 @@ class LazySupervisedDataset(Dataset):
         logger.info('Formatting inputs...Skip in lazy mode')
         total_ranks = torch.distributed.get_world_size()
         current_rank = torch.distributed.get_rank()
-        with open(meta['annotation'], 'r') as f:
-            self.raw_data = f.readlines()
-        total_lines = len(self.raw_data)
-        logger.info(f'total_ranks: {total_ranks}, current_rank: {current_rank}, total_lines: {total_lines}')
-        lines_per_rank = total_lines // total_ranks  # 每个rank分得的行数
-        start_line = lines_per_rank * current_rank  # 当前rank开始的行数
-        end_line = start_line + lines_per_rank  # 当前rank结束的行数
-        self.raw_data = self.raw_data[start_line:end_line]  # 读取当前rank对应的行
+        basename = os.path.basename(meta['annotation']).replace('.jsonl', '')
+        data_dir = os.path.join(os.path.dirname(meta['annotation']), f'{basename}_temp')
+        if not os.path.exists(data_dir):
+            try:
+                os.makedirs(data_dir)
+            except:
+                pass
+        temp_path = os.path.join(data_dir, f'{basename}_{current_rank}_of_{total_ranks}.jsonl')
+        if os.path.exists(temp_path):
+            with open(temp_path, 'r') as f:
+                self.raw_data = f.readlines()
+        else:
+            with open(meta['annotation'], 'r') as f:
+                self.raw_data = f.readlines()
+            total_lines = len(self.raw_data)
+            logger.info(f'total_ranks: {total_ranks}, current_rank: {current_rank}, total_lines: {total_lines}')
+            lines_per_rank = total_lines // total_ranks  # 每个rank分得的行数
+            start_line = lines_per_rank * current_rank  # 当前rank开始的行数
+            end_line = start_line + lines_per_rank  # 当前rank结束的行数
+            self.raw_data = self.raw_data[start_line:end_line]  # 读取当前rank对应的行
+            writer = open(temp_path, 'w')
+            writer.writelines(self.raw_data)
+            writer.close()
 
         self.root = meta['root']
         self.cached_data_dict = {}
@@ -307,6 +322,13 @@ class LazySupervisedDataset(Dataset):
     def multi_modal_get_item(self, data_item):
         if '<image>' not in data_item['conversations'][0]['value']:
             data_item['conversations'][0]['value'] = '<image>\n' + data_item['conversations'][0]['value']
+
+        # count <image>
+        image_cnt = 0
+        for conv in data_item['conversations']:
+            if conv['from'] == 'human':
+                image_cnt += conv['value'].count('<image>')
+        assert image_cnt == 1, f'There should be exactly one <image> in the conversation, but got {image_cnt}'
 
         if data_item['image'].startswith('s3://'):
             image_path = self.root + data_item['image']
