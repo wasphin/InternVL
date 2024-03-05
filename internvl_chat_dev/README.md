@@ -140,18 +140,9 @@ The hyperparameters used for fine-tuning are listed in the following table. And,
 | ------------------ | ---------------- | ----------------- | ------------- | ------ | ---------- | ------------ |
 | InternVL-Chat-V1.2 | 40B (full model) | 512               | 1e-5          | 1      | 2048       | 0.05         |
 
-## Continue Fine-tune
+### Continued Fine-tune
 
-You can continue to fine-tune the checkpoint from the previous training process use this [script](./shell/hermes2_yi34b/internvl_chat_v1_2_hermes2_yi34b_448_finetune_continue.sh).
-
-Before fine-tuning, you should set the `--meta_path` in to your custom meta file of training data.
-
-```sh
-# using 16 GPUs, fine-tune the full LLM
-PARTITION='your partition' GPUS=16 sh shell/hermes2_yi34b/internvl_chat_v1_2_hermes2_yi34b_448_finetune_continue.sh
-# using 2 GPUs, fine-tune the LoRA
-CUDA_VISIBLE_DEVICES=0,1 sh shell/hermes2_yi34b/internvl_chat_v1_2_hermes2_yi34b_448_finetune_continue_lora.sh
-```
+See [CONTINUED_FINETUNE.md](CONTINUED_FINETUNE.md).
 
 ## 📊 Evaluation
 
@@ -411,8 +402,10 @@ GPUS=8 sh evaluate.sh <checkpoint> caption-coco
 mkdir -p data/flickr30k && cd data/flickr30k
 
 # download images from https://bryanplummer.com/Flickr30kEntities/
-# karpathy split annotations can be downloaded from https://cs.stanford.edu/people/karpathy/deepimagesent/
-# download converted files
+# karpathy split annotations can be downloaded from the following link:
+# https://github.com/mehdidc/retrieval_annotations/releases/download/1.0.0/flickr30k_test_karpathy.txt
+# this file is provided by the clip-benchmark repository.
+# We convert this txt file to json format, download the converted file:
 wget https://github.com/OpenGVLab/InternVL/releases/download/data/flickr30k_test_karpathy.json
 
 cd ../..
