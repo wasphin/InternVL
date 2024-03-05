@@ -1,0 +1,93 @@
+{
+  "sharegpt4v_instruct_gpt4-vision_cap100k": {
+    "root": "playground/data/",
+    "annotation": "playground/meta_v1/sharegpt4v_instruct_gpt4-vision_cap100k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 102025
+  },
+  "llava_instruct_150k_zh": {
+    "root": "playground/data/coco/",
+    "annotation": "playground/meta_v1/llava_instruct_150k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 157712
+  },
+  "sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k": {
+    "root": "playground/data/",
+    "annotation": "playground/meta_v1/sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 665058
+  },
+  "dvqa_train_200k": {
+    "root": "playground/data/dvqa/",
+    "annotation": "playground/meta_v1/dvqa_train_200k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 200000
+  },
+  "chartqa_trainval_30k_w_csv": {
+    "root": "playground/data/chartqa/",
+    "annotation": "playground/meta_v1/chartqa_trainval_30k_w_csv.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 30219
+  },
+  "ai2d_train_12k": {
+    "root": "playground/data/ai2d/",
+    "annotation": "playground/meta_v1/ai2d_train_12k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12413
+  },
+  "ai2d_train_12k_new": {
+    "root": "playground/data/ai2d/",
+    "annotation": "playground/meta_v1/ai2d_train_12k_new.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12413
+  },
+  "infovqa_train_25k": {
+    "root": "playground/data/infovqa/",
+    "annotation": "playground/meta_v1/infovqa_train_25k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 25466
+  },
+  "docvqa_train_56k": {
+    "root": "playground/data/docvqa/",
+    "annotation": "playground/meta_v1/docvqa_train_56k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 56259
+  },
+  "geoqa+": {
+    "root": "playground/data/geoqa+/",
+    "annotation": "playground/meta_v1/geoqa+.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 72318
+  },
+  "synthdog_en": {
+    "root": "playground/data/synthdog-en/",
+    "annotation": "playground/meta_v1/synthdog_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29765
+  },
+  "ScienceQA": {
+    "root": "langchao:s3://mm_dataset",
+    "annotation": "data/metas/tianhao_data/stage3_v5/academic/science_qa_choice_augment.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 34718
+  },
+  "ScienceQA_AUG": {
+    "root": "langchao:s3://mm_dataset",
+    "annotation": "data/metas/tianhao_data/stage3_v5/academic/science_qa_multi_choice.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19024
+  }
+}
