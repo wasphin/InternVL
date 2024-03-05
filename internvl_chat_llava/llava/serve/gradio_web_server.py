@@ -340,7 +340,7 @@ def build_demo(embed_mode):
                 image_process_mode = gr.Radio(
                     ["Crop", "Resize", "Pad", "Default"],
                     value="Default",
-                    label="Preprocess for non-square image", visible=False)
+                    label="Preprocess for non-square image", visible=True)
 
                 cur_dir = os.path.dirname(os.path.abspath(__file__))
                 gr.Examples(examples=[

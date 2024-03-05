@@ -142,6 +142,7 @@ class Conversation:
                     from io import BytesIO
                     from PIL import Image
                     msg, image, image_process_mode = msg
+                    print(f"image_process_mode: {image_process_mode}")
                     if image_process_mode == "Pad":
                         def expand2square(pil_img, background_color=(122, 116, 104)):
                             width, height = pil_img.size
