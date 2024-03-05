@@ -77,15 +77,15 @@
     "length": 29765
   },
   "ScienceQA": {
-    "root": "langchao:s3://mm_dataset",
-    "annotation": "data/metas/tianhao_data/stage3_v5/academic/science_qa_choice_augment.jsonl",
+    "root": "hzh:s3://mm_dataset",
+    "annotation": "playground/meta_v1/science_qa_choice_augment.jsonl",
     "data_augment": false,
     "repeat_time": 1,
     "length": 34718
   },
   "ScienceQA_AUG": {
-    "root": "langchao:s3://mm_dataset",
-    "annotation": "data/metas/tianhao_data/stage3_v5/academic/science_qa_multi_choice.jsonl",
+    "root": "hzh:s3://mm_dataset",
+    "annotation": "playground/meta_v1/science_qa_multi_choice.jsonl",
     "data_augment": false,
     "repeat_time": 1,
     "length": 19024
