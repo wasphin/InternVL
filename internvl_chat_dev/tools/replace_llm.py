@@ -13,10 +13,10 @@ args = argparse.parse_args()
 if args.model_path[-1] == '/':
     args.model_path = args.model_path[:-1]
 
-model = InternVLChatModel.from_pretrained(args.model_path)
+model = InternVLChatModel.from_pretrained(args.model_path, torch_dtype=torch.bfloat16)
 
 llm = AutoModel.from_pretrained(
-    args.llm_path, trust_remote_code=True)
+    args.llm_path, trust_remote_code=True, torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(
     args.llm_path, trust_remote_code=True)
 model.language_model = llm
