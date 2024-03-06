@@ -77,14 +77,14 @@
     "length": 29765
   },
   "ScienceQA": {
-    "root": "hzh:s3://mm_dataset",
+    "root": "hzh:s3://multi_modal",
     "annotation": "playground/meta_v1/science_qa_choice_augment.jsonl",
     "data_augment": false,
     "repeat_time": 1,
     "length": 34718
   },
   "ScienceQA_AUG": {
-    "root": "hzh:s3://mm_dataset",
+    "root": "hzh:s3://multi_modal",
     "annotation": "playground/meta_v1/science_qa_multi_choice.jsonl",
     "data_augment": false,
     "repeat_time": 1,
