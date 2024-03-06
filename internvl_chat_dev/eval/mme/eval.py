@@ -98,9 +98,7 @@ if __name__ == '__main__':
                 tokenizer=tokenizer,
                 pixel_values=pixel_values,
                 question=question,
-                generation_config=generation_config,
-                dynamic_image_size=args.dynamic,
-                use_thumbnail=use_thumbnail,
+                generation_config=generation_config
             )
             response = post_processing(response)
             print(img, question, gt, response, sep='\t', file=fout)

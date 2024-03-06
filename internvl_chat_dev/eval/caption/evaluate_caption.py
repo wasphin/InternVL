@@ -162,9 +162,7 @@ def evaluate_chat_model():
                 tokenizer=tokenizer,
                 pixel_values=pixel_values,
                 question=prompt,
-                generation_config=generation_config,
-                dynamic_image_size=args.dynamic,
-                use_thumbnail=use_thumbnail,
+                generation_config=generation_config
             )
             image_ids.extend(ids)
             captions.extend([pred])

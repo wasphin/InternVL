@@ -118,9 +118,7 @@ def evaluate_chat_model():
                 tokenizer=tokenizer,
                 pixel_values=pixel_value,
                 question=question,
-                generation_config=generation_config,
-                dynamic_image_size=args.dynamic,
-                use_thumbnail=use_thumbnail,
+                generation_config=generation_config
             )
             print(question, pred)
             question_id = item['question_id']
