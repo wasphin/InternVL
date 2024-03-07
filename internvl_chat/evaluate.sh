@@ -35,10 +35,10 @@ if  [ ${DATASET} == "caption-coco" ]; then
   torchrun \
     --nnodes=1 \
     --node_rank=0 \
-    --master_addr=127--master_port=${MASTER_PORT}.0.0.1 \
+    --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
-     \
-    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets coco ${@:3}
+    --master_port=${MASTER_PORT} \
+    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets coco
 fi
 
 if  [ ${DATASET} == "caption-flickr30k" ]; then
