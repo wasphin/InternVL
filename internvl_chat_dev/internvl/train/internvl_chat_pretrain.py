@@ -323,10 +323,12 @@ class LazySupervisedDataset(Dataset):
         if '<image>' not in data_item['conversations'][0]['value']:
             data_item['conversations'][0]['value'] = '<image>\n' + data_item['conversations'][0]['value']
 
-        # count <image>
+        # fix bug when there are multiple <image> in conversations
         image_cnt = 0
-        for conv in data_item['conversations']:
+        for idx, conv in enumerate(data_item['conversations']):
             if conv['from'] == 'human':
+                if idx != 0:
+                    conv['value'] = conv['value'].replace('<image>\n', '').replace('\n<image>', '').replace('<image>', '')
                 image_cnt += conv['value'].count('<image>')
         assert image_cnt == 1, f'There should be exactly one <image> in the conversation, but got {image_cnt}'
 
