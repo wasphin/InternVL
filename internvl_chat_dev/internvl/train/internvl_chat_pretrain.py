@@ -192,6 +192,14 @@ class DataTrainingArguments:
         default=False,
         metadata={'help': 'Set to True to add a thumbnail image.'},
     )
+    min_dynamic_patch: Optional[int] = field(
+        default=1,
+        metadata={'help': 'The minimum number of dynamic patches. Default is 1.'},
+    )
+    max_dynamic_patch: Optional[int] = field(
+        default=6,
+        metadata={'help': 'The maximum number of dynamic patches. Default is 6.'},
+    )
 
 
 class LazySupervisedDataset(Dataset):
@@ -199,7 +207,7 @@ class LazySupervisedDataset(Dataset):
 
     def __init__(self, template_name, meta, tokenizer, tcs_loader, num_image_token,
                  image_size=224, is_train=True, pad2square=False, group_by_length=False,
-                 dynamic_image_size=False, use_thumbnail=False):
+                 dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1, max_dynamic_patch=6):
         super(LazySupervisedDataset, self).__init__()
         self.tokenizer = tokenizer
         self.template_name = template_name
@@ -207,6 +215,8 @@ class LazySupervisedDataset(Dataset):
         logger.info(f'[Dataset] num_image_token: {num_image_token}')
         logger.info(f'[Dataset] dynamic_image_size: {dynamic_image_size}')
         logger.info(f'[Dataset] use_thumbnail: {use_thumbnail}')
+        logger.info(f'[Dataset] min_dynamic_patch: {min_dynamic_patch}, max_dynamic_patch: {max_dynamic_patch}')
+
         self.image_size = image_size
         self.is_train = is_train
         self.pad2square = pad2square
@@ -243,6 +253,8 @@ class LazySupervisedDataset(Dataset):
         self.group_by_length = group_by_length
         self.dynamic_image_size = dynamic_image_size
         self.use_thumbnail = use_thumbnail
+        self.min_dynamic_patch = min_dynamic_patch
+        self.max_dynamic_patch = max_dynamic_patch
         if self.group_by_length:
             self.conv2length = {}
             self.length = []
@@ -343,7 +355,7 @@ class LazySupervisedDataset(Dataset):
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square)
         if self.dynamic_image_size:
-            images = self.dynamic_preprocess(image)
+            images = self.dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch)
         else:
             images = [image]
         pixel_values = [transform(image) for image in images]
@@ -371,7 +383,7 @@ class LazySupervisedDataset(Dataset):
 
     def pure_text_get_item(self, data_item):
         image = Image.new('RGB', (224, 224), (255, 255, 255))
-        images = self.dynamic_preprocess(image)
+        images = self.dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch)
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square)
         pixel_values = [transform(image) for image in images]
@@ -420,7 +432,8 @@ class LazySupervisedDataset(Dataset):
 
 
 def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=False,
-                   dynamic_image_size=False, use_thumbnail=False):
+                   dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1,
+                   max_dynamic_patch=6):
     datasets = []
     lengths = []
     ds_collections = json.loads(open(data_args.meta_path).read())
@@ -437,7 +450,9 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 pad2square=data_args.pad2square,
                 group_by_length=group_by_length,
                 dynamic_image_size=dynamic_image_size,
-                use_thumbnail=use_thumbnail
+                use_thumbnail=use_thumbnail,
+                min_dynamic_patch=min_dynamic_patch,
+                max_dynamic_patch=max_dynamic_patch
             )
         except Exception:
             logger.info(f'Error in loading dataset: {ds_name}')
@@ -540,6 +555,8 @@ def main():
         config.dynamic_image_size = data_args.dynamic_image_size
         config.use_thumbnail = data_args.use_thumbnail
         config.ps_version = model_args.ps_version
+        config.min_dynamic_patch = data_args.min_dynamic_patch
+        config.max_dynamic_patch = data_args.max_dynamic_patch
         model = InternVLChatModel.from_pretrained(
             model_args.model_name_or_path, torch_dtype=torch.bfloat16, config=config)
     else:
@@ -560,7 +577,8 @@ def main():
             pad2square=data_args.pad2square, template=data_args.conv_style,
             select_layer=model_args.vision_select_layer, image_fold=model_args.image_fold,
             dynamic_image_size=data_args.dynamic_image_size, use_thumbnail=data_args.use_thumbnail,
-            ps_version=model_args.ps_version)
+            ps_version=model_args.ps_version, min_dynamic_patch=data_args.min_dynamic_patch,
+            max_dynamic_patch=data_args.max_dynamic_patch)
         internvl_chat_config.force_image_size = data_args.force_image_size
         logger.info('Building InternVLChatModel...')
         model = InternVLChatModel(internvl_chat_config, vision_model, llm)
@@ -598,10 +616,10 @@ def main():
     if model_args.grad_checkpoint:
         model.language_model._set_gradient_checkpointing()
 
-    train_dataset = build_datasets(data_args, tokenizer, tcs_loader, model,
-                                   group_by_length=training_args.group_by_length,
-                                   dynamic_image_size=data_args.dynamic_image_size,
-                                   use_thumbnail=data_args.use_thumbnail)
+    train_dataset = build_datasets(
+        data_args, tokenizer, tcs_loader, model, group_by_length=training_args.group_by_length,
+        dynamic_image_size=data_args.dynamic_image_size, use_thumbnail=data_args.use_thumbnail,
+        min_dynamic_patch=data_args.min_dynamic_patch, max_dynamic_patch=data_args.max_dynamic_patch)
 
     def _freeze_params(module):
         for param in module.parameters():
