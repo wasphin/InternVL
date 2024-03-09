@@ -9,6 +9,7 @@ from transformers.trainer import (LengthGroupedSampler, RandomSampler,
 from transformers.trainer_pt_utils import logger
 
 
+# copy from https://github.com/haotian-liu/LLaVA/blob/main/llava/train/llava_trainer.py#L38
 def split_to_even_chunks(indices, lengths, num_chunks):
     """
     Split a list of indices into `chunks` chunks of roughly equal lengths.
@@ -31,6 +32,7 @@ def split_to_even_chunks(indices, lengths, num_chunks):
     return chunks
 
 
+# copy from https://github.com/haotian-liu/LLaVA/blob/main/llava/train/llava_trainer.py#L88
 def get_length_grouped_indices(lengths, batch_size, world_size, generator=None, merge=True):
     # We need to use torch for the random part as a distributed sampler will set the random seed for torch.
     indices = torch.randperm(len(lengths), generator=generator)
@@ -42,6 +44,7 @@ def get_length_grouped_indices(lengths, batch_size, world_size, generator=None, 
     return [i for megabatch in megabatches for batch in megabatch for i in batch]
 
 
+# modified from https://github.com/haotian-liu/LLaVA/blob/main/llava/train/llava_trainer.py#L99
 class LengthGroupedSampler(Sampler):
     r"""
     Sampler that samples indices in a way that groups together features of the dataset of roughly the same length while
