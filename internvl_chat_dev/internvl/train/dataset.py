@@ -402,7 +402,7 @@ def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_
             best_ratio = (1, 1)
         else:
             best_ratio = (2, 2)
-    print(f'width: {width}, height: {height}, best_ratio: {best_ratio}')
+    # print(f'width: {width}, height: {height}, best_ratio: {best_ratio}')
     return best_ratio
 
 

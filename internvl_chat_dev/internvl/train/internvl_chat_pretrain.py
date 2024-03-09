@@ -256,18 +256,23 @@ class LazySupervisedDataset(Dataset):
         self.min_dynamic_patch = min_dynamic_patch
         self.max_dynamic_patch = max_dynamic_patch
         if self.group_by_length:
-            self.conv2length = {}
+            self.conv2length = {}  # using dict to speedup the calculation of token length
             self.length = []
             for data_item in tqdm(self.raw_data):
-                conversations = ''.join(data_item.split('conversations')[1:])
-                str_length = len(conversations)
-                if str_length not in self.conv2length:
-                    token_length = tokenizer(
-                        conversations, return_tensors='pt', padding=False, truncation=False,
-                    ).input_ids.size(1)
-                    self.conv2length[str_length] = token_length
+                data_item = json.loads(data_item)
+                if 'length' in data_item:
+                    token_length = data_item['length']  # use precomputed length if exists
                 else:
-                    token_length = self.conv2length[str_length]
+                    # compute token length using tokenizer
+                    conversations = '\n'.join([temp['value'] for temp in data_item['conversations']])
+                    str_length = len(conversations)
+                    if str_length not in self.conv2length:
+                        token_length = tokenizer(
+                            conversations, return_tensors='pt', padding=False, truncation=False,
+                        ).input_ids.size(1)
+                        self.conv2length[str_length] = token_length + num_image_token * (max_dynamic_patch + use_thumbnail)
+                    else:
+                        token_length = self.conv2length[str_length]
                 self.length.append(token_length)
 
     def __len__(self):
@@ -338,10 +343,10 @@ class LazySupervisedDataset(Dataset):
         # fix bug when there are multiple <image> in conversations
         image_cnt = 0
         for idx, conv in enumerate(data_item['conversations']):
-            if conv['from'] == 'human':
-                if idx != 0:
-                    conv['value'] = conv['value'].replace('<image>\n', '').replace('\n<image>', '').replace('<image>', '')
-                image_cnt += conv['value'].count('<image>')
+            conv['value'] = conv['value'].replace('<image>\n', '').replace('\n<image>', '').replace('<image>', '')
+            if idx == 0:
+                conv['value'] = '<image>\n' + conv['value']
+            image_cnt += conv['value'].count('<image>')
         assert image_cnt == 1, f'There should be exactly one <image> in the conversation, but got {image_cnt}'
 
         if data_item['image'].startswith('s3://'):
@@ -419,7 +424,7 @@ class LazySupervisedDataset(Dataset):
                     ret = self.pure_text_get_item(data_item)
                 break
             except Exception as e:
-                logger.info(e)
+                print(e)
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item:
                     if data_item['image'].startswith('s3://'):
