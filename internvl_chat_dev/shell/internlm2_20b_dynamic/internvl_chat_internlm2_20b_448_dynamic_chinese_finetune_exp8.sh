@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34224
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp4'
+OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp8'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -27,9 +27,8 @@ fi
 # total batch size: 512
 # epoch: 1
 srun -p ${PARTITION} \
-  --gres=gpu:0 \
+  --gres=gpu:${GPUS_PER_NODE} \
   --nodes=${NODES} \
-  -w SH-IDC1-10-140-37-[2,32,34-38,41,44-45,64,70,84,86-88] \
   --ntasks=${GPUS} \
   --ntasks-per-node=${GPUS_PER_NODE} \
   --cpus-per-task=${CPUS_PER_TASK} \
@@ -37,10 +36,10 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain/checkpoint-1300_replace_llm" \
+  --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain/checkpoint-5200" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v4.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v6.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
@@ -51,7 +50,7 @@ srun -p ${PARTITION} \
   --freeze_backbone False \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 2 \
+  --dataloader_num_workers 8 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \

@@ -13,9 +13,9 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34223
+export MASTER_PORT=34224
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp3'
+OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -36,10 +36,10 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain/checkpoint-500_replace_llm" \
+  --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain/checkpoint-5200" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v4.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
@@ -50,7 +50,7 @@ srun -p ${PARTITION} \
   --freeze_backbone False \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 2 \
+  --dataloader_num_workers 8 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
