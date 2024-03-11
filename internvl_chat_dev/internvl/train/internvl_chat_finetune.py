@@ -1,4 +1,4 @@
-import json
+import gc
 import logging
 import math
 import os
@@ -8,6 +8,7 @@ import warnings
 from copy import deepcopy
 from typing import Dict, Optional
 
+import orjson as json
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from transformers.trainer_pt_utils import LabelSmoother
 
@@ -251,6 +252,8 @@ class LazySupervisedDataset(Dataset):
                     else:
                         token_length = self.conv2length[str_length]
                 self.length.append(token_length)
+        del self.conv2length
+        gc.collect()
 
     def __len__(self):
         return len(self.raw_data)
