@@ -88,7 +88,7 @@ if [ ${DATASET} == "vqa-textvqa-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val_ocr ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val ${@:3}
 fi
 
 if [ ${DATASET} == "vqa-vizwiz-val" ]; then
