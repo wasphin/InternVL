@@ -40,7 +40,7 @@ srun -p ${PARTITION} \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0304_zh_finetune.json" \
-  --overwrite_output_dir True \
+  --overwrite_output_dir False \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
@@ -65,7 +65,7 @@ srun -p ${PARTITION} \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 4096 \
+  --max_seq_length 3072 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length True \
