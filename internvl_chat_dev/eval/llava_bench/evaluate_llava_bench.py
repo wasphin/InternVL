@@ -65,7 +65,7 @@ def evaluate_chat_model():
             prompt=' Please give a detailed answer.',
             input_size=image_size,
             dynamic_image_size=args.dynamic,
-            use_thumbnail=args.use_thumbnail,
+            use_thumbnail=use_thumbnail,
             max_num=args.max_num
         )
 
@@ -128,6 +128,7 @@ if __name__ == '__main__':
     model = InternVLChatModel.from_pretrained(
         args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16).cuda().eval()
     image_size = model.config.force_image_size or model.config.vision_config.image_size
+    use_thumbnail = model.config.use_thumbnail
 
     total_params = sum(p.numel() for p in model.parameters()) / 1e9
     if total_params > 30:
@@ -138,7 +139,7 @@ if __name__ == '__main__':
     print(f'[test] image_size: {image_size}')
     print(f'[test] template: {model.config.template}')
     print(f'[test] dynamic_image_size: {args.dynamic}')
-    print(f'[test] use_thumbnail: {args.use_thumbnail}')
+    print(f'[test] use_thumbnail: {use_thumbnail}')
     print(f'[test] max_num: {args.max_num}')
 
     model_id = '_'.join(args.checkpoint.split('/')[-2:])

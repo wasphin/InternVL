@@ -152,7 +152,7 @@ def evaluate_chat_model():
             prompt=prompt,
             input_size=image_size,
             dynamic_image_size=args.dynamic,
-            use_thumbnail=args.use_thumbnail,
+            use_thumbnail=use_thumbnail,
             max_num=args.max_num
         )
         dataloader = torch.utils.data.DataLoader(
@@ -279,6 +279,6 @@ if __name__ == '__main__':
     print(f'[test] image_size: {image_size}')
     print(f'[test] template: {model.config.template}')
     print(f'[test] dynamic_image_size: {args.dynamic}')
-    print(f'[test] use_thumbnail: {args.use_thumbnail}')
+    print(f'[test] use_thumbnail: {use_thumbnail}')
 
     evaluate_chat_model()

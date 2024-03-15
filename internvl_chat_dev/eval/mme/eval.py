@@ -13,9 +13,9 @@ from transformers import AutoTokenizer
 def load_image(image_file, input_size=224):
     image = Image.open(image_file).convert('RGB')
     transform = build_transform(is_train=False, input_size=input_size)
-    if args.dynamic_image_size:
+    if args.dynamic:
         images = dynamic_preprocess(image, image_size=input_size,
-                                    use_thumbnail=args.use_thumbnail,
+                                    use_thumbnail=use_thumbnail,
                                     max_num=args.max_num)
     else:
         images = [image]
@@ -61,7 +61,7 @@ if __name__ == '__main__':
     print(f'[test] image_size: {image_size}')
     print(f'[test] template: {model.config.template}')
     print(f'[test] dynamic_image_size: {args.dynamic}')
-    print(f'[test] use_thumbnail: {args.use_thumbnail}')
+    print(f'[test] use_thumbnail: {use_thumbnail}')
     print(f'[test] max_num: {args.max_num}')
 
     output = os.path.basename(args.checkpoint)
