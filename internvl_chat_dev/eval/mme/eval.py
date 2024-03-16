@@ -36,7 +36,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--checkpoint', type=str, default='')
     parser.add_argument('--root', type=str, default='./Your_Results')
-    parser.add_argument('--beam-num', type=int, default=5)
+    parser.add_argument('--num-beams', type=int, default=5)
     parser.add_argument('--top-k', type=int, default=50)
     parser.add_argument('--top-p', type=float, default=0.9)
     parser.add_argument('--sample', type=bool, default=True)
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     use_thumbnail = model.config.use_thumbnail
 
     total_params = sum(p.numel() for p in model.parameters()) / 1e9
-    if total_params > 30:
+    if total_params > 20:
         args.num_beams = 1
         print(f'[test] total_params: {total_params}B, use num_beams: {args.num_beams}')
     else:
@@ -82,7 +82,7 @@ if __name__ == '__main__':
                 do_sample=args.sample,
                 top_k=args.top_k,
                 top_p=args.top_p,
-                num_beams=args.beam_num,
+                num_beams=args.num_beams,
                 max_new_tokens=20,
                 eos_token_id=tokenizer.eos_token_id,
             )
