@@ -390,7 +390,7 @@ def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_
     for ratio in target_ratios:
         target_aspect_ratio = ratio[0] / ratio[1]
         ratio_diff = abs(aspect_ratio - target_aspect_ratio)
-        if ratio_diff < best_ratio_diff:
+        if ratio_diff < best_ratio_diff: # TODO: ratio_diff <= best_ratio_diff
             best_ratio_diff = ratio_diff
             best_ratio = ratio
     if best_ratio == (2, 3) or best_ratio == (3, 2):
