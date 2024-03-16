@@ -424,6 +424,9 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
     ds_collections = json.loads(open(data_args.meta_path).read())
     for ds_name in ds_collections.keys():
         repeat_time = ds_collections[ds_name]['repeat_time']
+        if 'max_dynamic_patch' in ds_collections[ds_name]:
+            max_dynamic_patch = ds_collections[ds_name]['max_dynamic_patch']
+            logger.info(f'max_dynamic_patch is set to {max_dynamic_patch} according to the meta file')
         try:
             dataset = LazySupervisedDataset(
                 data_args.conv_style, ds_collections[ds_name],
