@@ -255,6 +255,7 @@ if __name__ == '__main__':
     model = InternVLChatModel.from_pretrained(
         args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16).cuda().eval()
     image_size = model.config.force_image_size or model.config.vision_config.image_size
+    use_thumbnail = model.config.use_thumbnail
 
     total_params = sum(p.numel() for p in model.parameters()) / 1e9
     if total_params > 20:
