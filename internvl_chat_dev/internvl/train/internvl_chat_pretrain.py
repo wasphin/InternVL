@@ -246,10 +246,10 @@ class LazySupervisedDataset(Dataset):
             start_line = lines_per_rank * current_rank  # 当前rank开始的行数
             end_line = start_line + lines_per_rank  # 当前rank结束的行数
             self.raw_data = self.raw_data[start_line:end_line]  # 读取当前rank对应的行
-            random.shuffle(self.raw_data)
             writer = open(temp_path, 'w')
             writer.writelines(self.raw_data)
             writer.close()
+        random.shuffle(self.raw_data)
 
         self.root = meta['root']
         self.cached_data_dict = {}
