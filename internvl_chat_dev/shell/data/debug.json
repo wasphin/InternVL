@@ -1,9 +1,0 @@
-{
-  "llava_zh_150k": {
-    "root": "data/",
-    "annotation": "data/metas/tianhao_data/stage3_v5/academic/llava_zh_150k.jsonl",
-    "data_augment": false,
-    "repeat_time": 1,
-    "length": 154175
-  }
-}

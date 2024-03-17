@@ -1,4 +1,3 @@
-import gc
 import logging
 import math
 import os
@@ -9,6 +8,8 @@ from copy import deepcopy
 from typing import Dict, Optional
 
 import orjson as json
+from internvl.train.dataset import (dynamic_preprocess,
+                                    find_closest_aspect_ratio)
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from transformers.trainer_pt_utils import LabelSmoother
 
@@ -252,69 +253,9 @@ class LazySupervisedDataset(Dataset):
                     else:
                         token_length = self.conv2length[str_length]
                 self.length.append(token_length)
-        del self.conv2length
-        gc.collect()
 
     def __len__(self):
         return len(self.raw_data)
-
-    def find_closest_aspect_ratio(self, aspect_ratio, target_ratios, width, height):
-        best_ratio_diff = float('inf')
-        best_ratio = (1, 1)
-        area = width * height
-        for ratio in target_ratios:
-            target_aspect_ratio = ratio[0] / ratio[1]
-            ratio_diff = abs(aspect_ratio - target_aspect_ratio)
-            if ratio_diff < best_ratio_diff:
-                best_ratio_diff = ratio_diff
-                best_ratio = ratio
-        if best_ratio == (2, 3) or best_ratio == (3, 2):
-            new_area = self.image_size * self.image_size * 4
-            if area < new_area:
-                best_ratio = (2, 2)
-        if best_ratio == (1, 1) or best_ratio == (2, 2):
-            if area < self.image_size * self.image_size:
-                best_ratio = (1, 1)
-            else:
-                best_ratio = (2, 2)
-        return best_ratio
-
-    def dynamic_preprocess(self, image, min_num=1, max_num=6):
-        orig_width, orig_height = image.size
-        aspect_ratio = orig_width / orig_height
-
-        # calculate the existing image aspect ratio
-        target_ratios = set(
-            (i, j) for n in range(min_num, max_num + 1) for i in range(1, n + 1) for j in range(1, n + 1) if
-            i * j <= max_num and i * j >= min_num)
-
-        # find the closest aspect ratio to the target
-        target_aspect_ratio = self.find_closest_aspect_ratio(
-            aspect_ratio, target_ratios, orig_width, orig_height)
-
-        # calculate the target width and height
-        target_width = self.image_size * target_aspect_ratio[0]
-        target_height = self.image_size * target_aspect_ratio[1]
-        blocks = target_aspect_ratio[0] * target_aspect_ratio[1]
-
-        # resize the image
-        resized_img = image.resize((target_width, target_height))
-        processed_images = []
-        for i in range(blocks):
-            box = (
-                (i % (target_width // self.image_size)) * self.image_size,
-                (i // (target_width // self.image_size)) * self.image_size,
-                ((i % (target_width // self.image_size)) + 1) * self.image_size,
-                ((i // (target_width // self.image_size)) + 1) * self.image_size
-            )
-            # split the image
-            split_img = resized_img.crop(box)
-            processed_images.append(split_img)
-        assert len(processed_images) == blocks
-        if self.use_thumbnail and len(processed_images) != 1:
-            thumbnail_img = image.resize((self.image_size, self.image_size))
-            processed_images.append(thumbnail_img)
-        return processed_images
 
     def multi_modal_get_item(self, data_item):
         if '<image>' not in data_item['conversations'][0]['value']:
@@ -340,7 +281,8 @@ class LazySupervisedDataset(Dataset):
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square)
         if self.dynamic_image_size:
-            images = self.dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch)
+            images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
+                                        image_size=self.image_size, use_thumbnail=self.use_thumbnail)
         else:
             images = [image]
         pixel_values = [transform(image) for image in images]
@@ -368,7 +310,8 @@ class LazySupervisedDataset(Dataset):
 
     def pure_text_get_item(self, data_item):
         image = Image.new('RGB', (224, 224), (255, 255, 255))
-        images = self.dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch)
+        images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
+                                    image_size=self.image_size, use_thumbnail=self.use_thumbnail)
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square)
         pixel_values = [transform(image) for image in images]

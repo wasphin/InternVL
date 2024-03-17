@@ -390,18 +390,12 @@ def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_
     for ratio in target_ratios:
         target_aspect_ratio = ratio[0] / ratio[1]
         ratio_diff = abs(aspect_ratio - target_aspect_ratio)
-        if ratio_diff < best_ratio_diff: # TODO: ratio_diff <= best_ratio_diff
+        if ratio_diff < best_ratio_diff:
             best_ratio_diff = ratio_diff
             best_ratio = ratio
-    if best_ratio == (2, 3) or best_ratio == (3, 2):
-        new_area = image_size * image_size * 4
-        if area < new_area:
-            best_ratio = (2, 2)
-    if best_ratio == (1, 1) or best_ratio == (2, 2):
-        if area < image_size * image_size:
-            best_ratio = (1, 1)
-        else:
-            best_ratio = (2, 2)
+        elif ratio_diff == best_ratio_diff:
+            if area > 0.5 * image_size * image_size * ratio[0] * ratio[1]:
+                best_ratio = ratio
     # print(f'width: {width}, height: {height}, best_ratio: {best_ratio}')
     return best_ratio
 
@@ -414,6 +408,7 @@ def dynamic_preprocess(image, min_num=1, max_num=6, image_size=448, use_thumbnai
     target_ratios = set(
         (i, j) for n in range(min_num, max_num + 1) for i in range(1, n + 1) for j in range(1, n + 1) if
         i * j <= max_num and i * j >= min_num)
+    target_ratios = sorted(target_ratios, key=lambda x: x[0] * x[1])
 
     # find the closest aspect ratio to the target
     target_aspect_ratio = find_closest_aspect_ratio(
