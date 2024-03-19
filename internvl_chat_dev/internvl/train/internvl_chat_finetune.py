@@ -209,7 +209,8 @@ class LazySupervisedDataset(Dataset):
 
     def __init__(self, template_name, meta, tokenizer, tcs_loader, num_image_token,
                  image_size=224, is_train=True, pad2square=False, group_by_length=False,
-                 dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1, max_dynamic_patch=6):
+                 dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1,
+                 max_dynamic_patch=6, repeat_time=1):
         super(LazySupervisedDataset, self).__init__()
         self.tokenizer = tokenizer
         self.template_name = template_name
@@ -226,6 +227,9 @@ class LazySupervisedDataset(Dataset):
         assert meta['annotation'].endswith('jsonl'), f'annotation must be jsonl, but got {meta["annotation"]}'
         with open(meta['annotation'], 'r') as f:
             self.raw_data = f.readlines()
+            if repeat_time < 1:
+                # choice top len(self.raw_data) * repeat_time samples
+                self.raw_data = self.raw_data[:int(len(self.raw_data) * repeat_time)]
         self.root = meta['root']
         self.cached_data_dict = {}
         self.tcs_loader = tcs_loader
@@ -383,12 +387,14 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 dynamic_image_size=dynamic_image_size,
                 use_thumbnail=use_thumbnail,
                 min_dynamic_patch=min_dynamic_patch,
-                max_dynamic_patch=max_dynamic_patch
+                max_dynamic_patch=max_dynamic_patch,
+                repeat_time=repeat_time,
             )
         except Exception:
             logger.info(f'Error in loading dataset: {ds_name}')
             exit()
         dataset.ds_name = ds_name
+        repeat_time = 1 if repeat_time < 1 else repeat_time  # don't repeat if repeat_time is less than 1
         for i in range(repeat_time):
             logger.info(f'Add dataset:{ds_name}_{i} with length: {len(dataset)}')
             datasets.append(dataset)
