@@ -14,10 +14,12 @@ data = [json.loads(line) for line in f.readlines()]
 writer = open(args.path.replace('.jsonl', '_new.jsonl'), 'w')
 for idx, item in enumerate(data):
     item['id'] = idx
+    item['image'] = item['image'].replace('wwy_s_new:s3://xcomposer_data/', '')
     # item['image'] = os.path.join('train/documents/', item['image'])
     conversations = item['conversations']
     if conversations[0]['from'] == 'system':
         item['conversations'] = item['conversations'][1:]
+    # conversations[0]['value'] = conversations[0]['value'].replace("\nAnswer the question using a single word or phrase.", ".")
     writer.write(json.dumps(item, ensure_ascii=False) + '\n')
 
 writer.close()

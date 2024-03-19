@@ -423,7 +423,7 @@ logger = logging.getLogger(__name__)
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-f = open('shell/data/data_0304_zh_ocr.json')
+f = open('shell/data/ocr.json')
 data = json.load(f)
 ds_collections = {}
 for k, v in data.items():
