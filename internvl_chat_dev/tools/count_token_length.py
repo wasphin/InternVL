@@ -7,8 +7,8 @@ from transformers import AutoTokenizer
 
 # set your path and output path here
 # this code will find all `.jsonl` files and count the token length
-path = '/mnt/petrelfs/wangwenhai/private_data/tianhao_data/v1_20240222_updateRoot_std'
-output = '/mnt/petrelfs/wangwenhai/private_data/tianhao_data/v1_20240318_updateRoot_std'
+path = '/mnt/petrelfs/wangwenhai/private_data/tianhao_data/v1_20240318_updateRoot_std'
+output = '/mnt/petrelfs/wangwenhai/private_data/tianhao_data/v1_20240320_updateRoot_std'
 
 model_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat/work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain/checkpoint-5200'
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=True)

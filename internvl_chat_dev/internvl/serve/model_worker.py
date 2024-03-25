@@ -146,7 +146,8 @@ class ModelWorker:
                 images = [load_image_from_base64(image) for image in images]
                 if model.config.dynamic_image_size:
                     images = dynamic_preprocess(
-                        images[0], image_size=self.image_size, use_thumbnail=model.config.use_thumbnail)
+                        images[0], image_size=self.image_size, max_num=12,
+                        use_thumbnail=model.config.use_thumbnail)
                 images = [item.resize((self.image_size, self.image_size)) for item in images]
                 logger.info(f'Resize images to {self.image_size}x{self.image_size}')
                 images = process_images(images, image_processor, model.config)
@@ -186,8 +187,8 @@ class ModelWorker:
         stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
         streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True, timeout=15)
 
-        max_new_tokens = min(max_new_tokens, max_context_length - input_ids.shape[-1] - num_image_tokens)
-
+        max_new_tokens = min(max_new_tokens, max_context_length - input_ids.shape[-1])
+        logger.info(f'max_new_tokens: {max_new_tokens}')
         if max_new_tokens < 1:
             yield json.dumps({'text': ori_prompt + 'Exceeds max token length. Please start a new conversation, thanks.', 'error_code': 0}).encode() + b'\0'
             return

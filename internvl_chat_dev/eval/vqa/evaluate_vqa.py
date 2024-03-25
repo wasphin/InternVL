@@ -313,7 +313,8 @@ def post_process(response):
 def evaluate_chat_model():
     base_prompt = 'Answer the question using a single word or phrase.'
     vizwiz_prompt = "When the provided information is insufficient, respond with 'Unanswerable'. "
-    infovqa_prompt = 'Answer the question directly.'
+    # infovqa_prompt = 'Answer the question directly.'
+    infovqa_prompt = 'Answer the question using a single word or phrase.'
     ai2d_prompt = ''
     random.seed(args.seed)
     summaries = []

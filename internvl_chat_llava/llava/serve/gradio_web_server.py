@@ -239,10 +239,12 @@ def http_bot(state, model_selector, temperature, top_p, max_new_tokens, request:
         "max_new_tokens": min(int(max_new_tokens), 1536),
         "stop": state.sep if state.sep_style in [SeparatorStyle.SINGLE, SeparatorStyle.MPT] else state.sep2,
         "images": f'List of {len(state.get_images())} images: {all_image_hash}',
+        "org_images": f'List of {len(state.get_images(return_org=True))} images: {all_image_hash}',
     }
     logger.info(f"==== request ====\n{pload}")
 
     pload['images'] = state.get_images()
+    pload['org_images'] = state.get_images(return_org=True)
 
     state.messages[-1][-1] = "▌"
     yield (state, state.to_gradio_chatbot()) + (disable_btn,) * 5
@@ -340,7 +342,7 @@ def build_demo(embed_mode):
                 image_process_mode = gr.Radio(
                     ["Crop", "Resize", "Pad", "Default"],
                     value="Default",
-                    label="Preprocess for non-square image", visible=True)
+                    label="Preprocess for non-square image", visible=False)
 
                 cur_dir = os.path.dirname(os.path.abspath(__file__))
                 gr.Examples(examples=[
