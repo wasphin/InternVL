@@ -181,14 +181,14 @@ if [ ${DATASET} == "vqa-chartqa-test" ]; then
     eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_human,chartqa_test_augmented ${@:3}
 fi
 
-if [ ${DATASET} == "vqa-infovqa" ]; then
+if [ ${DATASET} == "vqa-infovqa-val" ]; then
     torchrun \
     --nnodes=1 \
     --node_rank=0 \
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_val ${@:3}
 fi
 
 if [ ${DATASET} == "vqa-chartqa-test-human" ]; then

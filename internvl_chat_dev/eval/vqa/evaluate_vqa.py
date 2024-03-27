@@ -125,11 +125,18 @@ ds_collections = {
         'metric': 'accuracy',
         'max_new_tokens': 10,
     },
-    'infographicsvqa': {
+    'infographicsvqa_val': {
         'train': 'data/infographicsvqa/train.jsonl',
         'test': 'data/infographicsvqa/val.jsonl',
         'annotation': 'data/infographicsvqa/infographicsVQA_val_v1.0_withQT.json',
         'metric': 'anls',
+        'max_new_tokens': 100,
+    },
+    'infographicsvqa_test': {
+        'train': 'data/infographicsvqa/train.jsonl',
+        'test': 'data/infographicsvqa/test.jsonl',
+        'annotation': 'data/infographicsvqa/infographicsVQA_test_v1.0.json',
+        'metric': None,
         'max_new_tokens': 100,
     }
 }
@@ -375,8 +382,8 @@ def evaluate_chat_model():
                         'question_id': question_id,
                         'answer': answer,
                     })
-                elif ds_name in ['docvqa_val', 'infographicsvqa', 'gqa_testdev', 'ocrvqa_val',
-                                 'ocrvqa_test', 'gqa_testdev_llava']:
+                elif ds_name in ['docvqa_val', 'infographicsvqa_val', 'gqa_testdev', 'ocrvqa_val',
+                                 'ocrvqa_test', 'gqa_testdev_llava', 'infographicsvqa_test',]:
                     outputs.append({
                         'question': question,
                         'questionId': question_id,
