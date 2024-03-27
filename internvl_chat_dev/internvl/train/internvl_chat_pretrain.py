@@ -203,6 +203,10 @@ class DataTrainingArguments:
         default=6,
         metadata={'help': 'The maximum number of dynamic patches. Default is 6.'},
     )
+    neftune_alpha: Optional[float] = field(
+        default=None,
+        metadata={'help': 'The noise_alpha value for NEFTune. Default is None.'},
+    )
 
 
 class LazySupervisedDataset(Dataset):
@@ -542,6 +546,7 @@ def main():
         logger.info('Building InternVLChatModel...')
         model = InternVLChatModel(internvl_chat_config, vision_model, llm)
     model.img_context_token_id = img_context_token_id
+    model.neftune_alpha = data_args.neftune_alpha
 
     if model_args.mlp_path is not None:
         logger.info('Loading pretrained MLP projector...')
@@ -585,7 +590,7 @@ def main():
             param.requires_grad = False
 
     if model_args.freeze_backbone:
-        model.vision_model = model.vision_model.eval()
+        # model.vision_model = model.vision_model.eval()
         _freeze_params(model.vision_model)
 
     if model_args.freeze_llm:

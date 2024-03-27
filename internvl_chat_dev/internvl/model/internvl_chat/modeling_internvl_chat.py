@@ -109,6 +109,7 @@ class InternVLChatModel(PreTrainedModel):
             )
 
         self.img_context_token_id = None
+        self.neftune_alpha = None
 
         if config.use_backbone_lora:
             self.wrap_backbone_lora(r=config.use_backbone_lora, lora_alpha=2 * config.use_backbone_lora)
@@ -235,6 +236,12 @@ class InternVLChatModel(PreTrainedModel):
             x = x.permute(0, 2, 1, 3).contiguous()
         return x
 
+    def noised_embed(self, vit_embeds, noise_alpha=5):
+        dims = torch.tensor(vit_embeds.size(1) * vit_embeds.size(2))
+        mag_norm = noise_alpha / torch.sqrt(dims)
+        noise = torch.zeros_like(vit_embeds).uniform_(-mag_norm, mag_norm)
+        return vit_embeds + noise
+
     def extract_feature(self, pixel_values):
         if self.image_fold:
             image_size = pixel_values.size(-1)  # B, C, H, W
@@ -251,6 +258,9 @@ class InternVLChatModel(PreTrainedModel):
                 output_hidden_states=True,
                 return_dict=True).hidden_states[self.select_layer]
         vit_embeds = vit_embeds[:, 1:, :]
+
+        if self.training and self.neftune_alpha is not None:
+            vit_embeds = self.noised_embed(vit_embeds, self.neftune_alpha)
 
         if self.image_fold:
             vit_embeds = window_reverse(vit_embeds, window_size=image_size // (self.image_fold * self.patch_size),
