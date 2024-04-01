@@ -423,7 +423,7 @@ logger = logging.getLogger(__name__)
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-f = open('shell/data/ocr.json')
+f = open('shell/data/data_yi34b_finetune_v5_15_langchao.json')
 data = json.load(f)
 ds_collections = {}
 for k, v in data.items():
@@ -613,7 +613,7 @@ def test_dataset(dataset):
 
 
 if __name__ == '__main__':
-    llm_path = './work_dirs/internvl_chat_internlm2_20b_448_chinese_pretrain/checkpoint-4600'
+    llm_path = './work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain2/checkpoint-2400'
     llm_tokenizer = AutoTokenizer.from_pretrained(
         llm_path, add_eos_token=False, trust_remote_code=True)
 
