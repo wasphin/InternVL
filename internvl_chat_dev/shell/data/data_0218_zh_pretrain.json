@@ -1,0 +1,363 @@
+{
+  "coyo_zh": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_coyo_zh_42m_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "grit_zh": {
+    "root": "/mnt/petrelfs/share_data/zhangqinglong/GRIT/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_grit_zh_14m.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "laion": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_laion_74m_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "laion_zh": {
+    "root": "langchao:s3://laion-zh/data/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_laion_zh_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "open_objects": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_openimages_objects365_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "open_objects_zh": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_openimages_objects365_zh_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "chartqa_train_18k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/ChartQA/train/png/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/chartqa_train_18k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 18317
+  },
+  "docvqa_train_10k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/DocVQA/train/train/documents/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/docvqa_train_10k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 10211
+  },
+  "stvqa_train_19k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/ST-VQA/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/stvqa_train_19k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 18921
+  },
+  "estvqa_train_17k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/EST-VQA-v1.0/images/train/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/estvqa_train_17k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 17047
+  },
+  "infovqa_train_4k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/InfoVQA/infographicVQA_train_v1.0_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/infovqa_train_4k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 4406
+  },
+  "ocrvqa_train_206k": {
+    "root": "data/playground/data/ocr_vqa/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/ocrvqa_train_206k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 206374
+  },
+  "textcap_train_21k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/textcap_train_21k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 21461
+  },
+  "textvqa_train_21k": {
+    "root": "langchao:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/textvqa_train_21k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 21461
+  },
+  "llavar_train_20k": {
+    "root": "langchao:s3://mm_dataset/LLaVAR/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/llavar_train_20k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 19800
+  },
+  "lrv_chart_7k": {
+    "root": "langchao:s3://mm_dataset/LRV-Instruction/chart_image/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/lrv_chart_7k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7311
+  },
+  "iconqa_train_30k": {
+    "root": "langchao:s3://mm_dataset/IconQA/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/iconqa_train_30k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29859
+  },
+  "ai2d_train_12k": {
+    "root": "data/ai2diagram/ai2d",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/ai2d_train_12k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 49652
+  },
+  "gqa_train_943k": {
+    "root": "data/playground/data/gqa/images",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/gqa_train_943k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 943000
+  },
+  "vqav2_train_83k": {
+    "root": "langchao:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/vqav2_train_83k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 82783
+  },
+  "inhouse_gpt4v_longcap": {
+    "root": "langchao:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_longcap.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2215
+  },
+  "inhouse_gpt4v_qa": {
+    "root": "langchao:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_qa.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 2074
+  },
+  "inhouse_gpt4v_qa_231109": {
+    "root": "langchao:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_qa_231109.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 16260
+  },
+  "inhouse_gpt4v_qa_231109_zh": {
+    "root": "langchao:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_qa_231109_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 16393
+  },
+  "inhouse_gpt4v_longcap_231109": {
+    "root": "langchao:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_longcap_231109.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 26863
+  },
+  "math_150": {
+    "root": "langchao:s3://mm_dataset/pic_math150/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/math/math_150.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 150
+  },
+  "math_2k": {
+    "root": "langchao:s3://mm_dataset/pic_math2k/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/math/math_2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 2000
+  },
+  "dvqa_train_200k": {
+    "root": "/mnt/petrelfs/share_data/wangwenhai/data/DVQA/images/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/dvqa_train_200k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "CLEVR_train": {
+    "root": "langchao:s3://mm_dataset",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/CLEVR_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 70000
+  },
+  "ScienceQA": {
+    "root": "langchao:s3://mm_dataset",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/science_qa_choice_augment.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 34718
+  },
+  "markdown_table": {
+    "root": "data/ocr_data/chart_data/png",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/chart_data_with_markdown.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 185541
+  },
+  "LSVT-CN": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/LSVT-CN/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/LSVT-CN_train_standard_cat_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 5490
+  },
+  "Chinese-OCR": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/Chinese-OCR/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/Chinese-OCR_train_standard_cat_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 10,
+    "length": 41442
+  },
+  "ArT_1": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/ArT/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/ArT_task2_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 49946
+  },
+  "ArT_2": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/ArT/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/ArT_task1_3_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 5583
+  },
+  "CASIA": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/CASIA/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/CASIA_train_standard_cat_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2193
+  },
+  "LVST_1": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/IVST/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/LSVT_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29797
+  },
+  "LVST_2": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/IVST/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/LSVT_weak_chatv2.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 399783
+  },
+  "RCTW-17": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/RCTW-17/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/RCTW_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7979
+  },
+  "ReCTS": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/ReCTS/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/ReCTS_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19890
+  },
+  "CTW": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/CTW/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/CTW_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 24290
+  },
+  "TextOCR": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/TextOCR/images",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/Textocr_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21438
+  },
+  "naf": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/naf/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/naf_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 865
+  },
+  "wildreceipt": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/wildreceipt/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/wildreceipt_train_weak_chatv2.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1267
+  },
+  "objects365_w_box_614k_det": {
+    "root": "langchao:s3://Objects365/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/objects365_w_box_614k_det.jsonl",
+    "data_augment": false,
+    "repeat_time": 5
+  },
+  "objects365_w_box_614k_zh_det": {
+    "root": "langchao:s3://Objects365/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/objects365_w_box_614k_zh_det.jsonl",
+    "data_augment": false,
+    "repeat_time": 5
+  },
+  "grit_w_box_800k_det": {
+    "root": "/mnt/petrelfs/share_data/wangwenhai/data/GRIT/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/grit_w_box_800k_det.jsonl",
+    "data_augment": false,
+    "repeat_time": 5
+  },
+  "grit_w_box_28k_zh_det": {
+    "root": "/mnt/petrelfs/share_data/wangwenhai/data/GRIT/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/grit_w_box_28k_zh_det.jsonl",
+    "data_augment": false,
+    "repeat_time": 5
+  },
+  "chat_grit_caption_w_box_800k_en": {
+    "root": "/mnt/petrelfs/share_data/wangwenhai/data/GRIT/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_grit_caption_w_box_800k_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 5
+  },
+  "chat_grit_caption_w_box_28k_zh": {
+    "root": "/mnt/petrelfs/share_data/wangwenhai/data/GRIT/",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_grit_caption_w_box_28k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 5
+  },
+  "all_see_en": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_all_seeing_qa_en_v3.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "all_see_zh": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/chat_all_seeing_qa_zh_v3.jsonl",
+    "data_augment": false,
+    "repeat_time": 1
+  },
+  "wukong_ocr": {
+    "root": "langchao:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/wukong_ocr.jsonl",
+    "data_augment": false,
+    "repeat_time": 2
+  },
+  "laioncoco_ocr": {
+    "root": "hzh:",
+    "annotation": "data/metas/tianhao_data/stage2_v5/laioncoco_ocr.jsonl",
+    "data_augment": false,
+    "repeat_time": 2
+  }
+}

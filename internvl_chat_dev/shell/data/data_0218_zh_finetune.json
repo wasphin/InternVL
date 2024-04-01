@@ -1,0 +1,827 @@
+{
+  "standford40_action": {
+    "root": "hzh:s3://multi_modal/Stanford40/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/standford40/standford40_action.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 9397
+  },
+  "standford40_longcap": {
+    "root": "hzh:s3://multi_modal/Stanford40/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/standford40/standford40_longcap.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 6461
+  },
+  "standford40_qa": {
+    "root": "hzh:s3://multi_modal/Stanford40/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/standford40/standford40_qa.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 9169
+  },
+  "ctrip_food_qa": {
+    "root": "hzh:s3://multi_modal/xiecheng_food/image/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ctrip/ctrip_food_qa.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 2353
+  },
+  "ctrip_food_longcap": {
+    "root": "hzh:s3://multi_modal/xiecheng_food/image/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ctrip/ctrip_food_longcap.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2437
+  },
+  "ctrip_insight_gpt4v": {
+    "root": "hzh:s3://multi_modal/xiecheng_sights/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ctrip/ctrip_insight_gpt4v.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10002
+  },
+  "douban_movie_qa": {
+    "root": "hzh:s3://multi_modal/douban_movie_tv/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/douban_movie/douban_movie_qa.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 6431
+  },
+  "douban_movie_longcap": {
+    "root": "hzh:s3://multi_modal/douban_movie_tv/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/douban_movie/douban_movie_longcap.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7549
+  },
+  "inhouse_gpt4v_longcap": {
+    "root": "hzh:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_longcap.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2215
+  },
+  "inhouse_gpt4v_qa": {
+    "root": "hzh:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_qa.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 2074
+  },
+  "inhouse_gpt4v_qa_231109": {
+    "root": "hzh:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_qa_231109.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 16260
+  },
+  "inhouse_gpt4v_qa_231109_zh": {
+    "root": "hzh:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_qa_231109_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 16393
+  },
+  "inhouse_gpt4v_longcap_231109": {
+    "root": "hzh:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/inhouse_gpt4v_longcap_231109.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 26618
+  },
+  "math_150": {
+    "root": "hzh:s3://mm_dataset/pic_math150/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/math/math_150.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 150
+  },
+  "math_2k": {
+    "root": "hzh:s3://mm_dataset/pic_math2k/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/math/math_2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 2000
+  },
+  "coco_poetry": {
+    "root": "hzh:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/coco_poetry.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 8778
+  },
+  "coco_clothes": {
+    "root": "hzh:s3://multi_modal/coco",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/inhouse_gpt4v/coco_clothes.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 9552
+  },
+  "coco_karpathy_train_567k": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/coco_karpathy_train_567k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 566747
+  },
+  "vqav2_train_83k": {
+    "root": "hzh:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/vqav2_train_83k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 82783
+  },
+  "vqav2_qa_zh": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/vqav2_qa_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 38617
+  },
+  "vsr_train_8k": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/vsr_train_8k.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 7680
+  },
+  "okvqa_train_9k": {
+    "root": "hzh:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/okvqa_train_9k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 8996
+  },
+  "aokvqa_train_66k": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/aokvqa_train_66k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 66160
+  },
+  "iconqa_train_30k": {
+    "root": "hzh:s3://mm_dataset/IconQA/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/iconqa_train_30k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29859
+  },
+  "ai2d_train_12k": {
+    "root": "hzh:s3://multi_modal/ai2diagram/ai2d/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/ai2d_train_12k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 49652
+  },
+  "gqa_train_943k": {
+    "root": "s3://mm_dataset/gqa/images",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/gqa_train_943k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 943000
+  },
+  "textvqa_train_21k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/textvqa_train_21k.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 21461
+  },
+  "ocrvqa_train_206k": {
+    "root": "hzh:s3://mm_dataset/ocrvqa/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/ocrvqa_train_206k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 206374
+  },
+  "chartqa_train_18k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/ChartQA/train/png/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/chartqa_train_18k.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 18317
+  },
+  "docvqa_train_10k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/DocVQA/train/train/documents/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/docvqa_train_10k.jsonl",
+    "data_augment": false,
+    "repeat_time": 8,
+    "length": 10211
+  },
+  "stvqa_train_19k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/ST-VQA/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/stvqa_train_19k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 18921
+  },
+  "estvqa_train_17k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/EST-VQA-v1.0/images/train/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/estvqa_train_17k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 17047
+  },
+  "infovqa_train_4k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/InfoVQA/infographicVQA_train_v1.0_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/infovqa_train_4k.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 4406
+  },
+  "llavar_train_20k": {
+    "root": "hzh:s3://mm_dataset/LLaVAR/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/llavar_train_20k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19800
+  },
+  "textcap_train_21k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/textcap_train_21k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21461
+  },
+  "visdial_train_123k": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/visdial_train_123k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 123287
+  },
+  "CLEVR_train": {
+    "root": "hzh:s3://multi_modal/CLEVR/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/CLEVR_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 70000
+  },
+  "ScienceQA": {
+    "root": "hzh:s3://multi_modal",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/science_qa_choice_augment.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 34718
+  },
+  "ScienceQA_AUG": {
+    "root": "hzh:s3://multi_modal",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/science_qa_multi_choice.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19024
+  },
+  "ComVint": {
+    "root": "hzh:s3://multi_modal",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/ComVint_refine.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 31889
+  },
+  "negative_coco": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/negative/negative_coco.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 6600
+  },
+  "wukong_ocr": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/wukong_ocr.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 91
+  },
+  "markdown_table": {
+    "root": "hzh:s3://multi_modal/ocr_data/chart_data/png",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/chart_data_with_markdown.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 185541
+  },
+  "LSVT-CN": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/LSVT-CN/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/LSVT-CN_train_standard_cat_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 5490
+  },
+  "Chinese-OCR": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/Chinese-OCR/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/Chinese-OCR_train_standard_cat_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 41442
+  },
+  "ArT_1": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/ArT/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/ArT_task2_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 49946
+  },
+  "ArT_2": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/ArT/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/ArT_task1_3_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 5583
+  },
+  "CASIA": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/CASIA/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/CASIA_train_standard_cat_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2193
+  },
+  "LVST_1": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/IVST/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/LSVT_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29797
+  },
+  "LVST_2": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/IVST/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/LSVT_weak_chatv2.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 399783
+  },
+  "RCTW-17": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/RCTW-17/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/RCTW_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7979
+  },
+  "ReCTS": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/ReCTS/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/ReCTS_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19890
+  },
+  "CTW": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/CTW/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/CTW_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 24290
+  },
+  "TextOCR": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/TextOCR/images",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/Textocr_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21438
+  },
+  "naf": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/naf/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/naf_full2weak_chat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 865
+  },
+  "wildreceipt": {
+    "root": "/mnt/petrelfs/share_data/cuierfei/OCR/wildreceipt/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/ocr/wildreceipt_train_weak_chatv2.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1267
+  },
+  "refcoco_grounding": {
+    "root": "hzh:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/refcoco_grounding.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 27676
+  },
+  "refcoco_grounding_aug": {
+    "root": "hzh:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/refcoco_grounding_aug.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 141880
+  },
+  "toloka_grounding": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/toloka_grounding.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 37522
+  },
+  "toloka_grounding_aug": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/toloka_grounding_aug.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 37522
+  },
+  "Chat_GPT4GEN_RD_BoxCoT_valid": {
+    "root": "hzh:s3://mm_dataset/flickr30k-images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/Chat_GPT4GEN_RD_BoxCoT_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 3756
+  },
+
+  "llava_zh_150k": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/llava_zh_150k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 154175
+  },
+  "llava_instruct_150k": {
+    "root": "hzh:s3://multi_modal/coco/train2017/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/llava_instruct_150k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 157712
+  },
+  "lrv_chart_7k": {
+    "root": "hzh:s3://mm_dataset/LRV-Instruction/chart_image/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/lrv_chart_7k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7311
+  },
+  "lrv_instruction_68k": {
+    "root": "hzh:s3://mm_dataset/VG_100K/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/lrv_instruction_68k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 68434
+  },
+  "svit_300k": {
+    "root": "hzh:s3://mm_dataset/VG_100K/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/svit/svit_300k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 318631
+  },
+  "svit_instruct_zh_900k": {
+    "root": "hzh:s3://mm_dataset/VG_100K/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/svit/svit_instruct_zh_900k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 903637
+  },
+
+  "lvis_instruct4v_220k_zh": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/lvis_instruct4v/lvis_instruct4v_220k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 222646
+  },
+  "lvis_instruct4v_220k": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/lvis_instruct4v/lvis_instruct4v_220k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 222646
+  },
+
+  "sharegpt4v_caption_coco50k": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_coco50k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 50026
+  },
+  "sharegpt4v_caption_coco50k_zh": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_coco50k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 49911
+  },
+  "sharegpt4v_caption_llava30k": {
+    "root": "hzh:s3://mm_dataset/BlipLaionCCSbu",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_llava30k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29889
+  },
+  "sharegpt4v_caption_llava30k_zh": {
+    "root": "hzh:s3://mm_dataset/BlipLaionCCSbu",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_llava30k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29762
+  },
+  "sharegpt4v_caption_sam14k": {
+    "root": "hzh:s3://sam-all/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_sam14k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 14341
+  },
+  "sharegpt4v_caption_sam14k_zh": {
+    "root": "hzh:s3://sam-all/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_sam14k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 14306
+  },
+  "sharegpt4v_caption_wwws2k": {
+    "root": "hzh:s3://mm_dataset/ShareGPT4V/data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_wwws2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1998
+  },
+  "sharegpt4v_caption_wwws2k_zh": {
+    "root": "hzh:s3://mm_dataset/ShareGPT4V/data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharegpt4v/sharegpt4v_caption_wwws2k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1995
+  },
+  "sharecaptioner_coco118k": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharecaptioner/sharecaptioner_coco118k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 118143
+  },
+  "sharecaptioner_lcs558k": {
+    "root": "hzh:s3://mm_dataset/BlipLaionCCSbu",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharecaptioner/sharecaptioner_lcs558k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 555083
+  },
+  "sharecaptioner_sam490k": {
+    "root": "hzh:s3://sam-all/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharecaptioner/sharecaptioner_sam490k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 489112
+  },
+  "sharecaptioner_coco118k_zh": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharecaptioner/sharecaptioner_coco118k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 117653
+  },
+  "sharecaptioner_lcs558k_zh": {
+    "root": "hzh:s3://mm_dataset/BlipLaionCCSbu",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharecaptioner/sharecaptioner_lcs558k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 508661
+  },
+  "sharecaptioner_sam490k_zh": {
+    "root": "hzh:s3://sam-all/images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/sharecaptioner/sharecaptioner_sam490k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 486790
+  },
+
+  "CLEVR_math_train": {
+    "root": "hzh:s3://multi_modal/CLEVR/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/CLEVR_math_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 70000
+  },
+  "geometry3k": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/geometry3k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10505
+  },
+  "geoqa+": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/geoqa+.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 72318
+  },
+  "geos": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/geos.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 338
+  },
+  "mathqa_augment": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/mathqa_augment.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 212931
+  },
+  "mathqa": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/mathqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 28527
+  },
+  "unigeo_calc": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/unigeo_calc.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20994
+  },
+
+  "dvqa": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/dvqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 200000
+  },
+  "figureqa": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/figureqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 100000
+  },
+  "MapQA_S_train": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/MapQA_S_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12470
+  },
+  "MapQA_U_train": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/MapQA_U_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12470
+  },
+  "MapQA_V_train": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/MapQA_V_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12470
+  },
+  "pmc-vqa": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/pmc-vqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 251160
+  },
+  "superCLEVR_questions_30k_AllRedundant": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/superCLEVR_questions_30k_AllRedundant.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20000
+  },
+  "superCLEVR_questions_30k": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/superCLEVR_questions_30k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20000
+  },
+  "superCLEVR_questions_30k_NoRedundant": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/superCLEVR_questions_30k_NoRedundant.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20000
+  },
+  "tabmwp": {
+    "root": "hzh:s3://multi_modal/TabMWP/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/tabmwp.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 74921
+  },
+  "tqa": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/tqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20117
+  },
+  "vqa_rad": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/vqa_rad.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1793
+  },
+
+  "chat_alpaca_gpt4_en": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_alpaca_gpt4_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 52002
+  },
+  "chat_alpaca_gpt4_zh": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_alpaca_gpt4_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 48818
+  },
+  "chat-firefly-train-1M": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat-firefly-train-1M.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_leetcode_en_2k": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_leetcode_en_2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1761
+  },
+  "chat_lima_coedit": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_lima_coedit.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 83300
+  },
+  "chat_math_en": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_math_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_math_zh": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_math_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_poetry": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_poetry.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_translate": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_translate.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_ultra": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/chat_ultra.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "sharegpt_en_84K_0701": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/sharegpt_en_84K_0701.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 25555
+  },
+  "sharegpt_zh_34K_0701": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/llm_chat_subset_2M_v1.0/sharegpt_zh_34K_0701.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 26308
+  },
+  "openorca_gpt4": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/nlp_data/flan1m-alpaca-uncensored-conversation.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 891857
+  },
+  "openhermes2_5": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/nlp_data/openhermes2_5.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1001551
+  },
+  "k12_en_multi_turn": {
+    "root": "",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/nlp_data/k12_en_multi_turn.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 4001
+  }
+}
