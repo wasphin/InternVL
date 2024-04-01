@@ -13,7 +13,9 @@ from PIL import Image
 from torch.utils.data import ConcatDataset, WeightedRandomSampler
 from torchvision.transforms.functional import InterpolationMode
 
-from .constants import IMG_CONTEXT_TOKEN, IMG_END_TOKEN, IMG_START_TOKEN
+from .constants import (CLIP_MEAN, CLIP_STD, IMAGENET_MEAN, IMAGENET_STD,
+                        IMG_CONTEXT_TOKEN, IMG_END_TOKEN, IMG_START_TOKEN,
+                        SIGLIP_MEAN, SIGLIP_STD)
 
 try:
     from petrel_client.client import Client
@@ -72,30 +74,38 @@ def expand2square(pil_img, background_color):
         return result
 
 
-def build_transform(is_train, input_size, pad2square=False):
-    if is_train:
+def build_transform(is_train, input_size, pad2square=False, normalize_type='imagenet'):
+    if normalize_type == 'imagenet':
+        MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
+    elif normalize_type == 'clip':
+        MEAN, STD = CLIP_MEAN, CLIP_STD
+    elif normalize_type == 'siglip':
+        MEAN, STD = SIGLIP_MEAN, SIGLIP_STD
+    else:
+        raise NotImplementedError
+    if is_train:  # use data augumentation
         transform = T.Compose([
             T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
             T.RandomResizedCrop(input_size, scale=(0.8, 1.0), ratio=(3. / 4., 4. / 3.),
                                 interpolation=InterpolationMode.BICUBIC),
             T.ToTensor(),
-            T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+            T.Normalize(mean=MEAN, std=STD)
         ])
     else:
-        if pad2square is False:
+        if pad2square is False:  # now we use this transform function by default
             transform = T.Compose([
                 T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
                 T.Resize((input_size, input_size), interpolation=InterpolationMode.BICUBIC),
                 T.ToTensor(),
-                T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+                T.Normalize(mean=MEAN, std=STD)
             ])
         else:
             transform = T.Compose([
                 T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
-                T.Lambda(lambda img: expand2square(img, tuple(int(x * 255) for x in (0.485, 0.456, 0.406)))),
+                T.Lambda(lambda img: expand2square(img, tuple(int(x * 255) for x in MEAN))),
                 T.Resize((input_size, input_size), interpolation=InterpolationMode.BICUBIC),
                 T.ToTensor(),
-                T.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+                T.Normalize(mean=MEAN, std=STD)
             ])
 
     return transform

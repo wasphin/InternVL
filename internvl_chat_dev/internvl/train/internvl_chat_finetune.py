@@ -206,6 +206,10 @@ class DataTrainingArguments:
         default=None,
         metadata={'help': 'The noise_alpha value for NEFTune. Default is None.'},
     )
+    normalize_type: Optional[str] = field(
+        default='imagenet',
+        metadata={'help': 'The normalize type for the image. Default is imagenet.'},
+    )
 
 
 class LazySupervisedDataset(Dataset):
@@ -214,7 +218,7 @@ class LazySupervisedDataset(Dataset):
     def __init__(self, template_name, meta, tokenizer, tcs_loader, num_image_token,
                  image_size=224, is_train=True, pad2square=False, group_by_length=False,
                  dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1,
-                 max_dynamic_patch=6, repeat_time=1):
+                 max_dynamic_patch=6, repeat_time=1, normalize_type='imagenet'):
         super(LazySupervisedDataset, self).__init__()
         self.tokenizer = tokenizer
         self.template_name = template_name
@@ -242,6 +246,7 @@ class LazySupervisedDataset(Dataset):
         self.use_thumbnail = use_thumbnail
         self.min_dynamic_patch = min_dynamic_patch
         self.max_dynamic_patch = max_dynamic_patch
+        self.normalize_type = normalize_type
         if self.group_by_length:
             self.conv2length = {}  # using dict to speedup the calculation of token length
             self.length = []
@@ -287,7 +292,7 @@ class LazySupervisedDataset(Dataset):
         else:
             image = Image.open(image_path).convert('RGB')
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
-                                    pad2square=self.pad2square)
+                                    pad2square=self.pad2square, normalize_type=self.normalize_type)
         if self.dynamic_image_size:
             images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
                                         image_size=self.image_size, use_thumbnail=self.use_thumbnail)
@@ -321,7 +326,7 @@ class LazySupervisedDataset(Dataset):
         images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
                                     image_size=self.image_size, use_thumbnail=self.use_thumbnail)
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
-                                    pad2square=self.pad2square)
+                                    pad2square=self.pad2square, normalize_type=self.normalize_type)
         pixel_values = [transform(image) for image in images]
         pixel_values = torch.stack(pixel_values)
         num_patches = pixel_values.size(0)
@@ -369,7 +374,7 @@ class LazySupervisedDataset(Dataset):
 
 def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=False,
                    dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1,
-                   max_dynamic_patch=6):
+                   max_dynamic_patch=6, normalize_type='imagenet'):
     datasets = []
     lengths = []
     ds_collections = json.loads(open(data_args.meta_path).read())
@@ -393,6 +398,7 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 min_dynamic_patch=min_dynamic_patch,
                 max_dynamic_patch=max_dynamic_patch,
                 repeat_time=repeat_time,
+                normalize_type=normalize_type,
             )
         except Exception:
             logger.info(f'Error in loading dataset: {ds_name}')
@@ -564,7 +570,8 @@ def main():
     train_dataset = build_datasets(
         data_args, tokenizer, tcs_loader, model, group_by_length=training_args.group_by_length,
         dynamic_image_size=data_args.dynamic_image_size, use_thumbnail=data_args.use_thumbnail,
-        min_dynamic_patch=data_args.min_dynamic_patch, max_dynamic_patch=data_args.max_dynamic_patch)
+        min_dynamic_patch=data_args.min_dynamic_patch, max_dynamic_patch=data_args.max_dynamic_patch,
+        normalize_type=data_args.normalize_type)
 
     def _freeze_params(module):
         for param in module.parameters():
