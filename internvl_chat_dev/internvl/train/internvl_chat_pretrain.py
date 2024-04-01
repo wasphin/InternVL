@@ -6,16 +6,8 @@ import random
 import sys
 import warnings
 from copy import deepcopy
-from typing import Dict, Optional
-
-from internvl.train.dataset import (dynamic_preprocess,
-                                    find_closest_aspect_ratio)
-from internvl.train.trainer_monkey_patch import replace_create_optimizer
-from tqdm import tqdm
-from transformers.trainer_pt_utils import LabelSmoother
-
-IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 from dataclasses import dataclass, field
+from typing import Dict, Optional
 
 import torch
 import torch.distributed as dist
@@ -36,10 +28,13 @@ from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
                                       REF_START_TOKEN)
 from internvl.train.dataset import (ConcatDataset, TCSLoader,
                                     WeightedConcatDataset, build_transform,
-                                    preprocess, preprocess_internlm,
-                                    preprocess_mpt)
+                                    dynamic_preprocess,
+                                    find_closest_aspect_ratio, preprocess,
+                                    preprocess_internlm, preprocess_mpt)
+from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
+from tqdm import tqdm
 from transformers import (AutoConfig, AutoModel, AutoTokenizer,
                           HfArgumentParser, LlamaConfig, LlamaForCausalLM,
                           LlamaTokenizer, Trainer, TrainingArguments,

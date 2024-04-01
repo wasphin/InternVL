@@ -4,13 +4,8 @@ import os
 import random
 import sys
 import warnings
-from typing import Dict, Optional
-
-from internvl.train.trainer_monkey_patch import replace_create_optimizer
-from transformers.trainer_pt_utils import LabelSmoother
-
-IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 from dataclasses import dataclass, field
+from typing import Dict, Optional
 
 import torch
 import torch.distributed as dist
@@ -20,6 +15,7 @@ from internvl.model.internvl_distillation import (InternVisionModel,
                                                   InternVLDistillation,
                                                   InternVLDistillationConfig)
 from internvl.train.dataset import ConcatDataset, TCSLoader, build_transform
+from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
 from transformers import (HfArgumentParser, Trainer, TrainingArguments,
