@@ -350,6 +350,16 @@ if [ ${DATASET} == "mmbench-test-cn" ]; then
       eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_test_cn_20231003 ${@:3}
 fi
 
+if [ ${DATASET} == "ccbench-dev" ]; then
+    torchrun \
+      --nnodes=1 \
+      --node_rank=0 \
+      --master_addr=127.0.0.1 \
+      --nproc_per_node=${GPUS} \
+      --master_port=${MASTER_PORT} \
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets ccbench_dev_cn ${@:3}
+fi
+
 if [ ${DATASET} == "scienceqa" ]; then
     torchrun \
       --nnodes=1 \

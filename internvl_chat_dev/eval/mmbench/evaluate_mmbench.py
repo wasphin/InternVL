@@ -52,6 +52,13 @@ ds_collections = {
         'min_new_tokens': 1,
         'type': 'test',
         'language': 'en'
+    },
+    'ccbench_dev_cn': {
+        'root': 'data/mmbench/CCBench_legacy.tsv',
+        'max_new_tokens': 100,
+        'min_new_tokens': 1,
+        'type': 'dev',
+        'language': 'cn'
     }
 }
 

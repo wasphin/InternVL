@@ -324,6 +324,7 @@ data
 │       ├── ...
 │       └── Visual_Reasoning
 ├── mmbench
+│   ├── CCBench_legacy.tsv
 │   ├── mmbench_dev_20230712.tsv
 │   ├── mmbench_dev_cn_20231003.tsv
 │   ├── mmbench_dev_en_20231003.tsv
@@ -877,6 +878,7 @@ CUDA_VISIBLE_DEVICES=0 sh evaluate.sh <checkpoint> mme
 mkdir -p data/mmbench && cd data/mmbench
 
 # download csv files of mmbench
+wget http://opencompass.openxlab.space/utils/MMBench/CCBench_legacy.tsv
 wget https://download.openmmlab.com/mmclassification/datasets/mmbench/mmbench_dev_20230712.tsv
 wget https://download.openmmlab.com/mmclassification/datasets/mmbench/mmbench_dev_cn_20231003.tsv
 wget https://download.openmmlab.com/mmclassification/datasets/mmbench/mmbench_dev_en_20231003.tsv
