@@ -245,8 +245,12 @@ def evaluate_chat_model():
             output_path = os.path.join(args.out_dir, results_file)
             df = pd.read_table(ds_collections[ds_name]['root'])
             cur_df = df.copy()
-            cur_df = cur_df.drop(columns=['hint', 'category', 'source', 'image', 'comment', 'l2-category'])
-            cur_df.insert(6, 'prediction', None)
+            if 'mmbench' in ds_name:
+                cur_df = cur_df.drop(columns=['hint', 'category', 'source', 'image', 'comment', 'l2-category'])
+                cur_df.insert(6, 'prediction', None)
+            else:
+                cur_df = cur_df.drop(columns=['category', 'image'])
+                cur_df.insert(8, 'prediction', None)
             for item in merged_outputs:
                 cur_df.loc[df['index'] == item['index'], 'prediction'] = item['answer']
 
