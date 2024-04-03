@@ -1,0 +1,292 @@
+{
+  "sharegpt4v_instruct_gpt4-vision_cap100k": {
+    "root": "pcluster:s3://multi_modal/playground/data/",
+    "annotation": "playground/meta_v2/sharegpt4v_instruct_gpt4-vision_cap100k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 102025
+  },
+  "llava_instruct_150k_zh": {
+    "root": "pcluster:s3://multi_modal/playground/data/coco/",
+    "annotation": "playground/meta_v2/llava_instruct_150k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 157712
+  },
+  "sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k": {
+    "root": "pcluster:s3://multi_modal/playground/data/",
+    "annotation": "playground/meta_v2/sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k_reformat.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 664743
+  },
+  "dvqa_train_200k": {
+    "root": "pcluster:s3://multi_modal/playground/data/dvqa/",
+    "annotation": "playground/meta_v2/dvqa_train_200k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 200000
+  },
+  "chartqa_trainval_30k_w_csv": {
+    "root": "pcluster:s3://multi_modal/playground/data/chartqa/",
+    "annotation": "playground/meta_v2/chartqa_trainval_30k_w_csv.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 30219,
+    "max_dynamic_patch": 12
+  },
+  "ai2d_train_12k": {
+    "root": "pcluster:s3://multi_modal/playground/data/ai2d/",
+    "annotation": "playground/meta_v2/ai2d_train_12k.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 12413
+  },
+  "ai2d_train_12k_new": {
+    "root": "pcluster:s3://multi_modal/playground/data/ai2d/",
+    "annotation": "playground/meta_v2/ai2d_train_12k_new.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 12413
+  },
+  "infovqa_train_25k": {
+    "root": "pcluster:s3://multi_modal/playground/data/infovqa/",
+    "annotation": "playground/meta_v2/infovqa_train_25k.jsonl",
+    "data_augment": false,
+    "repeat_time": 4,
+    "length": 25466,
+    "max_dynamic_patch": 12
+  },
+  "docvqa_train_56k": {
+    "root": "pcluster:s3://multi_modal/playground/data/docvqa/",
+    "annotation": "playground/meta_v2/docvqa_train_56k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 56259,
+    "max_dynamic_patch": 12
+  },
+  "geoqa+": {
+    "root": "pcluster:s3://multi_modal/playground/data/geoqa+/",
+    "annotation": "playground/meta_v2/geoqa+.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 72318
+  },
+  "synthdog_en": {
+    "root": "pcluster:s3://multi_modal/playground/data/synthdog-en/",
+    "annotation": "playground/meta_v2/synthdog_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29765
+  },
+  "ScienceQA": {
+    "root": "pcluster:s3://multi_modal",
+    "annotation": "playground/meta_v2/science_qa_choice_augment.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 34718
+  },
+  "ScienceQA_AUG": {
+    "root": "pcluster:s3://multi_modal",
+    "annotation": "playground/meta_v2/science_qa_multi_choice.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19024
+  },
+  "tqa": {
+    "root": "pcluster:s3://multi_modal/",
+    "annotation": "playground/meta_v2/tqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20117
+  },
+  "textcap_train_21k": {
+    "root": "pcluster:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "playground/meta_v2/textcap_train_21k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21461,
+    "max_dynamic_patch": 12
+  },
+  "llavar_train_20k": {
+    "root": "pcluster:s3://mm_dataset/LLaVAR/images/",
+    "annotation": "playground/meta_v2/llavar_train_20k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19800
+  },
+  "vsr_train_8k": {
+    "root": "pcluster:s3://multi_modal/coco/",
+    "annotation": "playground/meta_v2/vsr_train_8k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7680
+  },
+  "markdown_table": {
+    "root": "pcluster:s3://multi_modal/ocr_data/chart_data/png",
+    "annotation": "playground/meta_v2/chart_data_with_markdown.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 185541
+  },
+  "okvqa_train_9k": {
+    "root": "pcluster:s3://multi_modal/coco/train2014",
+    "annotation": "playground/meta_v2/okvqa_train_9k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 8996
+  },
+  "lrv_chart_7k": {
+    "root": "pcluster:s3://mm_dataset/LRV-Instruction/chart_image/",
+    "annotation": "playground/meta_v2/lrv_chart_7k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7311
+  },
+  "tabmwp": {
+    "root": "pcluster:s3://multi_modal/TabMWP/",
+    "annotation": "playground/meta_v2/tabmwp.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 74921
+  },
+  "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_0316": {
+    "root": "pcluster:s3://multi_modal/",
+    "annotation": "playground/meta_v2/ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_0316.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 457082
+  },
+  "laion_gpt4v_en_0316": {
+    "root": "pcluster:s3://multi_modal/laion_gpt4v/images/",
+    "annotation": "playground/meta_v2/laion_gpt4v_en_0316.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10950
+  },
+  "SystemConversations_en_0316": {
+    "root": "",
+    "annotation": "playground/meta_v2/SystemConversations_en_0316.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7020
+  },
+  "textocr_gpt4v_en_0316": {
+    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
+    "annotation": "playground/meta_v2/textocr_gpt4v_en_0316.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21407
+  },
+  "textvqa_train_21k_wo_ocr": {
+    "root": "pcluster:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "playground/meta_v2/textvqa_train_21k_wo_ocr.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21461,
+    "max_dynamic_patch": 12
+  },
+  "kvqa_24k": {
+    "root": "wwy_s_new:s3://xcomposer_data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/xc2/kvqa_24k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 24602
+  },
+  "viquae_3k": {
+    "root": "wwy_s_new:s3://xcomposer_data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/xc2/viquae_3k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 3697
+  },
+  "MetaMathQA_380k": {
+    "root": "wwy_s_new:s3://xcomposer_data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/xc2/MetaMathQA_380k.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.052,
+    "length": 20000
+  },
+  "MetaMathQA_wOCR_380k": {
+    "root": "wwy_s_new:s3://xcomposer_data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/xc2/MetaMathQA_wOCR_380k.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.052,
+    "length": 20000
+  },
+  "mmc_inst_qa_600k": {
+    "root": "wwy_s_new:s3://xcomposer_data/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/xc2/mmc_inst_qa_600k.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.0333,
+    "length": 20000,
+    "max_dynamic_patch": 12
+  },
+  "CLEVR_train": {
+    "root": "pcluster:s3://multi_modal/CLEVR/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/CLEVR_train.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 70000
+  },
+  "info_qa_0320": {
+    "root": "pcluster:s3://multi_modal/infographic-aug/",
+    "annotation": "./playground/meta_v2/info_qa_0320.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 4455,
+    "max_dynamic_patch": 12
+  },
+  "markdown_0320": {
+    "root": "pcluster:s3://multi_modal/infographic-aug/",
+    "annotation": "./playground/meta_v2/markdown_0320.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 4455,
+    "max_dynamic_patch": 12
+  },
+  "infographics_0319_5k_20240320_wBox_cz": {
+    "root": "pcluster:s3://ocr/infographics_0319_5k/images/",
+    "annotation": "./playground/meta_v2/infographics_0319_5k_20240320_wBox_cz.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 4501,
+    "max_dynamic_patch": 12
+  },
+
+  "refcoco_grounding": {
+    "root": "pcluster:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/refcoco_grounding.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 27676
+  },
+  "refcoco_grounding_aug": {
+    "root": "pcluster:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/refcoco_grounding_aug.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 141880
+  },
+  "toloka_grounding": {
+    "root": "pcluster:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/toloka_grounding.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 37522
+  },
+  "toloka_grounding_aug": {
+    "root": "pcluster:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/toloka_grounding_aug.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 37522
+  },
+  "Chat_GPT4GEN_RD_BoxCoT_valid": {
+    "root": "pcluster:s3://mm_dataset/flickr30k-images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/grounding/Chat_GPT4GEN_RD_BoxCoT_valid.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 3756
+  }
+}

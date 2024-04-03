@@ -1,0 +1,111 @@
+{
+  "sharegpt4v_instruct_gpt4-vision_cap100k": {
+    "root": "pcluster:s3://multi_modal/playground/data/",
+    "annotation": "playground/meta_v1/sharegpt4v_instruct_gpt4-vision_cap100k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 102025
+  },
+  "llava_instruct_150k_zh": {
+    "root": "pcluster:s3://multi_modal/playground/data/coco/",
+    "annotation": "playground/meta_v1/llava_instruct_150k_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 157712
+  },
+  "sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k": {
+    "root": "pcluster:s3://multi_modal/playground/data/",
+    "annotation": "playground/meta_v1/sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 665058
+  },
+  "dvqa_train_200k": {
+    "root": "pcluster:s3://multi_modal/playground/data/dvqa/",
+    "annotation": "playground/meta_v1/dvqa_train_200k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 200000
+  },
+  "chartqa_trainval_30k_w_csv": {
+    "root": "pcluster:s3://multi_modal/playground/data/chartqa/",
+    "annotation": "playground/meta_v1/chartqa_trainval_30k_w_csv.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 30219,
+    "max_dynamic_patch": 12
+  },
+  "ai2d_train_12k": {
+    "root": "pcluster:s3://multi_modal/playground/data/ai2d/",
+    "annotation": "playground/meta_v1/ai2d_train_12k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12413
+  },
+  "ai2d_train_12k_new": {
+    "root": "pcluster:s3://multi_modal/playground/data/ai2d/",
+    "annotation": "playground/meta_v1/ai2d_train_12k_new.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 12413
+  },
+  "infovqa_train_25k": {
+    "root": "pcluster:s3://multi_modal/playground/data/infovqa/",
+    "annotation": "playground/meta_v1/infovqa_train_25k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 25466,
+    "max_dynamic_patch": 12
+  },
+  "docvqa_train_56k": {
+    "root": "pcluster:s3://multi_modal/playground/data/docvqa/",
+    "annotation": "playground/meta_v1/docvqa_train_56k.jsonl",
+    "data_augment": false,
+    "repeat_time": 2,
+    "length": 56259,
+    "max_dynamic_patch": 12
+  },
+  "geoqa+": {
+    "root": "pcluster:s3://multi_modal/playground/data/geoqa+/",
+    "annotation": "playground/meta_v1/geoqa+.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 72318
+  },
+  "synthdog_en": {
+    "root": "pcluster:s3://multi_modal/playground/data/synthdog-en/",
+    "annotation": "playground/meta_v1/synthdog_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29765
+  },
+  "ScienceQA": {
+    "root": "hzh:s3://multi_modal",
+    "annotation": "playground/meta_v1/science_qa_choice_augment.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 34718
+  },
+  "ScienceQA_AUG": {
+    "root": "hzh:s3://multi_modal",
+    "annotation": "playground/meta_v1/science_qa_multi_choice.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19024
+  },
+  "tqa": {
+    "root": "hzh:s3://multi_modal/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/tqa.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 20117
+  },
+  "textcap_train_21k": {
+    "root": "hzh:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/textcap_train_21k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21461,
+    "max_dynamic_patch": 12
+  }
+}

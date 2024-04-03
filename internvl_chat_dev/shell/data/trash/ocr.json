@@ -1,0 +1,226 @@
+{
+  "TextVQA_cn_ICDAR2019_ArT_task1_3_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ArT/task1&3/train_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2019_ArT_task1_3_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 5585
+  },
+  "TextVQA_cn_ICDAR2019_ArT_task1_3_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ArT/task1&3/train_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2019_ArT_task1_3_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 5585
+  },
+  "TextVQA_cn_CASIA_train_cat_v2.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/CASIA/cat_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_CASIA_train_cat_v2.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2193
+  },
+  "TextVQA_cn_CASIA_train_cat_v2.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/CASIA/cat_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_CASIA_train_cat_v2.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 2193
+  },
+  "chart_dataset_v1.0": {
+    "root": "pcluster:s3://ocr/ocr_data/ChartQA/train/png/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/chart_dataset_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 5842
+  },
+  "chart_Chart_to_Text_v1_merge_v1.0": {
+    "root": "pcluster:s3://ocr/table/Chart-to-text/statista_dataset/dataset/imgs/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/chart_Chart_to_Text_v1_merge_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 27714
+  },
+  "TextVQA_cn_Chinese_OCR_train_cat_v3.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/Chinese-OCR/cat_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_Chinese_OCR_train_cat_v3.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 55538
+  },
+  "TextVQA_cn_Chinese_OCR_train_cat_v3.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/Chinese-OCR/cat_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_Chinese_OCR_train_cat_v3.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 55538
+  },
+  "TextVQA_en_cocotextv2_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/coco/train2014/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_cocotextv2_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 16311
+  },
+  "TextVQA_en_cocotextv2_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/coco/train2014/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_cocotextv2_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 16311
+  },
+  "TextVQA_cn_CTW_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/CTW/images-trainval/ctw-images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_CTW_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 24280
+  },
+  "TextVQA_cn_CTW_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/CTW/images-trainval/ctw-images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_CTW_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 24280
+  },
+  "chart_DocVQA_v1_merge_v1.0": {
+    "root": "pcluster:s3://ocr/20240223/DocVQA/train/train/documents/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/chart_DocVQA_v1_merge_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10196
+  },
+  "TextVQA_en_DocVQA_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/20240223/DocVQA/train/train/documents/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_DocVQA_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10194
+  },
+  "TextVQA_en_DocVQA_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/20240223/DocVQA/train/train/documents/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_DocVQA_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10194
+  },
+  "TextVQA_cn_eaten_business_v1.0 ": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/EATEN/dataset_business/train/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_eaten_business_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 198000
+  },
+  "TextVQA_cn_eaten_passport_v1.0": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/EATEN/dataset_passport/train/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_eaten_passport_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 98000
+  },
+  "TextVQA_cn_eaten_trainticket_v1.0": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/EATEN/dataset_trainticket/train/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_eaten_trainticket_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 300000
+  },
+  "TextVQA_cn_ICDAR2019_LSVT_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-LSVT/train-full/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2019_LSVT_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29814
+  },
+  "TextVQA_cn_ICDAR2019_LSVT_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-LSVT/train-full/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2019_LSVT_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29814
+  },
+  "TextVQA_cn_MTWI_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/MTWI/image_train/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_MTWI_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 9687
+  },
+  "TextVQA_cn_MTWI_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/MTWI/image_train/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_MTWI_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 9687
+  },
+  "TextVQA_en_naf_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/naf/NAF_dataset/groups/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_naf_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 865
+  },
+  "chart_PlotQA1_v1_merge_2.0_v1.0": {
+    "root": "pcluster:s3://ocr/table/PlotQA/png/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/chart_PlotQA1_v1_merge_2.0_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 272727
+  },
+  "TextVQA_cn_ICDAR2017_RCTW_17_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2017-RCTW-17/train/train_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2017_RCTW_17_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7979
+  },
+  "TextVQA_cn_ICDAR2017_RCTW_17_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2017-RCTW-17/train/train_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2017_RCTW_17_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 7979
+  },
+  "TextVQA_cn_ICDAR2019_ReCTS_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ReCTS/img/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2019_ReCTS_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19858
+  },
+  "TextVQA_cn_ICDAR2019_ReCTS_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ReCTS/img/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_cn_ICDAR2019_ReCTS_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 19858
+  },
+  "TextVQA_en_textocr_train_v1.0_wBox": {
+    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_textocr_train_v1.0_wBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21412
+  },
+  "TextVQA_en_textocr_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_textocr_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 21412
+  },
+  "chart_UniChart_v2_merge_v1.0": {
+    "root": "pcluster:s3://ocr/20240223/UniChart/content/UniChart_Images/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/chart_UniChart_v2_merge_v1.0.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 504900
+  },
+  "TextVQA_en_wildreceipt_train_v1.0_woBox": {
+    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/wildreceipt/wildreceipt/image_files/",
+    "annotation": "data/metas/tianhao_data/v1_20240318_updateRoot_std/TextVQA_en_wildreceipt_train_v1.0_woBox.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1267
+  }
+}
