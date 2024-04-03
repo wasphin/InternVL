@@ -423,7 +423,7 @@ logger = logging.getLogger(__name__)
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-f = open('shell/data/data_yi34b_finetune_v5_15_langchao.json')
+f = open('shell/data/data_yi34b_finetune_v5_16.json')
 data = json.load(f)
 ds_collections = {}
 for k, v in data.items():
@@ -580,23 +580,23 @@ class LazySupervisedDataset(Dataset):
     def __getitem__(self, i) -> Dict[str, torch.Tensor]:
         i = i % len(self.raw_data)
         while True:
-            # try:
-            data_item = json.loads(self.raw_data[i])
-            if 'image' in data_item and len(data_item['image']) != 0:
-                ret = self.multi_modal_get_item(data_item)
-            else:
-                ret = self.pure_text_get_item(data_item)
-            break
-            # except Exception as e:
-            #     logger.info(e)
-            #     data_item = json.loads(self.raw_data[i])
-            #     if 'image' in data_item:
-            #         if data_item['image'].startswith('s3://'):
-            #             data_path = self.root + data_item['image']
-            #         else:
-            #             data_path = os.path.join(self.root, data_item['image'])
-            #         print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
-            #     i = random.randint(0, len(self.raw_data) - 1)
+            try:
+                data_item = json.loads(self.raw_data[i])
+                if 'image' in data_item and len(data_item['image']) != 0:
+                    ret = self.multi_modal_get_item(data_item)
+                else:
+                    ret = self.pure_text_get_item(data_item)
+                break
+            except Exception as e:
+                logger.info(e)
+                data_item = json.loads(self.raw_data[i])
+                if 'image' in data_item:
+                    if data_item['image'].startswith('s3://'):
+                        data_path = self.root + data_item['image']
+                    else:
+                        data_path = os.path.join(self.root, data_item['image'])
+                    print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
+                i = random.randint(0, len(self.raw_data) - 1)
         return ret
 
 
