@@ -177,8 +177,7 @@ class InternVLChatModel(PreTrainedModel):
             vit_embeds = vit_embeds.reshape(-1, C)
             print(f'warning: {e}, input_embeds[selected].shape={input_embeds[selected].shape}, '
                   f'vit_embeds.shape={vit_embeds.shape}')
-            n_token = min(selected.sum(), vit_embeds.shape[0])
-            selected = selected[:n_token]
+            n_token = selected.sum()
             input_embeds[selected] = input_embeds[selected] * 0.0 + vit_embeds[:n_token]
 
         input_embeds = input_embeds.reshape(B, N, C)

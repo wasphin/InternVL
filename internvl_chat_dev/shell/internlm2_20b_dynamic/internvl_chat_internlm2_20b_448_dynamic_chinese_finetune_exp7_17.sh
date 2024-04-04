@@ -1,6 +1,6 @@
 set -x
 
-PARTITION=${PARTITION:-"VC2"}
+PARTITION=${PARTITION:-"INTERN2"}
 GPUS=${GPUS:-256}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
@@ -34,6 +34,7 @@ srun -p ${PARTITION} \
   --cpus-per-task=${CPUS_PER_TASK} \
   --kill-on-bad-exit=1 \
   --quotatype=${QUOTA_TYPE} \
+  --jobid 2718475 \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
   --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain2/checkpoint-2400_replace_llm" \

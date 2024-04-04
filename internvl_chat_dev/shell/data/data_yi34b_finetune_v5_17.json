@@ -149,7 +149,7 @@
     "root": "langchao:s3://mm_dataset/DocOwl/DocReason25K/imgs/",
     "annotation": "metas/stage3_v5_20240403_std/academic/DocReason_20240402_v1_r25877_20240403_v1.jsonl",
     "data_augment": false,
-    "repeat_time": 1,
+    "repeat_time": 2,
     "length": 25877,
     "max_dynamic_patch": 12
   },
@@ -201,6 +201,13 @@
     "data_augment": false,
     "repeat_time": 1,
     "length": 457130
+  },
+  "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_zh_20240402": {
+    "root": "langchao:s3://multi_modal/allava_laion/",
+    "annotation": "metas/stage3_v5_20240403_std/gpt4v_data/ALLaVA-Instruct-MultiRound-Cap-LAION-4V_zh_20240402.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 9785
   },
   "laion_gpt4v_en_20240402": {
     "root": "langchao:s3://multi_modal/laion_gpt4v/images/",
@@ -383,21 +390,21 @@
     "root": "wwy_s_new:s3://xcomposer_data/",
     "annotation": "metas/stage3_v5_20240403_std/xc2/viquae_3k_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 1,
+    "repeat_time": 2,
     "length": 3697
   },
   "MetaMathQA_380k_en_20240402": {
     "root": "wwy_s_new:s3://xcomposer_data/",
     "annotation": "metas/stage3_v5_20240403_std/xc2/MetaMathQA_380k_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 0.1,
+    "repeat_time": 0.05,
     "length": 382225
   },
   "MetaMathQA_wOCR_380k_en_20240402": {
     "root": "wwy_s_new:s3://xcomposer_data/",
     "annotation": "metas/stage3_v5_20240403_std/xc2/MetaMathQA_wOCR_380k_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 0.1,
+    "repeat_time": 0.05,
     "length": 382225
   },
   "mmc_inst_qa_600k_en_20240402": {
@@ -435,6 +442,41 @@
     "data_augment": false,
     "repeat_time": 1,
     "length": 33334
+  },
+  "higher_edu_max_turn_5_zh_20240404": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240403_std/nlp_data/higher_edu_max_turn_5_zh_20240404.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.038,
+    "length": 261660
+  },
+  "exam_max_turn_5_zh_20240404": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240403_std/nlp_data/exam_max_turn_5_zh_20240404.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.011,
+    "length": 864552
+  },
+  "k12_max_turn_5_zh_20240404": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240403_std/nlp_data/k12_max_turn_5_zh_20240404.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.355,
+    "length": 28223
+  },
+  "vocational_edu_max_turn_5_zh_20240404": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240403_std/nlp_data/vocational_edu_max_turn_5_zh_20240404.jsonl",
+    "data_augment": false,
+    "repeat_time": 0.037,
+    "length": 267164
+  },
+  "openhermes2_5_en_20240404": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240403_std/nlp_data/openhermes2_5_en_20240404.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 200308
   },
   "markdown_table": {
     "root": "langchao:s3://multi_modal/ocr_data/chart_data/png",
@@ -608,14 +650,14 @@
     "root": "langchao:s3://multi_modal/playground/data/dvqa/",
     "annotation": "metas/stage3_v5_20240403_std/mathvista_indomain/dvqa_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 1,
+    "repeat_time": 0.5,
     "length": 200000
   },
   "tabmwp_en_20240402": {
     "root": "langchao:s3://multi_modal/TabMWP/",
     "annotation": "metas/stage3_v5_20240403_std/mathvista_indomain/tabmwp_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 1,
+    "repeat_time": 0.5,
     "length": 74921
   },
   "tqa_en_20240402": {

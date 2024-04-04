@@ -21,14 +21,14 @@ if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 128
+# number of gpus: 256
 # batch size per gpu: 4
 # gradient accumulation steps: 1
-# total batch size: 512
+# total batch size: 1024
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:0 \
-  -w SH-IDC1-10-140-37-[104,106,110-112,115,118,126,128-131,135-136,139,148,67-69,71-80,82,99,103] \
+  -w SH-IDC1-10-140-37-[13-14,18-19,22-23,31,33,43,46,50-55,57-63,66,81,83,91,132,142-143,149-150] \
   --nodes=${NODES} \
   --ntasks=${GPUS} \
   --ntasks-per-node=${GPUS_PER_NODE} \
