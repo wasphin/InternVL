@@ -13,13 +13,6 @@
     "repeat_time": 1,
     "length": 72140
   },
-  "llava_instruct_150k_zh_20240402": {
-    "root": "langchao:s3://multi_modal/playground/data/coco/",
-    "annotation": "metas/stage3_v5_20240403_std/academic/llava_instruct_150k_zh_20240402.jsonl",
-    "data_augment": false,
-    "repeat_time": 1,
-    "length": 157712
-  },
   "chartqa_trainval_30k_w_csv_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/chartqa/",
     "annotation": "metas/stage3_v5_20240403_std/academic/chartqa_trainval_30k_w_csv_en_20240402.jsonl",
@@ -62,7 +55,7 @@
     "root": "langchao:s3://multi_modal/playground/data/docvqa/",
     "annotation": "metas/stage3_v5_20240403_std/academic/docvqa_train_56k_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 4,
+    "repeat_time": 2,
     "length": 56259,
     "max_dynamic_patch": 12
   },
@@ -113,7 +106,7 @@
     "root": "langchao:s3://multi_modal/coco/train2014",
     "annotation": "metas/stage3_v5_20240403_std/academic/okvqa_train_9k_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 1,
+    "repeat_time": 2,
     "length": 8996
   },
   "lrv_chart_7k_en_20240402": {
@@ -154,28 +147,28 @@
     "max_dynamic_patch": 12
   },
   "art500k_train_30k_en_20240403": {
-    "root": "playground/data/art500k/",
+    "root": "langchao:s3://multi_modal/playground/data/art500k/",
     "annotation": "metas/stage3_v5_20240403_std/academic/art500k_train_30k_en_20240403.jsonl",
     "data_augment": false,
     "repeat_time": 0.16,
     "length": 30046
   },
   "movienet_train_27k_en_20240403": {
-    "root": "playground/data/movienet/",
+    "root": "langchao:s3://multi_modal/playground/data/movienet/",
     "annotation": "metas/stage3_v5_20240403_std/academic/movienet_train_27k_en_20240403.jsonl",
     "data_augment": false,
     "repeat_time": 0.18,
     "length": 26890
   },
   "koniq_10k_train_22k_en_20240403": {
-    "root": "playground/data/koniq-10k/",
+    "root": "langchao:s3://multi_modal/playground/data/koniq-10k/",
     "annotation": "metas/stage3_v5_20240403_std/academic/koniq_10k_train_22k_en_20240403.jsonl",
     "data_augment": false,
     "repeat_time": 0.25,
     "length": 21984
   },
   "objects365_train_7k_en_20240403": {
-    "root": "playground/data/objects365/",
+    "root": "langchao:s3://Objects365/",
     "annotation": "metas/stage3_v5_20240403_std/academic/objects365_train_7k_en_20240403.jsonl",
     "data_augment": false,
     "repeat_time": 1,
@@ -657,7 +650,7 @@
     "root": "langchao:s3://multi_modal/TabMWP/",
     "annotation": "metas/stage3_v5_20240403_std/mathvista_indomain/tabmwp_en_20240402.jsonl",
     "data_augment": false,
-    "repeat_time": 0.5,
+    "repeat_time": 1,
     "length": 74921
   },
   "tqa_en_20240402": {
