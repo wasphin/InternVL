@@ -101,6 +101,7 @@ class MMMUDataset(torch.utils.data.Dataset):
         if len(choice_txt) > 0:
             question += '\n' + choice_txt
         question += '\n' + self.prompt[question_type]
+        question = question.strip()
 
         return {
             'question': question,
