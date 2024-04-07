@@ -309,6 +309,7 @@ class InternVisionModel(PreTrainedModel):
         pos_emb = pos_emb.to(cls_emb.dtype).reshape(1, embed_dim, -1).permute(0, 2, 1)
         pos_emb = torch.cat([cls_emb, pos_emb], dim=1)
         self.embeddings.position_embedding = nn.Parameter(pos_emb)
+        self.embeddings.image_size = new_size
         logger.info('Resized position embeddings from {} to {}'.format(old_size, new_size))
 
     def get_input_embeddings(self):

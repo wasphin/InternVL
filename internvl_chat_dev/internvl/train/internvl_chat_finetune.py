@@ -34,7 +34,7 @@ from internvl.train.dataset import (ConcatDataset, TCSLoader,
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
-from transformers import (AutoConfig, AutoModel, AutoTokenizer,
+from transformers import (AutoConfig, AutoModelForCausalLM, AutoTokenizer,
                           HfArgumentParser, LlamaConfig, LlamaForCausalLM,
                           LlamaTokenizer, Trainer, TrainingArguments,
                           default_data_collator, set_seed)
@@ -513,7 +513,7 @@ def main():
         logger.info('Loading LLaMA...')
         llm_config = AutoConfig.from_pretrained(model_args.llm_path, trust_remote_code=True)
         llm_config.attn_implementation = 'flash_attention_2'
-        llm = AutoModel.from_pretrained(
+        llm = AutoModelForCausalLM.from_pretrained(
             model_args.llm_path, torch_dtype=torch.bfloat16,
             config=llm_config, trust_remote_code=True)
         logger.info('Building InternVLChatConfig...')
@@ -538,8 +538,13 @@ def main():
     logger.info('Finished')
 
     patch_size = model.config.vision_config.patch_size
-    if model.config.force_image_size != data_args.force_image_size and \
-            model.config.vision_config.image_size != data_args.force_image_size:
+    logger.info(f'model.config.force_image_size: {model.config.force_image_size}')
+    logger.info(f'data_args.force_image_size: {data_args.force_image_size}')
+    logger.info(f'model.config.vision_config.image_size: {model.config.vision_config.image_size}')
+    if model.config.vision_config.image_size != data_args.force_image_size:
+        logger.info(f'Resizing position embedding from '
+                    f'{model.config.vision_config.image_size} '
+                    f'to {data_args.force_image_size}...')
         model.vision_model.resize_pos_embeddings(old_size=model.config.vision_config.image_size,
                                                  new_size=data_args.force_image_size,
                                                  patch_size=patch_size)

@@ -95,18 +95,18 @@ class InternVLChatModel(PreTrainedModel):
         llm_hidden_size = config.llm_config.hidden_size
 
         self.mlp1 = nn.Sequential(
-            nn.LayerNorm(vit_hidden_size * 4),
-            nn.Linear(vit_hidden_size * 4, llm_hidden_size),
+            nn.LayerNorm(vit_hidden_size * int(1 / self.downsample_ratio) ** 2),
+            nn.Linear(vit_hidden_size * int(1 / self.downsample_ratio) ** 2, llm_hidden_size),
             nn.GELU(),
             nn.Linear(llm_hidden_size, llm_hidden_size)
         )
 
-        if config.force_image_size != config.vision_config.image_size:
-            self.vision_model.resize_pos_embeddings(
-                old_size=config.vision_config.image_size,
-                new_size=config.force_image_size,
-                patch_size=config.vision_config.patch_size
-            )
+        # if config.force_image_size != config.vision_config.image_size:
+        #     self.vision_model.resize_pos_embeddings(
+        #         old_size=config.vision_config.image_size,
+        #         new_size=config.force_image_size,
+        #         patch_size=config.vision_config.patch_size
+        #     )
 
         self.img_context_token_id = None
         self.neftune_alpha = None
