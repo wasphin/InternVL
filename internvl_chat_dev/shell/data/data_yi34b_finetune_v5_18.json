@@ -384,7 +384,7 @@
     "root": "wwy_s_new:s3://xcomposer_data/",
     "annotation": "metas/stage3_v5_20240403_std/xc2/Baidu_Baike_500k_zh_20240402_filtered.jsonl",
     "data_augment": false,
-    "repeat_time": 1.0,
+    "repeat_time": 1,
     "length": 76935
   },
   "SystemConversations_en_20240402": {

@@ -57,14 +57,6 @@
     "length": 25466,
     "max_dynamic_patch": 12
   },
-  "infovqa_train_25k_repeat": {
-    "root": "pcluster:s3://multi_modal/playground/data/infovqa/",
-    "annotation": "playground/meta_v2/infovqa_train_25k.jsonl",
-    "data_augment": false,
-    "repeat_time": 1,
-    "length": 25466,
-    "max_dynamic_patch": 14
-  },
   "docvqa_train_56k": {
     "root": "pcluster:s3://multi_modal/playground/data/docvqa/",
     "annotation": "playground/meta_v2/docvqa_train_56k.jsonl",
@@ -239,10 +231,18 @@
   },
   "markdown_0320": {
     "root": "pcluster:s3://multi_modal/infographic-aug/",
-    "annotation": "./playground/meta_v2/markdown_0320.jsonl",
+    "annotation": "playground/meta_v2/markdown_0320.jsonl",
     "data_augment": false,
     "repeat_time": 1,
     "length": 4455,
-    "max_dynamic_patch": 14
+    "max_dynamic_patch": 12
+  },
+  "markdown_v2_0327": {
+    "root": "/mnt/petrelfs/share_data/wangweiyun/playground/data/infographic-aug/",
+    "annotation": "playground/meta_v2/markdown_v2_0327.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 10025,
+    "max_dynamic_patch": 12
   }
 }
