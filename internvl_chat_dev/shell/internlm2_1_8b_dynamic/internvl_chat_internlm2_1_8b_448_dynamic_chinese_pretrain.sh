@@ -15,15 +15,15 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_1_7b_448_dynamic_chinese_pretrain'
+OUTPUT_DIR='work_dirs/internvl_chat_internlm2_1_8B_448_dynamic_chinese_pretrain'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
 # number of gpus: 32
-# batch size per gpu: 64
-# gradient accumulation steps: 1
+# batch size per gpu: 8
+# gradient accumulation steps: 8
 # total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
@@ -41,7 +41,7 @@ srun -p ${PARTITION} \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
-  --overwrite_output_dir False \
+  --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
