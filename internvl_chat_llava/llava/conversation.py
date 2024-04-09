@@ -133,7 +133,7 @@ class Conversation:
     def append_message(self, role, message):
         self.messages.append([role, message])
 
-    def get_images(self, return_pil=False):
+    def get_images(self, return_pil=False, return_org=False):
         images = []
         for i, (role, msg) in enumerate(self.messages[self.offset:]):
             if i % 2 == 0:
@@ -142,6 +142,7 @@ class Conversation:
                     from io import BytesIO
                     from PIL import Image
                     msg, image, image_process_mode = msg
+                    org_image = image.copy()
                     print(f"image_process_mode: {image_process_mode}")
                     if image_process_mode == "Pad":
                         def expand2square(pil_img, background_color=(122, 116, 104)):
@@ -179,10 +180,16 @@ class Conversation:
                                 H, W = shortest_edge, longest_edge
                             image = image.resize((W, H))
                     if return_pil:
-                        images.append(image)
+                        if return_org:
+                            images.append(image)
+                        else:
+                            images.append(org_image)
                     else:
                         buffered = BytesIO()
-                        image.save(buffered, format="PNG")
+                        if return_org:
+                            org_image.save(buffered, format="JPEG")
+                        else:
+                            image.save(buffered, format="PNG")
                         img_b64_str = base64.b64encode(buffered.getvalue()).decode()
                         images.append(img_b64_str)
         return images
