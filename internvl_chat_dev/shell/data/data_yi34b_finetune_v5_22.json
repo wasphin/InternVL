@@ -495,6 +495,62 @@
     "repeat_time": 1,
     "length": 20000
   },
+  "chat_alpaca_gpt4_zh": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat_alpaca_gpt4_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 48818
+  },
+  "chat_leetcode_en_2k": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat_leetcode_en_2k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 1761
+  },
+  "chat_math_en": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat_math_en.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_math_zh": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat_math_zh.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "sharegpt_zh_34K_0701": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/sharegpt_zh_34K_0701.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 26308
+  },
+  "chat_lima_coedit": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat_lima_coedit.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 83300
+  },
+  "chat-firefly-train-1M": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat-firefly-train-1M.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
+  "chat_ultra": {
+    "root": "",
+    "annotation": "metas/stage3_v5_20240410_std/nlp_data/chat_ultra.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 189918
+  },
   "markdown_table": {
     "root": "langchao:s3://multi_modal/ocr_data/chart_data/png",
     "annotation": "metas/stage3_v5_20240410_std/ocr/chart_data_with_markdown.jsonl",

@@ -276,7 +276,7 @@ class InternVLChatModel(PreTrainedModel):
         vit_embeds = self.mlp1(vit_embeds)
         return vit_embeds
 
-    def chat(self, tokenizer, pixel_values, question, generation_config,
+    def chat(self, tokenizer, pixel_values, question, generation_config, history=None, return_history=False,
              IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>'):
 
         img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
@@ -290,9 +290,16 @@ class InternVLChatModel(PreTrainedModel):
 
         template = get_conv_template(self.template)
         image_bs = pixel_values.shape[0]
-        image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * image_bs + IMG_END_TOKEN
         print(f'dynamic ViT batch size: {image_bs}')
-        template.append_message(template.roles[0], image_tokens + '\n' + question)
+        if history is None:
+            history = []
+            image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * image_bs + IMG_END_TOKEN
+            question = image_tokens + '\n' + question
+        else:
+            for (old_question, old_answer) in history:
+                template.append_message(template.roles[0], old_question)
+                template.append_message(template.roles[1], old_answer)
+        template.append_message(template.roles[0], question)
         template.append_message(template.roles[1], None)
         query = template.get_prompt()
         model_inputs = tokenizer(query, return_tensors='pt')
@@ -307,8 +314,13 @@ class InternVLChatModel(PreTrainedModel):
         )
         response = tokenizer.batch_decode(generation_output, skip_special_tokens=True)[0]
         response = response.split('<|im_end|>')[0].strip()  # for InternLM2
-        query_to_print = query.replace(image_tokens, '<image>')
-        print(query_to_print, response)
+        history.append((question, response))
+        if return_history:
+            return response, history
+        else:
+            query_to_print = query.replace(image_tokens, '<image>')
+            print(query_to_print, response)
+            return response
         return response
 
     @torch.no_grad()
