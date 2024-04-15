@@ -1,11 +1,11 @@
 set -x
 
-PARTITION=${PARTITION:-"VC2"}
+PARTITION=${PARTITION:-"INTERN2"}
 GPUS=${GPUS:-256}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
-CPUS_PER_TASK=${CPUS_PER_TASK:-15}
+CPUS_PER_TASK=${CPUS_PER_TASK:-1}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-1024}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34229
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7_22'
+OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7_22_2'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -33,8 +33,8 @@ srun -p ${PARTITION} \
   --ntasks-per-node=${GPUS_PER_NODE} \
   --cpus-per-task=${CPUS_PER_TASK} \
   --kill-on-bad-exit=1 \
-  -x SH-IDC1-10-140-37-[68,69] \
   --quotatype=${QUOTA_TYPE} \
+  --jobid 2810883 \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
   --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain4/checkpoint-800" \
@@ -60,7 +60,7 @@ srun -p ${PARTITION} \
   --save_strategy "steps" \
   --save_steps 200 \
   --save_total_limit 3 \
-  --learning_rate 2e-5 \
+  --learning_rate 1e-5 \
   --weight_decay 0.05 \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
