@@ -73,7 +73,7 @@ class ModelWorker:
             crop_size=self.image_size, do_center_crop=True, do_normalize=True, do_resize=True,
             image_mean=[0.485, 0.456, 0.406], image_std=[0.229, 0.224, 0.225], size=self.image_size
         )
-        self.context_len = 8192
+        self.context_len = 12800
         self.is_multimodal = True
 
         if not no_register:
@@ -134,6 +134,8 @@ class ModelWorker:
         tokenizer, model, image_processor = self.tokenizer, self.model, self.image_processor
 
         prompt = params['prompt']
+        max_input_tiles = params['max_input_tiles']
+        logger.info(f'max_input_tiles: {max_input_tiles}')
         ori_prompt = prompt
         images = params.get('images', None)
         num_image_tokens = 0
@@ -146,7 +148,7 @@ class ModelWorker:
                 images = [load_image_from_base64(image) for image in images]
                 if model.config.dynamic_image_size:
                     images = dynamic_preprocess(
-                        images[0], image_size=self.image_size, max_num=12,
+                        images[0], image_size=self.image_size, max_num=max_input_tiles,
                         use_thumbnail=model.config.use_thumbnail)
                 images = [item.resize((self.image_size, self.image_size)) for item in images]
                 logger.info(f'Resize images to {self.image_size}x{self.image_size}')
@@ -175,8 +177,8 @@ class ModelWorker:
 
         temperature = float(params.get('temperature', 1.0))
         top_p = float(params.get('top_p', 1.0))
-        max_context_length = getattr(model.config, 'max_position_embeddings', 4096)
-        max_new_tokens = min(int(params.get('max_new_tokens', 256)), 1024)
+        max_context_length = getattr(model.config, 'max_position_embeddings', 16384)
+        max_new_tokens = int(params.get('max_new_tokens', 1024))
         stop_str = params.get('stop', None)
         do_sample = True if temperature > 0.001 else False
         logger.info(f'num_image_tokens: {num_image_tokens}')
