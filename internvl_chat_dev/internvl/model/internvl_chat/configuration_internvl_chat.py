@@ -31,7 +31,6 @@ class InternVLChatConfig(PretrainedConfig):
             force_image_size=None,
             downsample_ratio=0.5,
             template=None,
-            image_fold=False,
             dynamic_image_size=False,
             use_thumbnail=False,
             ps_version='v1',
@@ -62,7 +61,6 @@ class InternVLChatConfig(PretrainedConfig):
         self.force_image_size = force_image_size
         self.downsample_ratio = downsample_ratio
         self.template = template
-        self.image_fold = image_fold
         self.dynamic_image_size = dynamic_image_size
         self.use_thumbnail = use_thumbnail
         self.ps_version = ps_version  # pixel shuffle version
@@ -70,7 +68,6 @@ class InternVLChatConfig(PretrainedConfig):
         self.max_dynamic_patch = max_dynamic_patch
 
         logger.info(f'vision_select_layer: {self.select_layer}')
-        logger.info(f'image_fold: {self.image_fold}')
         logger.info(f'ps_version: {self.ps_version}')
         logger.info(f'min_dynamic_patch: {self.min_dynamic_patch}')
         logger.info(f'max_dynamic_patch: {self.max_dynamic_patch}')
@@ -93,7 +90,6 @@ class InternVLChatConfig(PretrainedConfig):
         output['force_image_size'] = self.force_image_size
         output['downsample_ratio'] = self.downsample_ratio
         output['template'] = self.template
-        output['image_fold'] = self.image_fold
         output['dynamic_image_size'] = self.dynamic_image_size
         output['use_thumbnail'] = self.use_thumbnail
         output['ps_version'] = self.ps_version

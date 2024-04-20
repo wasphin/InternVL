@@ -12,10 +12,9 @@ import torch
 from internvl.model.internvl_chat import InternVLChatModel
 from internvl.train.dataset import build_transform, dynamic_preprocess
 from PIL import Image
+from textvqa_eval import TextVQAAccuracyEvaluator
 from tqdm import tqdm
 from transformers import AutoTokenizer
-from vqa import VQA
-from vqa_eval import VQAEval
 
 ds_collections = {
     'vqav2_val': {
@@ -121,7 +120,7 @@ ds_collections = {
     },
     'ai2diagram_test': {
         'train': 'data/ai2diagram/train.jsonl',
-        'test': 'data/ai2diagram/test.jsonl',
+        'test': 'data/ai2diagram/test_vlmevalkit.jsonl',
         'metric': 'accuracy',
         'max_new_tokens': 10,
     },
@@ -434,16 +433,19 @@ def evaluate_chat_model():
             print('Results saved to {}'.format(results_file))
 
             if ds_collections[ds_name]['metric'] == 'vqa_score':
-                vqa = VQA(ds_collections[ds_name]['annotation'],
-                          ds_collections[ds_name]['question'])
-                results = vqa.loadRes(
-                    resFile=results_file,
-                    quesFile=ds_collections[ds_name]['question'])
-                vqa_scorer = VQAEval(vqa, results, n=2)
-                vqa_scorer.evaluate()
-
-                print(ds_name, vqa_scorer.accuracy)
-                summaries.append([args.checkpoint, ds_name, vqa_scorer.accuracy])
+                evaluator = TextVQAAccuracyEvaluator()
+                annotation = json.load(open(ds_collections[ds_name]['annotation'], 'r'))['annotations']
+                question_id2answers = {}
+                for item in annotation:
+                    question_id = item['question_id']
+                    answers = [answer['answer'] for answer in item['answers']]
+                    question_id2answers[question_id] = answers
+                for item in merged_outputs:
+                    item['pred_answer'] = item['answer']
+                    item['gt_answers'] = question_id2answers[item['question_id']]
+                accuracy = evaluator.eval_pred_list(merged_outputs)
+                print(ds_name, accuracy)
+                summaries.append([args.checkpoint, ds_name, accuracy])
 
             elif ds_collections[ds_name]['metric'] == 'anls':
                 json.dump(merged_outputs,

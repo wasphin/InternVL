@@ -72,9 +72,8 @@ class MMMUDataset(torch.utils.data.Dataset):
 
         data = process_single_sample(self.data[idx])
         data_id = data['id']
-        question = data['question'].replace('<image 1>', '')
-        # question = '<image>\n' + question
-        image = data['image']
+        question = data['question'].strip()
+        pil_images = data['image']
         question_type = data['question_type']
 
         choices = eval(data['options'])
@@ -82,19 +81,21 @@ class MMMUDataset(torch.utils.data.Dataset):
 
         choice_list = []
         options = {}
-        multiple_choices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+        multiple_choices = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M']
         for i, c in enumerate(choices):
             choice_list.append('{}. {}'.format(multiple_choices[i], c.strip()))
             options[multiple_choices[i]] = c.strip()
         choice_txt = '\n'.join(choice_list)
-
         if self.dynamic_image_size:
-            images = dynamic_preprocess(image, image_size=self.input_size,
-                                        use_thumbnail=self.use_thumbnail,
-                                        max_num=self.max_num)
+            images = []
+            for idx, pil_image in enumerate(pil_images):
+                if pil_image is not None:
+                    pil_image = dynamic_preprocess(pil_image, image_size=self.input_size,
+                                                   use_thumbnail=self.use_thumbnail,
+                                                   max_num=self.max_num)
+                    images += pil_image
         else:
-            images = [image]
+            images = [pil_images[0]]
         pixel_values = [self.transform(image) for image in images]
         pixel_values = torch.stack(pixel_values)
 
