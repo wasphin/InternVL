@@ -9,15 +9,18 @@ from typing import Dict, Optional
 
 import torch
 import torch.distributed as dist
+import torchvision.transforms as T
 import transformers
 from internvl.dist_utils import init_dist
 from internvl.model.internvl_distillation import (InternVisionModel,
                                                   InternVLDistillation,
                                                   InternVLDistillationConfig)
+from internvl.train.constants import IMAGENET_MEAN, IMAGENET_STD
 from internvl.train.dataset import ConcatDataset, TCSLoader, build_transform
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
+from torchvision.transforms.functional import InterpolationMode
 from transformers import (HfArgumentParser, Trainer, TrainingArguments,
                           default_data_collator, set_seed)
 from transformers.trainer_utils import get_last_checkpoint
@@ -144,7 +147,16 @@ class LazySupervisedDataset(Dataset):
             image = self.tcs_loader(image_path)
         else:
             image = Image.open(image_path).convert('RGB')
-        transform = build_transform(is_train=self.is_train, input_size=self.image_size)
+
+        MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
+        transform = T.Compose([
+            T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
+            T.RandomResizedCrop(self.image_size, scale=(0.8, 1.0), ratio=(3. / 4., 4. / 3.),
+                                interpolation=InterpolationMode.BICUBIC),
+            # T.Resize((self.input_size, self.input_size), interpolation=InterpolationMode.BICUBIC),
+            T.ToTensor(),
+            T.Normalize(mean=MEAN, std=STD)
+        ])
         pixel_values = transform(image)
 
         return dict(
