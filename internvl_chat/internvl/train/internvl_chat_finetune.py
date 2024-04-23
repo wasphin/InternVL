@@ -135,10 +135,6 @@ class ModelArguments:
         default=0.0,
         metadata={'help': 'Set the drop path rate for the ViT model. Default is 0.'},
     )
-    image_fold: int = field(
-        default=None,
-        metadata={'help': 'Specify the fold number for the high-resolution image. Default is None.'},
-    )
 
 
 @dataclass
@@ -412,7 +408,6 @@ def main():
         config.llm_config.attn_implementation = 'flash_attention_2'
         config.template = data_args.conv_style
         config.select_layer = model_args.vision_select_layer
-        config.image_fold = model_args.image_fold
         model = InternVLChatModel.from_pretrained(
             model_args.model_name_or_path, torch_dtype=torch.bfloat16, config=config)
     else:
@@ -432,8 +427,7 @@ def main():
                                                   downsample_ratio=data_args.down_sample_ratio,
                                                   pad2square=data_args.pad2square,
                                                   template=data_args.conv_style,
-                                                  select_layer=model_args.vision_select_layer,
-                                                  image_fold=model_args.image_fold)
+                                                  select_layer=model_args.vision_select_layer)
         internvl_chat_config.force_image_size = data_args.force_image_size
         logger.info('Building InternVLChatModel...')
         model = InternVLChatModel(internvl_chat_config, vision_model, llm)

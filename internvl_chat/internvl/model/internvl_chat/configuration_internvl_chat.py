@@ -31,7 +31,6 @@ class InternVLChatConfig(PretrainedConfig):
             force_image_size=None,
             downsample_ratio=0.5,
             template=None,
-            image_fold=False,
             ps_version='v1',
             **kwargs):
         super().__init__(**kwargs)
@@ -58,11 +57,9 @@ class InternVLChatConfig(PretrainedConfig):
         self.force_image_size = force_image_size
         self.downsample_ratio = downsample_ratio
         self.template = template
-        self.image_fold = image_fold
         self.ps_version = ps_version  # pixel shuffle version
 
         logger.info(f'vision_select_layer: {self.select_layer}')
-        logger.info(f'image_fold: {self.image_fold}')
         logger.info(f'ps_version: {self.ps_version}')
 
     def to_dict(self):
@@ -83,7 +80,6 @@ class InternVLChatConfig(PretrainedConfig):
         output['force_image_size'] = self.force_image_size
         output['downsample_ratio'] = self.downsample_ratio
         output['template'] = self.template
-        output['image_fold'] = self.image_fold
         output['ps_version'] = self.ps_version
 
         return output
