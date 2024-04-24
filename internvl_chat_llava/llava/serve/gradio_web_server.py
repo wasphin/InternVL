@@ -13,6 +13,7 @@ from llava.constants import LOGDIR
 from llava.utils import (build_logger, server_error_msg,
     violates_moderation, moderation_msg)
 import hashlib
+import re
 
 
 logger = build_logger("gradio_web_server", "gradio_web_server.log")
@@ -27,6 +28,34 @@ priority = {
     "vicuna-13b": "aaaaaaa",
     "koala-13b": "aaaaaab",
 }
+
+f_keyword = open("llava/serve/keyword_list.txt", "r")
+political_keywords = f_keyword.read().splitlines()
+political_keywords = [keyword.strip() for keyword in political_keywords]
+
+
+def taiwan_question_match_english(question):
+    if type(question) == tuple:
+        question = question[0]
+    print(f"question: {question}")
+    question = question.lower()
+    pattern = r'(taiwan|taiwa|china|chinese|)\b.*\b(is|are|belong|include|consider|govern|declared|recognized|part of|province of|territory of)\b.*\b(taiwan|taiwa|china|chinese)'
+    if re.search(pattern, question, re.IGNORECASE):
+        return True
+    else:
+        return False
+
+
+def taiwan_question_match_chinese(question):
+    if type(question) == tuple:
+        question = question[0]
+    print(f"question: {question}")
+    question = question.lower()
+    pattern = r'(台湾|中国|中华人民共和国)\s*(是|属于|包括|被认为是|被视为|是否是)\s*(中国的一部分|中国的|中国|中华人民共和国的一部分|中华人民共和国的)'
+    if re.search(pattern, question, re.IGNORECASE):
+        return True
+    else:
+        return False
 
 
 def get_conv_log_filename():
@@ -174,7 +203,7 @@ def http_bot(state, model_selector, temperature, top_p, max_new_tokens, max_inpu
     start_tstamp = time.time()
     model_name = model_selector
 
-    if state.skip_next:
+    if hasattr(state, 'skip_next') and state.skip_next:
         # This generate call is skipped due to invalid inputs
         yield (state, state.to_gradio_chatbot()) + (no_change_btn,) * 5
         return
@@ -265,28 +294,45 @@ def http_bot(state, model_selector, temperature, top_p, max_new_tokens, max_inpu
 
     state.messages[-1][-1] = "▌"
     yield (state, state.to_gradio_chatbot()) + (disable_btn,) * 5
-
-    try:
-        # Stream output
-        response = requests.post(worker_addr + "/worker_generate_stream",
-            headers=headers, json=pload, stream=True, timeout=10)
-        for chunk in response.iter_lines(decode_unicode=False, delimiter=b"\0"):
-            if chunk:
-                data = json.loads(chunk.decode())
-                if data["error_code"] == 0:
-                    output = data["text"][len(prompt):].strip()
-                    state.messages[-1][-1] = output + "▌"
-                    yield (state, state.to_gradio_chatbot()) + (disable_btn,) * 5
-                else:
-                    output = data["text"] + f" (error_code: {data['error_code']})"
-                    state.messages[-1][-1] = output
-                    yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
-                    return
-                time.sleep(0.03)
-    except requests.exceptions.RequestException as e:
-        state.messages[-1][-1] = server_error_msg
+    
+    if taiwan_question_match_english(state.messages[-2][-1]):
+        output = "I'm sorry, but I haven't yet mastered the skills to answer this question. I will continue to learn. You can also ask me some other questions, and I will do my best to provide you with answers."
+        for i in range(len(output)):
+            state.messages[-1][-1] = output[:i] + "▌"
+            yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
+        state.messages[-1][-1] = output + "."
         yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
-        return
+    elif any(keyword in state.messages[-2][-1] for keyword in political_keywords) or \
+            taiwan_question_match_chinese(state.messages[-2][-1]):
+        print(state.messages)
+        output = "很抱歉呀，目前我还没有掌握回答这个问题的技巧，我会不断学习，您也可以问我一些其他问题，我会努力给您解答。"
+        for i in range(len(output)):
+            state.messages[-1][-1] = output[:i] + "▌"
+            yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
+        state.messages[-1][-1] = output + "。"
+        yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
+    else:
+        try:
+            # Stream output
+            response = requests.post(worker_addr + "/worker_generate_stream",
+                headers=headers, json=pload, stream=True, timeout=10)
+            for chunk in response.iter_lines(decode_unicode=False, delimiter=b"\0"):
+                if chunk:
+                    data = json.loads(chunk.decode())
+                    if data["error_code"] == 0:
+                        output = data["text"][len(prompt):].strip()
+                        state.messages[-1][-1] = output + "▌"
+                        yield (state, state.to_gradio_chatbot()) + (disable_btn,) * 5
+                    else:
+                        output = data["text"] + f" (error_code: {data['error_code']})"
+                        state.messages[-1][-1] = output
+                        yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
+                        return
+                    time.sleep(0.03)
+        except requests.exceptions.RequestException as e:
+            state.messages[-1][-1] = server_error_msg
+            yield (state, state.to_gradio_chatbot()) + (disable_btn, disable_btn, disable_btn, enable_btn, enable_btn)
+            return
 
     state.messages[-1][-1] = state.messages[-1][-1][:-1]
     yield (state, state.to_gradio_chatbot()) + (enable_btn,) * 5
