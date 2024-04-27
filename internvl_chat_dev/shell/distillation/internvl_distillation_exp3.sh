@@ -22,10 +22,10 @@ if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 256
+# number of gpus: 248
 # batch size per gpu: 64
 # gradient accumulation steps: 1
-# total batch size: 16384
+# total batch size: 15872
 # epoch: 8
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -38,17 +38,16 @@ srun -p ${PARTITION} \
   --jobid 2977061 \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_distillation.py \
-  --student_path "./pretrained/intern_vit_300m_448px_v1_0" \
-  --teacher_path "./pretrained/intern_vit_6b_448px_v1_5" \
+  --model_name_or_path "./work_dirs/internvl_distillation_exp2/checkpoint-19000" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
-  --overwrite_output_dir False \
+  --overwrite_output_dir True \
   --force_image_size 448 \
   --drop_path_rate 0.0 \
   --vision_select_layer -6 \
   --dataloader_num_workers 6 \
   --bf16 True \
-  --num_train_epochs 8 \
+  --num_train_epochs 7 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
   --gradient_accumulation_steps ${GRADIENT_ACC} \
   --evaluation_strategy "no" \
