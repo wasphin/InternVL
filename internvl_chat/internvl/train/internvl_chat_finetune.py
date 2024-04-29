@@ -1,4 +1,3 @@
-import json
 import logging
 import math
 import os
@@ -6,14 +5,10 @@ import random
 import sys
 import warnings
 from copy import deepcopy
+from dataclasses import dataclass, field
 from typing import Dict, Optional
 
-from internvl.train.trainer_monkey_patch import replace_create_optimizer
-from transformers.trainer_pt_utils import LabelSmoother
-
-IGNORE_TOKEN_ID = LabelSmoother.ignore_index
-from dataclasses import dataclass, field
-
+import orjson as json
 import torch
 import torch.distributed as dist
 import transformers
@@ -22,7 +17,7 @@ from internvl.model.internvl_chat import (InternVisionConfig,
                                           InternVisionModel,
                                           InternVLChatConfig,
                                           InternVLChatModel)
-from internvl.patch import (pad_data_collator,
+from internvl.patch import (concat_pad_data_collator, pad_data_collator,
                             replace_llama2_attn_with_flash_attn,
                             replace_llama_rmsnorm_with_fused_rmsnorm,
                             replace_train_sampler)
@@ -31,12 +26,15 @@ from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
                                       IMG_START_TOKEN, QUAD_END_TOKEN,
                                       QUAD_START_TOKEN, REF_END_TOKEN,
                                       REF_START_TOKEN)
-from internvl.train.dataset import (TCSLoader, WeightedConcatDataset,
-                                    build_transform, preprocess,
+from internvl.train.dataset import (ConcatDataset, TCSLoader,
+                                    WeightedConcatDataset, build_transform,
+                                    dynamic_preprocess,
+                                    find_closest_aspect_ratio, preprocess,
                                     preprocess_internlm, preprocess_mpt)
+from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from PIL import Image, ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
-from transformers import (AutoConfig, AutoModel, AutoTokenizer,
+from transformers import (AutoConfig, AutoModelForCausalLM, AutoTokenizer,
                           HfArgumentParser, LlamaConfig, LlamaForCausalLM,
                           LlamaTokenizer, Trainer, TrainingArguments,
                           default_data_collator, set_seed)
@@ -135,6 +133,11 @@ class ModelArguments:
         default=0.0,
         metadata={'help': 'Set the drop path rate for the ViT model. Default is 0.'},
     )
+    ps_version: str = field(
+        default='v1',
+        metadata={'help': 'Specify the version of pixel shuffle implementation. Default is `v1`.'
+                          'Please use `v2` to fix the bug of transposed image.'}
+    )
 
 
 @dataclass
@@ -174,18 +177,48 @@ class DataTrainingArguments:
         default=False,
         metadata={'help': 'Set to True to use data resampling.'},
     )
+    dynamic_image_size: Optional[bool] = field(
+        default=False,
+        metadata={'help': 'Set to True to use dynamic image size.'},
+    )
+    use_thumbnail: Optional[bool] = field(
+        default=False,
+        metadata={'help': 'Set to True to add a thumbnail image.'},
+    )
+    min_dynamic_patch: Optional[int] = field(
+        default=1,
+        metadata={'help': 'The minimum number of dynamic patches. Default is 1.'},
+    )
+    max_dynamic_patch: Optional[int] = field(
+        default=6,
+        metadata={'help': 'The maximum number of dynamic patches. Default is 6.'},
+    )
+    neftune_alpha: Optional[float] = field(
+        default=None,
+        metadata={'help': 'The noise_alpha value for NEFTune. Default is None.'},
+    )
+    normalize_type: Optional[str] = field(
+        default='imagenet',
+        metadata={'help': 'The normalize type for the image. Default is imagenet.'},
+    )
 
 
 class LazySupervisedDataset(Dataset):
     """Dataset for supervised fine-tuning."""
 
     def __init__(self, template_name, meta, tokenizer, tcs_loader, num_image_token,
-                 image_size=224, is_train=True, pad2square=False, group_by_length=False):
+                 image_size=224, is_train=True, pad2square=False, group_by_length=False,
+                 dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1,
+                 max_dynamic_patch=6, repeat_time=1, normalize_type='imagenet'):
         super(LazySupervisedDataset, self).__init__()
         self.tokenizer = tokenizer
         self.template_name = template_name
         self.num_image_token = num_image_token
         logger.info(f'[Dataset] num_image_token: {num_image_token}')
+        logger.info(f'[Dataset] dynamic_image_size: {dynamic_image_size}')
+        logger.info(f'[Dataset] use_thumbnail: {use_thumbnail}')
+        logger.info(f'[Dataset] min_dynamic_patch: {min_dynamic_patch}, max_dynamic_patch: {max_dynamic_patch}')
+
         self.image_size = image_size
         self.is_train = is_train
         self.pad2square = pad2square
@@ -193,23 +226,36 @@ class LazySupervisedDataset(Dataset):
         assert meta['annotation'].endswith('jsonl'), f'annotation must be jsonl, but got {meta["annotation"]}'
         with open(meta['annotation'], 'r') as f:
             self.raw_data = f.readlines()
+            if repeat_time < 1:
+                # choice top len(self.raw_data) * repeat_time samples
+                self.raw_data = self.raw_data[:int(len(self.raw_data) * repeat_time)]
         self.root = meta['root']
         self.cached_data_dict = {}
         self.tcs_loader = tcs_loader
         self.group_by_length = group_by_length
+        self.dynamic_image_size = dynamic_image_size
+        self.use_thumbnail = use_thumbnail
+        self.min_dynamic_patch = min_dynamic_patch
+        self.max_dynamic_patch = max_dynamic_patch
+        self.normalize_type = normalize_type
         if self.group_by_length:
-            self.conv2length = {}
+            self.conv2length = {}  # using dict to speedup the calculation of token length
             self.length = []
             for data_item in self.raw_data:
-                conversations = ''.join(data_item.split('conversations')[1:])
-                str_length = len(conversations)
-                if str_length not in self.conv2length:
-                    token_length = tokenizer(
-                        conversations, return_tensors='pt', padding=False, truncation=False,
-                    ).input_ids.size(1)
-                    self.conv2length[str_length] = token_length
+                data_item = json.loads(data_item)
+                if 'length' in data_item:
+                    token_length = data_item['length']  # use precomputed length if exists
                 else:
-                    token_length = self.conv2length[str_length]
+                    # compute token length using tokenizer
+                    conversations = '\n'.join([temp['value'] for temp in data_item['conversations']])
+                    str_length = len(conversations)
+                    if str_length not in self.conv2length:
+                        token_length = tokenizer(
+                            conversations, return_tensors='pt', padding=False, truncation=False,
+                        ).input_ids.size(1)
+                        self.conv2length[str_length] = token_length + num_image_token * (max_dynamic_patch + use_thumbnail)
+                    else:
+                        token_length = self.conv2length[str_length]
                 self.length.append(token_length)
 
     def __len__(self):
@@ -218,6 +264,15 @@ class LazySupervisedDataset(Dataset):
     def multi_modal_get_item(self, data_item):
         if '<image>' not in data_item['conversations'][0]['value']:
             data_item['conversations'][0]['value'] = '<image>\n' + data_item['conversations'][0]['value']
+
+        # fix bug when there are multiple <image> in conversations
+        image_cnt = 0
+        for idx, conv in enumerate(data_item['conversations']):
+            conv['value'] = conv['value'].replace('<image>\n', '').replace('\n<image>', '').replace('<image>', '')
+            if idx == 0:
+                conv['value'] = '<image>\n' + conv['value']
+            image_cnt += conv['value'].count('<image>')
+        assert image_cnt == 1, f'There should be exactly one <image> in the conversation, but got {image_cnt}'
 
         if data_item['image'].startswith('s3://'):
             image_path = self.root + data_item['image']
@@ -228,8 +283,17 @@ class LazySupervisedDataset(Dataset):
         else:
             image = Image.open(image_path).convert('RGB')
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
-                                    pad2square=self.pad2square)
-        pixel_values = transform(image)
+                                    pad2square=self.pad2square, normalize_type=self.normalize_type)
+        if self.dynamic_image_size:
+            images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
+                                        image_size=self.image_size, use_thumbnail=self.use_thumbnail)
+        else:
+            images = [image]
+        pixel_values = [transform(image) for image in images]
+        pixel_values = torch.stack(pixel_values)
+        num_patches = pixel_values.size(0)
+        if not self.dynamic_image_size:
+            assert num_patches == 1, f'The number of patches should be 1, but got {num_patches}.'
         if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
         elif self.template_name == 'internlm2-chat':
@@ -237,22 +301,27 @@ class LazySupervisedDataset(Dataset):
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token,
+                                  self.tokenizer, self.num_image_token * num_patches,
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
         ret = dict(
             input_ids=ret['input_ids'][0],
             labels=ret['labels'][0],
             attention_mask=ret['attention_mask'][0],
             pixel_values=pixel_values,
-            image_flags=torch.tensor([1], dtype=torch.long)
+            image_flags=torch.tensor([1] * num_patches, dtype=torch.long)
         )
         return ret
 
     def pure_text_get_item(self, data_item):
-        image = Image.new('RGB', (448, 448), (255, 255, 255))
+        image = Image.new('RGB', (224, 224), (255, 255, 255))
+        images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
+                                    image_size=self.image_size, use_thumbnail=self.use_thumbnail)
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
-                                    pad2square=self.pad2square)
-        pixel_values = transform(image)
+                                    pad2square=self.pad2square, normalize_type=self.normalize_type)
+        pixel_values = [transform(image) for image in images]
+        pixel_values = torch.stack(pixel_values)
+        num_patches = pixel_values.size(0)
+        assert num_patches == 1, f'The number of patches should be 1, but got {num_patches}.'
         if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
         elif self.template_name == 'internlm2-chat':
@@ -260,14 +329,14 @@ class LazySupervisedDataset(Dataset):
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token, text_only=True,
+                                  self.tokenizer, self.num_image_token * num_patches, text_only=True,
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
         ret = dict(
             input_ids=ret['input_ids'][0],
             labels=ret['labels'][0],
             attention_mask=ret['attention_mask'][0],
             pixel_values=pixel_values,
-            image_flags=torch.tensor([0], dtype=torch.long)
+            image_flags=torch.tensor([0] * num_patches, dtype=torch.long)
         )
         return ret
 
@@ -282,7 +351,7 @@ class LazySupervisedDataset(Dataset):
                     ret = self.pure_text_get_item(data_item)
                 break
             except Exception as e:
-                logger.info(e)
+                print(e)
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item:
                     if data_item['image'].startswith('s3://'):
@@ -294,12 +363,17 @@ class LazySupervisedDataset(Dataset):
         return ret
 
 
-def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=False):
+def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=False,
+                   dynamic_image_size=False, use_thumbnail=False, min_dynamic_patch=1,
+                   max_dynamic_patch=6, normalize_type='imagenet'):
     datasets = []
     lengths = []
     ds_collections = json.loads(open(data_args.meta_path).read())
     for ds_name in ds_collections.keys():
         repeat_time = ds_collections[ds_name]['repeat_time']
+        if 'max_dynamic_patch' in ds_collections[ds_name]:
+            max_dynamic_patch = ds_collections[ds_name]['max_dynamic_patch']
+            logger.info(f'max_dynamic_patch is set to {max_dynamic_patch} according to the meta file')
         try:
             dataset = LazySupervisedDataset(
                 data_args.conv_style, ds_collections[ds_name],
@@ -309,12 +383,19 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 image_size=data_args.force_image_size,
                 is_train=ds_collections[ds_name]['data_augment'],
                 pad2square=data_args.pad2square,
-                group_by_length=group_by_length
+                group_by_length=group_by_length,
+                dynamic_image_size=dynamic_image_size,
+                use_thumbnail=use_thumbnail,
+                min_dynamic_patch=min_dynamic_patch,
+                max_dynamic_patch=max_dynamic_patch,
+                repeat_time=repeat_time,
+                normalize_type=normalize_type,
             )
         except Exception:
             logger.info(f'Error in loading dataset: {ds_name}')
             exit()
         dataset.ds_name = ds_name
+        repeat_time = 1 if repeat_time < 1 else repeat_time  # don't repeat if repeat_time is less than 1
         for i in range(repeat_time):
             logger.info(f'Add dataset:{ds_name}_{i} with length: {len(dataset)}')
             datasets.append(dataset)
@@ -322,9 +403,12 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 lengths.append(math.sqrt(len(dataset)))
             else:
                 lengths.append(len(dataset))
-    total_length = sum(lengths)
-    weights = [l / total_length for l in lengths]
-    train_dataset = WeightedConcatDataset(datasets, weights)
+    if data_args.use_data_resampling:
+        total_length = sum(lengths)
+        weights = [l / total_length for l in lengths]
+        train_dataset = WeightedConcatDataset(datasets, weights)
+    else:
+        train_dataset = ConcatDataset(datasets)
     return train_dataset
 
 
@@ -405,9 +489,15 @@ def main():
         logger.info('Loading InternVLChatModel...')
         config = InternVLChatConfig.from_pretrained(model_args.model_name_or_path)
         config.vision_config.drop_path_rate = model_args.drop_path_rate
-        config.llm_config.attn_implementation = 'flash_attention_2'
+        config.llm_config.attn_implementation = 'flash_attention_2'  # for InternLM
+        config.llm_config._attn_implementation = 'flash_attention_2'  # for LLaMA
         config.template = data_args.conv_style
         config.select_layer = model_args.vision_select_layer
+        config.dynamic_image_size = data_args.dynamic_image_size
+        config.use_thumbnail = data_args.use_thumbnail
+        config.ps_version = model_args.ps_version
+        config.min_dynamic_patch = data_args.min_dynamic_patch
+        config.max_dynamic_patch = data_args.max_dynamic_patch
         model = InternVLChatModel.from_pretrained(
             model_args.model_name_or_path, torch_dtype=torch.bfloat16, config=config)
     else:
@@ -418,20 +508,23 @@ def main():
             model_args.vision_path, torch_dtype=torch.bfloat16, config=vision_config)
         logger.info('Loading LLaMA...')
         llm_config = AutoConfig.from_pretrained(model_args.llm_path, trust_remote_code=True)
-        llm_config.attn_implementation = 'flash_attention_2'
-        llm = AutoModel.from_pretrained(
+        llm_config.attn_implementation = 'flash_attention_2'  # for InternLM
+        llm_config._attn_implementation = 'flash_attention_2'  # for LLaMA
+        llm = AutoModelForCausalLM.from_pretrained(
             model_args.llm_path, torch_dtype=torch.bfloat16,
             config=llm_config, trust_remote_code=True)
         logger.info('Building InternVLChatConfig...')
-        internvl_chat_config = InternVLChatConfig(vision_config.to_dict(), llm_config.to_dict(),
-                                                  downsample_ratio=data_args.down_sample_ratio,
-                                                  pad2square=data_args.pad2square,
-                                                  template=data_args.conv_style,
-                                                  select_layer=model_args.vision_select_layer)
+        internvl_chat_config = InternVLChatConfig(
+            vision_config.to_dict(), llm_config.to_dict(), downsample_ratio=data_args.down_sample_ratio,
+            pad2square=data_args.pad2square, template=data_args.conv_style,
+            select_layer=model_args.vision_select_layer, dynamic_image_size=data_args.dynamic_image_size,
+            use_thumbnail=data_args.use_thumbnail, ps_version=model_args.ps_version,
+            min_dynamic_patch=data_args.min_dynamic_patch, max_dynamic_patch=data_args.max_dynamic_patch)
         internvl_chat_config.force_image_size = data_args.force_image_size
         logger.info('Building InternVLChatModel...')
         model = InternVLChatModel(internvl_chat_config, vision_model, llm)
     model.img_context_token_id = img_context_token_id
+    model.neftune_alpha = data_args.neftune_alpha
 
     if model_args.mlp_path is not None:
         logger.info('Loading pretrained MLP projector...')
@@ -441,8 +534,13 @@ def main():
     logger.info('Finished')
 
     patch_size = model.config.vision_config.patch_size
-    if model.config.force_image_size != data_args.force_image_size and \
-            model.config.vision_config.image_size != data_args.force_image_size:
+    logger.info(f'model.config.force_image_size: {model.config.force_image_size}')
+    logger.info(f'data_args.force_image_size: {data_args.force_image_size}')
+    logger.info(f'model.config.vision_config.image_size: {model.config.vision_config.image_size}')
+    if model.config.vision_config.image_size != data_args.force_image_size:
+        logger.info(f'Resizing position embedding from '
+                    f'{model.config.vision_config.image_size} '
+                    f'to {data_args.force_image_size}...')
         model.vision_model.resize_pos_embeddings(old_size=model.config.vision_config.image_size,
                                                  new_size=data_args.force_image_size,
                                                  patch_size=patch_size)
@@ -465,15 +563,18 @@ def main():
     if model_args.grad_checkpoint:
         model.language_model._set_gradient_checkpointing()
 
-    train_dataset = build_datasets(data_args, tokenizer, tcs_loader, model,
-                                   group_by_length=training_args.group_by_length)
+    train_dataset = build_datasets(
+        data_args, tokenizer, tcs_loader, model, group_by_length=training_args.group_by_length,
+        dynamic_image_size=data_args.dynamic_image_size, use_thumbnail=data_args.use_thumbnail,
+        min_dynamic_patch=data_args.min_dynamic_patch, max_dynamic_patch=data_args.max_dynamic_patch,
+        normalize_type=data_args.normalize_type)
 
     def _freeze_params(module):
         for param in module.parameters():
             param.requires_grad = False
 
     if model_args.freeze_backbone:
-        model.vision_model = model.vision_model.eval()
+        # model.vision_model = model.vision_model.eval()
         _freeze_params(model.vision_model)
 
     if model_args.freeze_llm:
@@ -513,13 +614,14 @@ def main():
     if model_args.use_custom_trainer:
         replace_create_optimizer()
 
+    # do we need default_data_collator?
     trainer = Trainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset if training_args.do_train else None,
         eval_dataset=None,
         tokenizer=tokenizer,
-        data_collator=default_data_collator if not training_args.group_by_length else pad_data_collator,
+        data_collator=concat_pad_data_collator
     )
 
     # Training

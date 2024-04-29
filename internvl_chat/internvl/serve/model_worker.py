@@ -15,6 +15,7 @@ import torch
 import uvicorn
 from fastapi import BackgroundTasks, FastAPI, Request
 from fastapi.responses import StreamingResponse
+from internvl.train.dataset import dynamic_preprocess
 from transformers import TextIteratorStreamer
 
 from ..model.internvl_chat import InternVLChatModel
@@ -60,19 +61,27 @@ class ModelWorker:
         else:
             self.model_name = model_name
 
-        self.device = device
         logger.info(f'Loading the model {self.model_name} on worker {worker_id} ...')
-        from transformers import CLIPImageProcessor, LlamaTokenizer
+        from transformers import AutoTokenizer, CLIPImageProcessor
 
-        self.tokenizer = LlamaTokenizer.from_pretrained(model_path)
-        self.model = InternVLChatModel.from_pretrained(
-            model_path, load_in_8bit=False, torch_dtype=torch.float16).cuda().eval()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
+        if device == 'auto':
+            import os
+            os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+            # This can make distributed deployment work properly, wonder why
+            self.model = InternVLChatModel.from_pretrained(
+                model_path, load_in_8bit=load_8bit, torch_dtype=torch.float16, device_map='auto').eval()
+        else:
+            self.model = InternVLChatModel.from_pretrained(
+                model_path, load_in_8bit=load_8bit, torch_dtype=torch.float16).eval()
+        if not load_8bit and not device == 'auto':
+            self.model = self.model.cuda()
         self.image_size = self.model.config.force_image_size
         self.image_processor = CLIPImageProcessor(
             crop_size=self.image_size, do_center_crop=True, do_normalize=True, do_resize=True,
             image_mean=[0.485, 0.456, 0.406], image_std=[0.229, 0.224, 0.225], size=self.image_size
         )
-        self.context_len = 2048
+        self.context_len = 12800
         self.is_multimodal = True
 
         if not no_register:
@@ -133,6 +142,8 @@ class ModelWorker:
         tokenizer, model, image_processor = self.tokenizer, self.model, self.image_processor
 
         prompt = params['prompt']
+        max_input_tiles = params['max_input_tiles']
+        logger.info(f'max_input_tiles: {max_input_tiles}')
         ori_prompt = prompt
         images = params.get('images', None)
         num_image_tokens = 0
@@ -140,8 +151,13 @@ class ModelWorker:
             if len(images) > 0:
                 if len(images) != prompt.count(DEFAULT_IMAGE_TOKEN):
                     raise ValueError('Number of images does not match number of <image> tokens in prompt')
-
+                logger.info(f'dynamic_image_size: {model.config.dynamic_image_size}')
+                logger.info(f'use_thumbnail: {model.config.use_thumbnail}')
                 images = [load_image_from_base64(image) for image in images]
+                if model.config.dynamic_image_size:
+                    images = dynamic_preprocess(
+                        images[0], image_size=self.image_size, max_num=max_input_tiles,
+                        use_thumbnail=model.config.use_thumbnail)
                 images = [item.resize((self.image_size, self.image_size)) for item in images]
                 logger.info(f'Resize images to {self.image_size}x{self.image_size}')
                 images = process_images(images, image_processor, model.config)
@@ -150,13 +166,15 @@ class ModelWorker:
                     images = [image.to(self.model.device, dtype=torch.float16) for image in images]
                 else:
                     images = images.to(self.model.device, dtype=torch.float16)
+                # images = torch.concat(images)
+                logger.info(f'Split images to {images.shape}')
 
                 replace_token = DEFAULT_IMAGE_TOKEN
                 # if getattr(self.model.config, 'mm_use_im_start_end', False):
                 replace_token = DEFAULT_IM_START_TOKEN + replace_token + DEFAULT_IM_END_TOKEN
                 prompt = prompt.replace(DEFAULT_IMAGE_TOKEN, replace_token)
                 logger.info(prompt)
-                num_image_tokens = model.num_image_token
+                num_image_tokens = model.num_image_token * images.size(0)
                 model.img_context_token_id = self.tokenizer.convert_tokens_to_ids(DEFAULT_IMAGE_PATCH_TOKEN)
             else:
                 images = None
@@ -167,20 +185,20 @@ class ModelWorker:
 
         temperature = float(params.get('temperature', 1.0))
         top_p = float(params.get('top_p', 1.0))
-        max_context_length = getattr(model.config, 'max_position_embeddings', 4096)
-        max_new_tokens = min(int(params.get('max_new_tokens', 256)), 1024)
+        max_context_length = getattr(model.config, 'max_position_embeddings', 16384)
+        max_new_tokens = int(params.get('max_new_tokens', 1024))
         stop_str = params.get('stop', None)
         do_sample = True if temperature > 0.001 else False
         logger.info(f'num_image_tokens: {num_image_tokens}')
-        input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, num_image_tokens, return_tensors='pt').unsqueeze(0).to(self.device)
+        input_ids = tokenizer_image_token(prompt, tokenizer, IMAGE_TOKEN_INDEX, num_image_tokens, return_tensors='pt').unsqueeze(0).cuda()
         input_ids[input_ids==IMAGE_TOKEN_INDEX] = model.img_context_token_id
 
         keywords = [stop_str]
         stopping_criteria = KeywordsStoppingCriteria(keywords, tokenizer, input_ids)
         streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True, timeout=15)
 
-        max_new_tokens = min(max_new_tokens, max_context_length - input_ids.shape[-1] - num_image_tokens)
-
+        max_new_tokens = min(max_new_tokens, max_context_length - input_ids.shape[-1])
+        logger.info(f'max_new_tokens: {max_new_tokens}')
         if max_new_tokens < 1:
             yield json.dumps({'text': ori_prompt + 'Exceeds max token length. Please start a new conversation, thanks.', 'error_code': 0}).encode() + b'\0'
             return

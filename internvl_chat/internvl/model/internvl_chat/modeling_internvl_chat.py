@@ -60,7 +60,7 @@ def window_reverse(windows, window_size, H, W):
 class InternVLChatModel(PreTrainedModel):
     config_class = InternVLChatConfig
     main_input_name = 'pixel_values'
-    _no_split_modules = ['InternVisionEncoderLayer', 'LlamaDecoderLayer', 'LlamaForCausalLM']
+    _no_split_modules = ['InternVisionEncoderLayer', 'LlamaDecoderLayer']
 
     def __init__(self, config: InternVLChatConfig, vision_model=None, language_model=None):
         super().__init__(config)
@@ -94,20 +94,21 @@ class InternVLChatModel(PreTrainedModel):
         llm_hidden_size = config.llm_config.hidden_size
 
         self.mlp1 = nn.Sequential(
-            nn.LayerNorm(vit_hidden_size * 4),
-            nn.Linear(vit_hidden_size * 4, llm_hidden_size),
+            nn.LayerNorm(vit_hidden_size * int(1 / self.downsample_ratio) ** 2),
+            nn.Linear(vit_hidden_size * int(1 / self.downsample_ratio) ** 2, llm_hidden_size),
             nn.GELU(),
             nn.Linear(llm_hidden_size, llm_hidden_size)
         )
 
-        if config.force_image_size != config.vision_config.image_size:
-            self.vision_model.resize_pos_embeddings(
-                old_size=config.vision_config.image_size,
-                new_size=config.force_image_size,
-                patch_size=config.vision_config.patch_size
-            )
+        # if config.force_image_size != config.vision_config.image_size:
+        #     self.vision_model.resize_pos_embeddings(
+        #         old_size=config.vision_config.image_size,
+        #         new_size=config.force_image_size,
+        #         patch_size=config.vision_config.patch_size
+        #     )
 
         self.img_context_token_id = None
+        self.neftune_alpha = None
 
         if config.use_backbone_lora:
             self.wrap_backbone_lora(r=config.use_backbone_lora, lora_alpha=2 * config.use_backbone_lora)
@@ -155,13 +156,17 @@ class InternVLChatModel(PreTrainedModel):
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
         image_flags = image_flags.squeeze(-1)
-        input_embeds = self.language_model.get_input_embeddings()(input_ids)
+        input_embeds = self.language_model.get_input_embeddings()(input_ids).clone()
 
         vit_embeds = self.extract_feature(pixel_values)
         vit_embeds = vit_embeds[image_flags == 1]
+        vit_batch_size = pixel_values.shape[0]
 
         B, N, C = input_embeds.shape
         input_embeds = input_embeds.reshape(B * N, C)
+
+        # if torch.distributed.get_rank() == 0:
+        #     print(f'dynamic ViT batch size: {vit_batch_size}, images per sample: {vit_batch_size / B}, dynamic token length: {N}')
 
         input_ids = input_ids.reshape(B * N)
         selected = (input_ids == self.img_context_token_id)
@@ -171,8 +176,7 @@ class InternVLChatModel(PreTrainedModel):
             vit_embeds = vit_embeds.reshape(-1, C)
             print(f'warning: {e}, input_embeds[selected].shape={input_embeds[selected].shape}, '
                   f'vit_embeds.shape={vit_embeds.shape}')
-            n_token = min(selected.sum(), vit_embeds.shape[0])
-            selected = selected[:n_token]
+            n_token = selected.sum()
             input_embeds[selected] = input_embeds[selected] * 0.0 + vit_embeds[:n_token]
 
         input_embeds = input_embeds.reshape(B, N, C)
@@ -230,6 +234,12 @@ class InternVLChatModel(PreTrainedModel):
             x = x.permute(0, 2, 1, 3).contiguous()
         return x
 
+    def noised_embed(self, vit_embeds, noise_alpha=5):
+        dims = torch.tensor(vit_embeds.size(1) * vit_embeds.size(2))
+        mag_norm = noise_alpha / torch.sqrt(dims)
+        noise = torch.zeros_like(vit_embeds).uniform_(-mag_norm, mag_norm)
+        return vit_embeds + noise
+
     def extract_feature(self, pixel_values):
 
         if self.select_layer == -1:
@@ -244,14 +254,17 @@ class InternVLChatModel(PreTrainedModel):
                 return_dict=True).hidden_states[self.select_layer]
         vit_embeds = vit_embeds[:, 1:, :]
 
+        if self.training and self.neftune_alpha is not None:
+            vit_embeds = self.noised_embed(vit_embeds, self.neftune_alpha)
+
         h = w = int(vit_embeds.shape[1] ** 0.5)
         vit_embeds = vit_embeds.reshape(vit_embeds.shape[0], h, w, -1)
         vit_embeds = self.pixel_shuffle(vit_embeds, scale_factor=self.downsample_ratio)
         vit_embeds = vit_embeds.reshape(vit_embeds.shape[0], -1, vit_embeds.shape[-1])
-        vit_embeds = self.mlp1(vit_embeds)
+        vit_embeds = self.mlp1(vit_embeds)#.to(pixel_values.device)
         return vit_embeds
 
-    def chat(self, tokenizer, pixel_values, question, generation_config,
+    def chat(self, tokenizer, pixel_values, question, generation_config, history=None, return_history=False,
              IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>'):
 
         img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
@@ -264,8 +277,17 @@ class InternVLChatModel(PreTrainedModel):
         from internvl.conversation import get_conv_template
 
         template = get_conv_template(self.template)
-        image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token + IMG_END_TOKEN
-        template.append_message(template.roles[0], image_tokens + '\n' + question)
+        image_bs = pixel_values.shape[0]
+        print(f'dynamic ViT batch size: {image_bs}')
+        if history is None:
+            history = []
+            image_tokens = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * image_bs + IMG_END_TOKEN
+            question = image_tokens + '\n' + question
+        else:
+            for (old_question, old_answer) in history:
+                template.append_message(template.roles[0], old_question)
+                template.append_message(template.roles[1], old_answer)
+        template.append_message(template.roles[0], question)
         template.append_message(template.roles[1], None)
         query = template.get_prompt()
         model_inputs = tokenizer(query, return_tensors='pt')
@@ -280,8 +302,64 @@ class InternVLChatModel(PreTrainedModel):
         )
         response = tokenizer.batch_decode(generation_output, skip_special_tokens=True)[0]
         response = response.split('<|im_end|>')[0].strip()  # for InternLM2
-        query_to_print = query.replace(image_tokens, '<image>')
-        print(query_to_print, response)
+        history.append((question, response))
+        if return_history:
+            return response, history
+        else:
+            query_to_print = query.replace(image_tokens, '<image>')
+            print(query_to_print, response)
+            return response
+        return response
+
+    def multi_image_chat(self, tokenizer, pixel_values, image_counts, question, generation_config, history=None,
+                         return_history=False, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>'):
+
+        img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
+        self.img_context_token_id = img_context_token_id
+        if tokenizer.convert_tokens_to_ids('<|im_end|>') != 0:
+            eos_token_id = tokenizer.convert_tokens_to_ids('<|im_end|>')  # 92542, InternLM2
+        else:
+            eos_token_id = tokenizer.eos_token_id
+
+        from internvl.conversation import get_conv_template
+
+        template = get_conv_template(self.template)
+
+        if history is None:
+            history = []
+            image_tokens = ''
+            image_bs = pixel_values.shape[0]
+            print(f'dynamic ViT batch size: {image_bs}, image_counts: {image_counts}')
+            for idx, image_count in enumerate(image_counts):
+                image_tokens += f'<image {idx+1}> (图{idx+1}):' + IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * image_count + IMG_END_TOKEN
+            question = image_tokens + '\n' + question
+        else:
+            for (old_question, old_answer) in history:
+                template.append_message(template.roles[0], old_question)
+                template.append_message(template.roles[1], old_answer)
+        template.append_message(template.roles[0], question)
+        template.append_message(template.roles[1], None)
+        query = template.get_prompt()
+        model_inputs = tokenizer(query, return_tensors='pt')
+        input_ids = model_inputs['input_ids'].cuda()
+        attention_mask = model_inputs['attention_mask'].cuda()
+        generation_config['eos_token_id'] = eos_token_id
+
+        generation_output = self.generate(
+            pixel_values=pixel_values,
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            **generation_config
+        )
+        response = tokenizer.batch_decode(generation_output, skip_special_tokens=True)[0]
+        response = response.split('<|im_end|>')[0].strip()  # for InternLM2
+        history.append((question, response))
+        if return_history:
+            return response, history
+        else:
+            query_to_print = query.replace(image_tokens, '<image>')
+            print(query_to_print, response)
+            return response
         return response
 
     @torch.no_grad()
@@ -311,7 +389,7 @@ class InternVLChatModel(PreTrainedModel):
             input_ids = input_ids.reshape(B * N)
             selected = (input_ids == self.img_context_token_id)
             assert selected.sum() != 0
-            input_embeds[selected] = vit_embeds.reshape(-1, C)
+            input_embeds[selected] = vit_embeds.reshape(-1, C).to(input_embeds.device)
 
             input_embeds = input_embeds.reshape(B, N, C)
         else:

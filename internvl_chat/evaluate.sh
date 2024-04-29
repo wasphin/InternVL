@@ -38,7 +38,7 @@ if  [ ${DATASET} == "caption-coco" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets coco
+    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets coco ${@:3}
 fi
 
 if  [ ${DATASET} == "caption-flickr30k" ]; then
@@ -82,6 +82,16 @@ if [ ${DATASET} == "vqa-okvqa-val" ]; then
 fi
 
 if [ ${DATASET} == "vqa-textvqa-val" ]; then
+    torchrun \
+    --nnodes=1 \
+    --node_rank=0 \
+    --master_addr=127.0.0.1 \
+    --nproc_per_node=${GPUS} \
+    --master_port=${MASTER_PORT} \
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val ${@:3}
+fi
+
+if [ ${DATASET} == "vqa-textvqa-val-ocr" ]; then
     torchrun \
     --nnodes=1 \
     --node_rank=0 \
@@ -181,14 +191,24 @@ if [ ${DATASET} == "vqa-chartqa-test" ]; then
     eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_human,chartqa_test_augmented ${@:3}
 fi
 
-if [ ${DATASET} == "vqa-infovqa" ]; then
+if [ ${DATASET} == "vqa-infovqa-val" ]; then
     torchrun \
     --nnodes=1 \
     --node_rank=0 \
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_val ${@:3}
+fi
+
+if [ ${DATASET} == "vqa-infovqa-test" ]; then
+    torchrun \
+    --nnodes=1 \
+    --node_rank=0 \
+    --master_addr=127.0.0.1 \
+    --nproc_per_node=${GPUS} \
+    --master_port=${MASTER_PORT} \
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_test ${@:3}
 fi
 
 if [ ${DATASET} == "vqa-chartqa-test-human" ]; then
@@ -338,6 +358,16 @@ if [ ${DATASET} == "mmbench-test-cn" ]; then
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
       eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_test_cn_20231003 ${@:3}
+fi
+
+if [ ${DATASET} == "ccbench-dev" ]; then
+    torchrun \
+      --nnodes=1 \
+      --node_rank=0 \
+      --master_addr=127.0.0.1 \
+      --nproc_per_node=${GPUS} \
+      --master_port=${MASTER_PORT} \
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets ccbench_dev_cn ${@:3}
 fi
 
 if [ ${DATASET} == "scienceqa" ]; then
