@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_1_8B_448_dynamic_chinese_pretrain'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_pretrain'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"

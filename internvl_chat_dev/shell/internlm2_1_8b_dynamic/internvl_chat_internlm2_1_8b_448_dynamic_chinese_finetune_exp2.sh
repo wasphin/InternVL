@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_finetune'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_finetune_exp2'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -39,7 +39,7 @@ srun -p ${PARTITION} \
   --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_pretrain/checkpoint-4000" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_18.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_23.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
