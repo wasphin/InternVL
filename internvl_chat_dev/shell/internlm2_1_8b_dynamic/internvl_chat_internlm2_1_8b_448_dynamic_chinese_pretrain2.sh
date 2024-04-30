@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_pretrain2'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_pretrain2'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -73,6 +73,6 @@ srun -p ${PARTITION} \
   --dynamic_image_size True \
   --use_thumbnail True \
   --ps_version 'v2' \
-  --deepspeed "zero_stage3_config_new.json" \
+  --deepspeed "zero_stage1_config.json" \
   --report_to "tensorboard" \
   2>&1 | tee -a "${OUTPUT_DIR}/training_log.txt"

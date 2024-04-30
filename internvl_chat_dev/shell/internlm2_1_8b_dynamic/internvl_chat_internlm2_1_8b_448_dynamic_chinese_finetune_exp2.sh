@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_finetune_exp2'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_finetune_exp2'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -36,7 +36,7 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8B_448_dynamic_chinese_pretrain/checkpoint-4000" \
+  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_pretrain/checkpoint-4000" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_yi34b_finetune_v5_23.json" \
@@ -71,6 +71,6 @@ srun -p ${PARTITION} \
   --dynamic_image_size True \
   --use_thumbnail True \
   --ps_version 'v2' \
-  --deepspeed "zero_stage3_config_new.json" \
+  --deepspeed "zero_stage1_config.json" \
   --report_to "tensorboard" \
   2>&1 | tee -a "${OUTPUT_DIR}/training_log.txt"
