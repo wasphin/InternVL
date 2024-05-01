@@ -1,0 +1,9 @@
+{
+  "blip_laion_cc_sbu_558k": {
+    "root": "playground/data/LLaVA-Pretrain/images/",
+    "annotation": "playground/data/LLaVA-Pretrain/blip_laion_cc_sbu_558k.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 558128
+  }
+}
