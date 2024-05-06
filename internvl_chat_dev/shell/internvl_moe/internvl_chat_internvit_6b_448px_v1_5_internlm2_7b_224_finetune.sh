@@ -8,10 +8,10 @@ NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-1024}
-PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
+PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
-
+export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk:${PYTHONPATH}"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
@@ -35,7 +35,7 @@ srun -p ${PARTITION} \
   --kill-on-bad-exit=1 \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
-  python -u internvl/train/internvl_chat_pretrain.py \
+  python -u internvl/train/internvl_chat_finetune.py \
   --vision_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/intern_vit_6b_448px_v1_5" \
   --llm_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/internlm2-chat-7b" \
   --conv_style "internlm2-chat" \

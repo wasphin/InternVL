@@ -8,10 +8,10 @@ NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-2048}
-PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-32}
+PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-16}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
-
+export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk:${PYTHONPATH}"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
@@ -65,7 +65,7 @@ srun -p ${PARTITION} \
   --warmup_steps 100 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 4096 \
+  --max_seq_length 1280 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length False \

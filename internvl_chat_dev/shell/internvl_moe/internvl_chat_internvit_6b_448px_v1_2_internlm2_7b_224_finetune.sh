@@ -8,10 +8,10 @@ NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-1024}
-PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
+PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
-
+export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk:${PYTHONPATH}"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
@@ -35,12 +35,11 @@ srun -p ${PARTITION} \
   --kill-on-bad-exit=1 \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
-  python -u internvl/train/internvl_chat_pretrain.py \
-  --vision_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/intern_vit_6b_448px_v1_2" \
-  --llm_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/internlm2-chat-7b" \
+  python -u internvl/train/internvl_chat_finetune.py \
+  --model_name_or_path "./work_dirs/internvl_chat_internvit_6b_448px_v1_2_internlm2_7b_224_pretrain/checkpoint-10300" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "/mnt/petrelfs/wangweiyun/workspace_cz/train_internvl/configs/data/internvl_sft_2m.json" \
+  --meta_path "./shell/data/internvl_sft_2m.json" \
   --overwrite_output_dir True \
   --force_image_size 224 \
   --down_sample_ratio 1.0 \
@@ -68,7 +67,7 @@ srun -p ${PARTITION} \
   --max_seq_length 4096 \
   --do_train True \
   --grad_checkpoint True \
-  --group_by_length False \
+  --group_by_length True \
   --dynamic_image_size False \
   --use_thumbnail False \
   --ps_version 'v2' \
