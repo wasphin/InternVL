@@ -42,7 +42,7 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils.logging import (enable_default_handler,
                                         enable_explicit_format, set_verbosity)
 
-# Upgrade transformers to v4.36.2, we don't need it anymore
+# Upgrade transformers to v4.37.2, we don't need it anymore
 # replace_llama2_attn_with_flash_attn()
 replace_llama_rmsnorm_with_fused_rmsnorm()
 replace_train_sampler()
@@ -489,7 +489,7 @@ def main():
         logger.info('Loading InternVLChatModel...')
         config = InternVLChatConfig.from_pretrained(model_args.model_name_or_path)
         config.vision_config.drop_path_rate = model_args.drop_path_rate
-        if 'internlm' in model_args.model_name_or_path.lower():
+        if config.llm_config.model_type == 'internlm2':
             config.llm_config.attn_implementation = 'flash_attention_2'  # for InternLM
             logger.info('Using flash_attention_2 for InternLM')
         else:
@@ -512,7 +512,7 @@ def main():
             model_args.vision_path, torch_dtype=torch.bfloat16, config=vision_config)
         logger.info('Loading LLaMA...')
         llm_config = AutoConfig.from_pretrained(model_args.llm_path, trust_remote_code=True)
-        if 'internlm' in model_args.llm_path.lower():
+        if llm_config.model_type == 'internlm2':
             llm_config.attn_implementation = 'flash_attention_2'  # for InternLM
             logger.info('Using flash_attention_2 for InternLM')
         else:

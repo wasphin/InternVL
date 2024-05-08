@@ -36,11 +36,10 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --vision_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/intern_vit_6b_448px_v1_5" \
-  --llm_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/internlm2-chat-7b" \
+  --model_name_or_path "./work_dirs/internvl_chat_internvit_6b_448px_v1_5_internlm2_7b_224_pretrain/checkpoint-10100" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "/mnt/petrelfs/wangweiyun/workspace_cz/train_internvl/configs/data/internvl_sft_2m.json" \
+  --meta_path "./shell/data/internvl_sft_2m.json" \
   --overwrite_output_dir True \
   --force_image_size 224 \
   --down_sample_ratio 1.0 \
@@ -68,7 +67,7 @@ srun -p ${PARTITION} \
   --max_seq_length 4096 \
   --do_train True \
   --grad_checkpoint True \
-  --group_by_length False \
+  --group_by_length True \
   --dynamic_image_size False \
   --use_thumbnail False \
   --ps_version 'v2' \
