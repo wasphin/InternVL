@@ -1,7 +1,7 @@
 set -x
 
 PARTITION=${PARTITION:-"INTERN2"}
-GPUS=${GPUS:-256}
+GPUS=${GPUS:-128}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
@@ -15,15 +15,15 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34229
 
-OUTPUT_DIR='work_dirs/internvl_chat_v1_5/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7_23'
+OUTPUT_DIR='work_dirs/internvl_chat_v1_5/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7_25'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 256
+# number of gpus: 128
 # batch size per gpu: 4
-# gradient accumulation steps: 1
+# gradient accumulation steps: 2
 # total batch size: 1024
 # epoch: 1
 srun -p ${PARTITION} \
@@ -39,7 +39,7 @@ srun -p ${PARTITION} \
   --model_name_or_path "./work_dirs/internvl_chat_v1_5/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain4/checkpoint-800" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_23.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_25.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
