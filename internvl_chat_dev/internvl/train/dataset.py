@@ -149,17 +149,16 @@ def preprocess(
         for j, sentence in enumerate(source):
             role = roles[sentence['from']]
             assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
     image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
+    if not text_only:
+        new_conversations = []
+        for conversation in conversations:
+            conversation = conversation.replace('<image>', image_tokens, 1)
+            new_conversations.append(conversation)
+        conversations = new_conversations
 
     # Tokenize conversations
     input_ids = tokenizer(
@@ -252,17 +251,16 @@ def preprocess_mpt(
         for j, sentence in enumerate(source):
             role = roles[sentence['from']]
             assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
     image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
+    if not text_only:
+        new_conversations = []
+        for conversation in conversations:
+            conversation = conversation.replace('<image>', image_tokens, 1)
+            new_conversations.append(conversation)
+        conversations = new_conversations
 
     # Tokenize conversations
     input_ids = tokenizer(
@@ -341,8 +339,6 @@ def preprocess_internlm(
         for j, sentence in enumerate(source):
             role = roles[sentence['from']]
             assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
             sentence['value'] = sentence['value'].strip()
             if sentence['value'][0] == '\n':
                 sentence['value'] = sentence['value'][1:]
@@ -350,11 +346,12 @@ def preprocess_internlm(
         conversations.append(conv.get_prompt())
 
     image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
+    if not text_only:
+        new_conversations = []
+        for conversation in conversations:
+            conversation = conversation.replace('<image>', image_tokens, 1)
+            new_conversations.append(conversation)
+        conversations = new_conversations
 
     # Tokenize conversations
     input_ids = tokenizer(
