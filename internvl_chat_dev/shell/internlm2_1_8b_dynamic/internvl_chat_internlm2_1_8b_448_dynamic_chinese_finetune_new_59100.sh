@@ -39,7 +39,7 @@ srun -p ${PARTITION} \
   --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_pretrain_new/checkpoint-59100" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_25.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_26.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
