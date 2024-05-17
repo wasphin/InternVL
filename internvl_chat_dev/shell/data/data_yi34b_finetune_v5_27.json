@@ -61,7 +61,7 @@
     "annotation": "metas/stage3_v5_20240517_std/academic/infovqa_train_25k_en_20240402_gpt4v.jsonl",
     "data_augment": true,
     "repeat_time": 4,
-    "length": 2345
+    "length": 4412
   },
   "infovqa_train_25k_24patch_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/infovqa/",
