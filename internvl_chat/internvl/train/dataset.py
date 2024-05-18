@@ -74,6 +74,21 @@ def expand2square(pil_img, background_color):
         return result
 
 
+def simulate_jpeg_degradation(quality):
+    def jpeg_degrade(img):
+        with io.BytesIO() as output:
+            img.convert('RGB').save(output, format='JPEG', quality=quality)
+            output.seek(0)  # Move the reading cursor to the start of the stream
+            img_jpeg = Image.open(output).copy()  # Use .copy() to make sure the image is loaded in memory
+        return img_jpeg
+    return jpeg_degrade
+
+
+# Define the JPEG compression quality range, pre-create all JPEG compression functions
+qualities = list(range(75, 96))
+jpeg_degrade_functions = {quality: simulate_jpeg_degradation(quality) for quality in qualities}
+
+
 def build_transform(is_train, input_size, pad2square=False, normalize_type='imagenet'):
     if normalize_type == 'imagenet':
         MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
@@ -86,8 +101,8 @@ def build_transform(is_train, input_size, pad2square=False, normalize_type='imag
     if is_train:  # use data augumentation
         transform = T.Compose([
             T.Lambda(lambda img: img.convert('RGB') if img.mode != 'RGB' else img),
-            T.RandomResizedCrop(input_size, scale=(0.8, 1.0), ratio=(3. / 4., 4. / 3.),
-                                interpolation=InterpolationMode.BICUBIC),
+            T.RandomChoice([T.Lambda(jpeg_degrade_functions[quality]) for quality in qualities]),
+            T.Resize((input_size, input_size), interpolation=InterpolationMode.BICUBIC),
             T.ToTensor(),
             T.Normalize(mean=MEAN, std=STD)
         ])
@@ -134,17 +149,16 @@ def preprocess(
         for j, sentence in enumerate(source):
             role = roles[sentence['from']]
             assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
     image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
+    if not text_only:
+        new_conversations = []
+        for conversation in conversations:
+            conversation = conversation.replace('<image>', image_tokens, 1)
+            new_conversations.append(conversation)
+        conversations = new_conversations
 
     # Tokenize conversations
     input_ids = tokenizer(
@@ -237,17 +251,16 @@ def preprocess_mpt(
         for j, sentence in enumerate(source):
             role = roles[sentence['from']]
             assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
     image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
+    if not text_only:
+        new_conversations = []
+        for conversation in conversations:
+            conversation = conversation.replace('<image>', image_tokens, 1)
+            new_conversations.append(conversation)
+        conversations = new_conversations
 
     # Tokenize conversations
     input_ids = tokenizer(
@@ -326,8 +339,6 @@ def preprocess_internlm(
         for j, sentence in enumerate(source):
             role = roles[sentence['from']]
             assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
             sentence['value'] = sentence['value'].strip()
             if sentence['value'][0] == '\n':
                 sentence['value'] = sentence['value'][1:]
@@ -335,11 +346,12 @@ def preprocess_internlm(
         conversations.append(conv.get_prompt())
 
     image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
+    if not text_only:
+        new_conversations = []
+        for conversation in conversations:
+            conversation = conversation.replace('<image>', image_tokens, 1)
+            new_conversations.append(conversation)
+        conversations = new_conversations
 
     # Tokenize conversations
     input_ids = tokenizer(
