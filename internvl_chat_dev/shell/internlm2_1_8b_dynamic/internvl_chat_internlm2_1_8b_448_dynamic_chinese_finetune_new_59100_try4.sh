@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_finetune_new_59100_try3'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_finetune_new_59100_try4'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -64,7 +64,7 @@ srun -p ${PARTITION} \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 6144 \
+  --max_seq_length 5120 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length True \

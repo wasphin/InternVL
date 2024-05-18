@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_phi3_2_8b_448_dynamic_chinese_pretrain'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_phi3_3_8b_dynamic_res_pretrain'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -40,7 +40,7 @@ srun -p ${PARTITION} \
   --llm_path "./pretrained/Phi-3-mini-128k-instruct" \
   --conv_style "phi3-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/debug.json" \
+  --meta_path "./shell/data/data_0404_zh_pretrain.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
