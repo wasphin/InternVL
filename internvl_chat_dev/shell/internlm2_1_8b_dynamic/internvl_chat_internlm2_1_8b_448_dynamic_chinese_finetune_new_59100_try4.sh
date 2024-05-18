@@ -64,7 +64,7 @@ srun -p ${PARTITION} \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 8192 \
+  --max_seq_length 6144 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length True \

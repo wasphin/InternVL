@@ -62,7 +62,7 @@ srun -p ${PARTITION} \
   --save_steps 100 \
   --save_total_limit 5 \
   --learning_rate 2e-5 \
-  --weight_decay 0.05 \
+  --weight_decay 0.01 \
   --warmup_steps 100 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
