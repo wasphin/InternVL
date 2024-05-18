@@ -3,21 +3,21 @@
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240403_std/arxiv/arxiv_equation_167k_en_20240403.jsonl",
     "data_augment": false,
-    "repeat_time": 0.03,
+    "repeat_time": 1,
     "length": 167156
   },
   "arxiv_table_65k_en_20240403": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240403_std/arxiv/arxiv_table_65k_en_20240403.jsonl",
     "data_augment": false,
-    "repeat_time": 0.08,
+    "repeat_time": 1,
     "length": 64707
   },
   "arxiv_texteq_162k_en_20240403": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240403_std/arxiv/arxiv_texteq_162k_en_20240403.jsonl",
     "data_augment": false,
-    "repeat_time": 0.03,
+    "repeat_time": 1,
     "length": 162464
   }
 }

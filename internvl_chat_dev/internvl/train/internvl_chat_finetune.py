@@ -289,6 +289,8 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_mpt
         elif self.template_name == 'internlm2-chat':
             preprocess_function = preprocess_internlm
+        elif self.template_name == 'phi3-chat':
+            preprocess_function = preprocess_internlm
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],

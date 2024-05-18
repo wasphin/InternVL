@@ -38,9 +38,9 @@ srun -p ${PARTITION} \
   python -u internvl/train/internvl_chat_pretrain.py \
   --vision_path "./pretrained/intern_vit_300m_448px_v1_5" \
   --llm_path "./pretrained/Phi-3-mini-128k-instruct" \
-  --conv_style "internlm2-chat" \
+  --conv_style "phi3-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_0404_zh_pretrain.json" \
+  --meta_path "./shell/data/debug.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
