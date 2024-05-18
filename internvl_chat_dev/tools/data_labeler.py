@@ -32,11 +32,12 @@ def save_current_conversations(question1, answer1, question2, answer2, question3
 
 
 def save_conversations(question1, answer1, question2, answer2, question3, answer3, question4, answer4, question5,
-                       answer5):
+                       answer5, file_path_input):
     save_current_conversations(question1, answer1, question2, answer2, question3, answer3, question4, answer4,
                                question5, answer5)
-    with open(file_path_input.value, 'w') as f:
+    with open(file_path_input, 'w') as f:
         f.writelines(data_lines)
+        print('Saved to', file_path_input)
     return 'Saved successfully.'
 
 
@@ -148,23 +149,18 @@ with gr.Blocks() as demo:
 
             question1_box = gr.Textbox(label='Question 1', value='', interactive=True)
             answer1_box = gr.Textbox(label='Answer 1', value='', interactive=True)
-            gpt4_answer1_btn = gr.Button('Query GPT4V Answer')
 
             question2_box = gr.Textbox(label='Question 2', value='', interactive=True)
             answer2_box = gr.Textbox(label='Answer 2', value='', interactive=True)
-            gpt4_answer2_btn = gr.Button('Query GPT4V Answer')
 
             question3_box = gr.Textbox(label='Question 3', value='', interactive=True)
             answer3_box = gr.Textbox(label='Answer 3', value='', interactive=True)
-            gpt4_answer3_btn = gr.Button('Query GPT4V Answer')
 
             question4_box = gr.Textbox(label='Question 4', value='', interactive=True)
             answer4_box = gr.Textbox(label='Answer 4', value='', interactive=True)
-            gpt4_answer4_btn = gr.Button('Query GPT4V Answer')
 
             question5_box = gr.Textbox(label='Question 5', value='', interactive=True)
             answer5_box = gr.Textbox(label='Answer 5', value='', interactive=True)
-            gpt4_answer5_btn = gr.Button('Query GPT4V Answer')
 
             save_button = gr.Button('Save')
 
@@ -196,7 +192,7 @@ with gr.Blocks() as demo:
 
     save_button.click(
         inputs=[question1_box, answer1_box, question2_box, answer2_box, question3_box, answer3_box, question4_box,
-                answer4_box, question5_box, answer5_box],
+                answer4_box, question5_box, answer5_box, file_path_input],
         fn=save_conversations
     )
 
