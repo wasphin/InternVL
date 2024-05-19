@@ -1,5 +1,4 @@
 import io
-import time
 
 from transformers.trainer_pt_utils import LabelSmoother
 
