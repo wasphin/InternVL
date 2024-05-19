@@ -10,7 +10,6 @@ import torch
 from internvl.train.constants import (IMG_CONTEXT_TOKEN, IMG_END_TOKEN,
                                       IMG_START_TOKEN)
 from internvl.train.dataset import build_transform
-from petrel_client.client import Client as PetrelClient
 from PIL import Image
 from torch.utils.data import Dataset
 from transformers import AutoTokenizer
@@ -124,7 +123,9 @@ class InterleavedDataset(Dataset):
 
         self.random = random.Random(seed)
         shard_order = list(range(6144))
-        shard_order = partition_for_rank(shard_order, rank=0, world_num=1)
+        self.world_size = torch.distributed.get_world_size()
+        current_rank = torch.distributed.get_rank()
+        shard_order = partition_for_rank(shard_order, rank=current_rank, world_num=self.world_size)
         if self.dataset_resampled:
             self.random.shuffle(shard_order)
         self.shard_order = shard_order
@@ -153,7 +154,7 @@ class InterleavedDataset(Dataset):
 
     def __len__(self):
         if self.train_num_samples is not None:
-            return min(self.train_num_samples, self._length) // self.data_args.world_size
+            return min(self.train_num_samples, self._length) // self.world_size
         return self._length
 
     @staticmethod
@@ -309,6 +310,8 @@ class InterleavedDataset(Dataset):
 
 if __name__ == '__main__':
     import argparse
+
+    from petrel_client.client import Client as PetrelClient
 
     args = argparse.ArgumentParser()
     args.rank = 0
