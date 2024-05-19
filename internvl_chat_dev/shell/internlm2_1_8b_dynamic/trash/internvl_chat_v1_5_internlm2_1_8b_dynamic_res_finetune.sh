@@ -15,7 +15,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_finetune_new_59100_try3'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_finetune'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -36,10 +36,10 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_internlm2_1_8b_448_dynamic_chinese_pretrain_new/checkpoint-59100" \
+  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_448_dynamic_chinese_finetune_new_59100_replace_llm" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_28.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_26.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
@@ -60,11 +60,11 @@ srun -p ${PARTITION} \
   --save_steps 200 \
   --save_total_limit 3 \
   --learning_rate 4e-5 \
-  --weight_decay 0.01 \
+  --weight_decay 0.05 \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 5120 \
+  --max_seq_length 4096 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length True \

@@ -1,30 +1,31 @@
 set -x
 
 PARTITION=${PARTITION:-"INTERN2"}
-GPUS=${GPUS:-128}
+GPUS=${GPUS:-256}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
-BATCH_SIZE=${BATCH_SIZE:-8192}
-PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-32}
+BATCH_SIZE=${BATCH_SIZE:-2048}
+PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34223
+export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_chinese_pretrain'
+OUTPUT_DIR='work_dirs/internvl_chat_v1_2/internvl_chat_v1_2_hermes2_yi34b_448_res_finetune'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 128
-# batch size per gpu: 32
-# gradient accumulation steps: 2
-# total batch size: 8192
+# number of gpus: 256
+# batch size per gpu: 8
+# gradient accumulation steps: 1
+# total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -35,20 +36,20 @@ srun -p ${PARTITION} \
   --kill-on-bad-exit=1 \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
-  python -u internvl/train/internvl_chat_pretrain.py \
-  --vision_path "./pretrained/intern_vit_6b_448px_v1_2" \
-  --llm_path "./pretrained/internlm2-chat-20b" \
-  --conv_style "internlm2-chat" \
+  python -u internvl/train/internvl_chat_finetune.py \
+  --model_name_or_path "./work_dirs/internvl_chat_hermes2_yi34b_448_chinese_pretrain2/checkpoint-1000" \
+  --conv_style "Hermes-2" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_0218_zh_pretrain.json" \
-  --overwrite_output_dir True \
+  --meta_path "./shell/data/data_0204_zh_finetune.json" \
+  --overwrite_output_dir False \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
   --pad2square False \
-  --freeze_llm True \
+  --freeze_llm False \
   --freeze_mlp False \
   --freeze_backbone True \
+  --unfreeze_vit_layers -5 \
   --use_data_resampling False \
   --dataloader_num_workers 1 \
   --bf16 True \
@@ -58,15 +59,15 @@ srun -p ${PARTITION} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
   --save_steps 200 \
-  --save_total_limit 3 \
-  --learning_rate 2e-4 \
+  --save_total_limit 5 \
+  --learning_rate 2e-5 \
   --weight_decay 0.05 \
-  --warmup_steps 100 \
+  --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 384 \
+  --max_seq_length 1024 \
   --do_train True \
   --grad_checkpoint True \
-  --deepspeed "zero_stage1_config.json" \
+  --deepspeed "zero_stage3_config.json" \
   --report_to "tensorboard" \
   2>&1 | tee -a "${OUTPUT_DIR}/training_log.txt"

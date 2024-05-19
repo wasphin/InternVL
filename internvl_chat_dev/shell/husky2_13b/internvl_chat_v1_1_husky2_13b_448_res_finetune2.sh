@@ -7,24 +7,25 @@ QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
-BATCH_SIZE=${BATCH_SIZE:-4096}
+BATCH_SIZE=${BATCH_SIZE:-2048}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34223
+export MASTER_PORT=34227
+export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_chinese_finetune'
+OUTPUT_DIR='work_dirs/internvl_chat_v1_1/internvl_chat_v1_1_husky2_13b_448_res_finetune2'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
 # number of gpus: 128
-# batch size per gpu: 16
-# gradient accumulation steps: 2
-# total batch size: 4096
+# batch size per gpu: 4
+# gradient accumulation steps: 4
+# total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -36,11 +37,11 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_chinese_pretrain/checkpoint-4600" \
-  --conv_style "internlm2-chat" \
+  --model_name_or_path "./work_dirs/internvl_chat_v1_1/internvl_chat_v1_1_husky2_13b_448_res_pretrain2/checkpoint-10600_replace_llm" \
+  --conv_style "internvl_zh" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_0218_zh_finetune.json" \
-  --overwrite_output_dir False \
+  --meta_path "./shell/data/data_0121_zh_finetune.json" \
+  --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
@@ -48,10 +49,9 @@ srun -p ${PARTITION} \
   --freeze_llm False \
   --freeze_mlp False \
   --freeze_backbone True \
-  --unfreeze_vit_layers -2 \
-  --vision_select_layer -1 \
+  --unfreeze_vit_layers -5 \
   --use_data_resampling False \
-  --dataloader_num_workers 2 \
+  --dataloader_num_workers 1 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
@@ -59,16 +59,15 @@ srun -p ${PARTITION} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
   --save_steps 200 \
-  --save_total_limit 3 \
+  --save_total_limit 5 \
   --learning_rate 2e-5 \
   --weight_decay 0.05 \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 1280 \
+  --max_seq_length 1024 \
   --do_train True \
   --grad_checkpoint True \
-  --group_by_length True \
-  --deepspeed "zero_stage2_config.json" \
+  --deepspeed "zero_stage1_config.json" \
   --report_to "tensorboard" \
   2>&1 | tee -a "${OUTPUT_DIR}/training_log.txt"
