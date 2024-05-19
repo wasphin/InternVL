@@ -1,26 +1,25 @@
 import json
 import logging
-import math
 import os
 import random
 import warnings
 from copy import deepcopy
 
-import torch
 from transformers.trainer_pt_utils import LabelSmoother
 
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
-from internvl.train.dataset import (TCSLoader, WeightedConcatDataset,
-                                    build_transform, preprocess,
-                                    preprocess_internlm, preprocess_mpt)
-from PIL import Image, ImageFile, PngImagePlugin
+from internvl.train.dataset import (build_transform, preprocess,
+                                    preprocess_internlm, preprocess_mpt,
+                                    preprocess_phi3)
+from PIL import ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from transformers import AutoTokenizer, LlamaTokenizer
+from transformers import AutoTokenizer
 
 try:
     from petrel_client.client import Client
     from petrel_client.common.config import Config
+
     has_tcs_loader = True
 except ImportError as E:
     print('petrel_client is not installed. Using PIL to load images.')
@@ -37,8 +36,11 @@ import torch
 import torchvision.transforms as T
 import transformers
 from internvl.conversation import get_conv_template
-from internvl.train.constants import (IMG_CONTEXT_TOKEN, IMG_END_TOKEN,
-                                      IMG_START_TOKEN)
+from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
+                                      IMG_CONTEXT_TOKEN, IMG_END_TOKEN,
+                                      IMG_START_TOKEN, QUAD_END_TOKEN,
+                                      QUAD_START_TOKEN, REF_END_TOKEN,
+                                      REF_START_TOKEN)
 from PIL import Image
 from torch.utils.data import ConcatDataset, WeightedRandomSampler
 from torchvision.transforms.functional import InterpolationMode
@@ -423,7 +425,7 @@ logger = logging.getLogger(__name__)
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-f = open('shell/data/data_yi34b_finetune_v5_16.json')
+f = open('shell/data/data_yi34b_finetune_v5_29.json')
 data = json.load(f)
 ds_collections = {}
 for k, v in data.items():
@@ -537,6 +539,8 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_mpt
         elif self.template_name == 'internlm2-chat':
             preprocess_function = preprocess_internlm
+        elif self.template_name == 'phi3-chat':
+            preprocess_function = preprocess_phi3
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
@@ -563,6 +567,8 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_mpt
         elif self.template_name == 'internlm2-chat':
             preprocess_function = preprocess_internlm
+        elif self.template_name == 'phi3-chat':
+            preprocess_function = preprocess_phi3
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
@@ -613,10 +619,13 @@ def test_dataset(dataset):
 
 
 if __name__ == '__main__':
-    llm_path = './work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_pretrain2/checkpoint-2400'
+    llm_path = './pretrained/Phi-3-mini-128k-instruct'
     llm_tokenizer = AutoTokenizer.from_pretrained(
         llm_path, add_eos_token=False, trust_remote_code=True)
-
+    token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
+                  QUAD_START_TOKEN, QUAD_END_TOKEN, REF_START_TOKEN,
+                  REF_END_TOKEN, BOX_START_TOKEN, BOX_END_TOKEN]
+    num_new_tokens = llm_tokenizer.add_tokens(token_list, special_tokens=True)
     img_context_token_id = llm_tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
     llm_tokenizer.model_max_length = 3072
     tcs_loader = TCSLoader('~/petreloss.conf')
@@ -624,7 +633,7 @@ if __name__ == '__main__':
     for ds_name in ds_collections.keys():
         print(f'Testing {ds_name}...')
         dataset = LazySupervisedDataset(
-            'internlm2-chat',
+            'phi3-chat',
             ds_collections[ds_name],
             llm_tokenizer,
             tcs_loader,

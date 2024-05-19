@@ -749,14 +749,15 @@ register_conv_template(
         name='phi3-chat',
         system_template='<|system|>\n{system_message}',
         system_message='You are an AI assistant whose name is Phi-3.',
-        roles=('<|user|>\n', '<|assistant|>\n'),
-        sep_style=SeparatorStyle.MPT,
+        roles=('<|user|>', '<|assistant|>'),
+        sep_style=SeparatorStyle.CHATML,
         sep='<|end|>',
         stop_token_ids=[
             2,
             32000,
             32007
-        ]
+        ],
+        stop_str='<|end|>',
     )
 )
 
