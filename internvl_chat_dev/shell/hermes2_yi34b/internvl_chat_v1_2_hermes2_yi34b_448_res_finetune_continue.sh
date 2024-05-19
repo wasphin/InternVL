@@ -5,7 +5,7 @@ GPUS=${GPUS:-16}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
-CPUS_PER_TASK=${CPUS_PER_TASK:-1}
+CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-128}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
@@ -13,10 +13,10 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34223
+export MASTER_PORT=34229
 export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_v1_2/internvl_chat_v1_2_hermes2_yi34b_448_finetune_continue'
+OUTPUT_DIR='work_dirs/internvl_chat_v1_2_hermes2_yi34b_448_res_finetune_continue'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -37,7 +37,7 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./pretrained/InternVL-Chat-V1-2" \
+  --model_name_or_path "./pretrained/InternVL-Chat-V1-2-Plus" \
   --conv_style "Hermes-2" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./path/to/your/custom/meta/file" \
@@ -66,6 +66,7 @@ srun -p ${PARTITION} \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
   --max_seq_length 2048 \
+  --group_by_length True \
   --do_train True \
   --grad_checkpoint True \
   --deepspeed "zero_stage3_config.json" \
