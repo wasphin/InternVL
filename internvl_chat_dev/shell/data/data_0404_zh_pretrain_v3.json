@@ -4,7 +4,7 @@
     "annotation": "langchao:s3://liqingyun/projects/lmm_interleaved/data0417_shuffled/",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 210063360
+    "length": 210000000
   },
   "open_objects": {
     "root": "langchao:",
@@ -95,16 +95,14 @@
     "annotation": "metas/stage2_v5/wukong_ocr.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 24775108,
-    "max_dynamic_patch": 12
+    "length": 24775108
   },
   "laioncoco_ocr": {
     "root": "hzh:",
     "annotation": "metas/stage2_v5/laioncoco_ocr.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 36009054,
-    "max_dynamic_patch": 12
+    "length": 36009054
   },
   "standford40_action": {
     "root": "langchao:s3://multi_modal/Stanford40/",
@@ -153,16 +151,14 @@
     "annotation": "metas/stage3_v5_20240318_std/douban_movie/douban_movie_qa.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 6431,
-    "max_dynamic_patch": 12
+    "length": 6431
   },
   "douban_movie_longcap": {
     "root": "langchao:s3://multi_modal/douban_movie_tv/",
     "annotation": "metas/stage3_v5_20240318_std/douban_movie/douban_movie_longcap.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 7549,
-    "max_dynamic_patch": 12
+    "length": 7549
   },
   "inhouse_gpt4v_longcap": {
     "root": "langchao:s3://multi_modal/wenhai_gerneral/small_transet_231109/",
@@ -204,16 +200,14 @@
     "annotation": "metas/stage3_v5_20240318_std/math/math_150.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 150,
-    "max_dynamic_patch": 12
+    "length": 150
   },
   "math_2k": {
     "root": "langchao:s3://mm_dataset/pic_math2k/images/",
     "annotation": "metas/stage3_v5_20240318_std/math/math_2k.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 2000,
-    "max_dynamic_patch": 12
+    "length": 2000
   },
   "coco_poetry": {
     "root": "langchao:s3://multi_modal/coco/train2014",
@@ -229,41 +223,6 @@
     "repeat_time": 5,
     "length": 9552
   },
-  "coco_karpathy_train_567k": {
-    "root": "langchao:s3://multi_modal/coco/",
-    "annotation": "metas/stage3_v5_20240318_std/academic/coco_karpathy_train_567k.jsonl",
-    "data_augment": true,
-    "repeat_time": 5,
-    "length": 566747
-  },
-  "vqav2_train_83k": {
-    "root": "langchao:s3://multi_modal/coco/train2014",
-    "annotation": "metas/stage3_v5_20240318_std/academic/vqav2_train_83k.jsonl",
-    "data_augment": true,
-    "repeat_time": 5,
-    "length": 82783
-  },
-  "vsr_train_8k": {
-    "root": "langchao:s3://multi_modal/coco/",
-    "annotation": "metas/stage3_v5_20240318_std/academic/vsr_train_8k.jsonl",
-    "data_augment": true,
-    "repeat_time": 5,
-    "length": 7680
-  },
-  "okvqa_train_9k": {
-    "root": "langchao:s3://multi_modal/coco/train2014",
-    "annotation": "metas/stage3_v5_20240318_std/academic/okvqa_train_9k.jsonl",
-    "data_augment": true,
-    "repeat_time": 5,
-    "length": 8996
-  },
-  "aokvqa_train_66k": {
-    "root": "langchao:s3://multi_modal/coco/",
-    "annotation": "metas/stage3_v5_20240318_std/academic/aokvqa_train_66k.jsonl",
-    "data_augment": true,
-    "repeat_time": 5,
-    "length": 66160
-  },
   "iconqa_train_30k": {
     "root": "langchao:s3://mm_dataset/IconQA/",
     "annotation": "metas/stage3_v5_20240318_std/academic/iconqa_train_30k.jsonl",
@@ -276,16 +235,14 @@
     "annotation": "metas/stage3_v5_20240402_std/academic/ai2d_train_12k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 12413,
-    "max_dynamic_patch": 12
+    "length": 12413
   },
   "ai2d_train_12k_new_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/ai2d/",
     "annotation": "metas/stage3_v5_20240402_std/academic/ai2d_train_12k_new_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 12413,
-    "max_dynamic_patch": 12
+    "length": 12413
   },
   "gqa_train_en_20240402": {
     "root": "langchao:s3://mm_dataset/gqa/images/",
@@ -299,32 +256,28 @@
     "annotation": "metas/stage3_v5_20240402_std/academic/textvqa_train_21k_wo_ocr_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 21461,
-    "max_dynamic_patch": 12
+    "length": 21461
   },
   "ocrvqa_train_206k": {
     "root": "langchao:s3://mm_dataset/ocrvqa/images/",
     "annotation": "metas/stage3_v5_20240318_std/academic/ocrvqa_train_206k.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 206374,
-    "max_dynamic_patch": 12
+    "length": 206374
   },
   "chartqa_trainval_30k_w_csv_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/chartqa/",
     "annotation": "metas/stage3_v5_20240402_std/academic/chartqa_trainval_30k_w_csv_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 30219,
-    "max_dynamic_patch": 12
+    "length": 30219
   },
   "docvqa_train_56k_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/docvqa/",
     "annotation": "metas/stage3_v5_20240402_std/academic/docvqa_train_56k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 56259,
-    "max_dynamic_patch": 12
+    "length": 56259
   },
   "stvqa_train_19k": {
     "root": "langchao:s3://mm_dataset/ocr_data/ST-VQA/",
@@ -345,8 +298,7 @@
     "annotation": "metas/stage3_v5_20240402_std/academic/infovqa_train_25k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 25466,
-    "max_dynamic_patch": 12
+    "length": 25466
   },
   "llavar_train_20k": {
     "root": "langchao:s3://mm_dataset/LLaVAR/images/",
@@ -360,8 +312,7 @@
     "annotation": "metas/stage3_v5_20240318_std/academic/textcap_train_21k.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 21461,
-    "max_dynamic_patch": 12
+    "length": 21461
   },
   "visdial_train_123k": {
     "root": "langchao:s3://multi_modal/coco/",
@@ -403,8 +354,7 @@
     "annotation": "metas/stage3_v5_20240318_std/ocr/chart_data_with_markdown.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 185541,
-    "max_dynamic_patch": 12
+    "length": 185541
   },
   "refcoco_grounding": {
     "root": "langchao:s3://multi_modal/coco/train2014",
@@ -453,8 +403,7 @@
     "annotation": "metas/stage3_v5_20240318_std/academic/lrv_chart_7k.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 7311,
-    "max_dynamic_patch": 12
+    "length": 7311
   },
   "lrv_instruction_68k": {
     "root": "langchao:s3://mm_dataset/VG_100K/",
@@ -605,7 +554,7 @@
   },
   "geoqa+": {
     "root": "langchao:s3://multi_modal/",
-    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/mathvista_indomain/geoqa+.jsonl",
+    "annotation": "metas/stage3_v5_20240318_std/mathvista_indomain/geoqa+.jsonl",
     "data_augment": true,
     "repeat_time": 5,
     "length": 72318
@@ -692,8 +641,7 @@
     "annotation": "metas/stage3_v5_20240318_std/mathvista_indomain/tabmwp.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 74921,
-    "max_dynamic_patch": 12
+    "length": 74921
   },
   "tqa": {
     "root": "langchao:s3://multi_modal/",
@@ -777,24 +725,21 @@
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_CTW_train_v1.0_wBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 24280,
-    "max_dynamic_patch": 12
+    "length": 24280
   },
   "TextVQA_cn_CTW_train_v1.0_woBox": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/CTW/images-trainval/ctw-images/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_CTW_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 24280,
-    "max_dynamic_patch": 12
+    "length": 24280
   },
   "TextVQA_en_DocVQA_train_v1.0_wBox": {
     "root": "langchao:s3://ocr/20240223/DocVQA/train/train/documents/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_en_DocVQA_train_v1.0_wBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 10194,
-    "max_dynamic_patch": 12
+    "length": 10194
   },
   "TextVQA_en_DocVQA_train_v1.0_woBox": {
     "root": "langchao:s3://ocr/20240223/DocVQA/train/train/documents/",
@@ -822,80 +767,70 @@
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_eaten_business_v1.0.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 198000,
-    "max_dynamic_patch": 12
+    "length": 198000
   },
   "TextVQA_cn_eaten_passport_v1.0": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/EATEN/dataset_passport/train/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_eaten_passport_v1.0.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 98000,
-    "max_dynamic_patch": 12
+    "length": 98000
   },
   "TextVQA_cn_eaten_trainticket_v1.0": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/EATEN/dataset_trainticket/train/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_eaten_trainticket_v1.0.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 300000,
-    "max_dynamic_patch": 12
+    "length": 300000
   },
   "TextVQA_cn_ICDAR2019_LSVT_train_v1.0_wBox": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-LSVT/train-full/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_ICDAR2019_LSVT_train_v1.0_wBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 29814,
-    "max_dynamic_patch": 12
+    "length": 29814
   },
   "TextVQA_cn_ICDAR2019_LSVT_train_v1.0_woBox": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-LSVT/train-full/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_ICDAR2019_LSVT_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 29814,
-    "max_dynamic_patch": 12
+    "length": 29814
   },
   "TextVQA_cn_MTWI_train_v1.0_wBox": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/MTWI/image_train/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_MTWI_train_v1.0_wBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 9687,
-    "max_dynamic_patch": 12
+    "length": 9687
   },
   "TextVQA_cn_MTWI_train_v1.0_woBox": {
     "root": "langchao:s3://ocr/TextVQA-dataset-CHN/MTWI/image_train/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_cn_MTWI_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 9687,
-    "max_dynamic_patch": 12
+    "length": 9687
   },
   "TextVQA_en_naf_v1.0_woBox": {
     "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/naf/NAF_dataset/groups/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_en_naf_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 865,
-    "max_dynamic_patch": 12
+    "length": 865
   },
   "pdf60k_cn_v1.0_wBox": {
     "root": "langchao:s3://ocr/pdf/cn60k/images/",
     "annotation": "metas/v1_20240321_updateRoot_std/pdf60k_cn_v1.0_wBox.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 9589394,
-    "max_dynamic_patch": 12
+    "length": 9589394
   },
   "pdf60k_cn_v1.0_woBox": {
     "root": "langchao:s3://ocr/pdf/cn60k/images/",
     "annotation": "metas/v1_20240321_updateRoot_std/pdf60k_cn_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 9589394,
-    "max_dynamic_patch": 12
+    "length": 9589394
   },
   "chart_PlotQA1_v1_merge_2.0_v1.0": {
     "root": "langchao:s3://ocr/table/PlotQA/png/",
@@ -986,56 +921,49 @@
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_en_textocr_train_v1.0_wBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 21412,
-    "max_dynamic_patch": 12
+    "length": 21412
   },
   "TextVQA_en_textocr_train_v1.0_woBox": {
     "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_en_textocr_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 21412,
-    "max_dynamic_patch": 12
+    "length": 21412
   },
   "chart_UniChart_v2_merge_v1.0": {
     "root": "langchao:s3://ocr/20240223/UniChart/content/UniChart_Images/",
     "annotation": "metas/v1_20240321_updateRoot_std/chart_UniChart_v2_merge_v1.0.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 504900,
-    "max_dynamic_patch": 12
+    "length": 504900
   },
   "TextVQA_en_wildreceipt_train_v1.0_woBox": {
     "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/wildreceipt/wildreceipt/image_files/",
     "annotation": "metas/v1_20240321_updateRoot_std/TextVQA_en_wildreceipt_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 1267,
-    "max_dynamic_patch": 12
+    "length": 1267
   },
   "arxiv_equation": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/ocr_pretrain_20240307_weiyun/arxiv_equation.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 5349023,
-    "max_dynamic_patch": 12
+    "length": 5349023
   },
   "arxiv_table": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/ocr_pretrain_20240307_weiyun/arxiv_table.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 2070626,
-    "max_dynamic_patch": 12
+    "length": 2070626
   },
   "arxiv_texteq": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/ocr_pretrain_20240307_weiyun/arxiv_texteq.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 5198854,
-    "max_dynamic_patch": 12
+    "length": 5198854
   },
   "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_20240402": {
     "root": "langchao:s3://multi_modal/allava_laion/",
@@ -1056,8 +984,7 @@
     "annotation": "metas/stage3_v5_20240318_std/chenzhe/textocr_gpt4v_en_0316.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 21407,
-    "max_dynamic_patch": 12
+    "length": 21407
   },
   "ccbench_inhouse_20240401_v2": {
     "root": "langchao:s3://multi_modal_2024/ccbench/raw_data/",
@@ -1071,24 +998,21 @@
     "annotation": "metas/stage3_v5_20240402_std/academic/DocReason_20240402_v1_r25877_20240403_v1.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 25877,
-    "max_dynamic_patch": 12
+    "length": 25877
   },
   "info_markdown_en_20240402": {
     "root": "langchao:s3://multi_modal/infographic-aug/",
     "annotation": "metas/stage3_v5_20240402_std/gpt4v_data/info_markdown_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 4455,
-    "max_dynamic_patch": 12
+    "length": 4455
   },
   "info_markdown_v2_en_20240402": {
     "root": "langchao:s3://multi_modal/infographic-aug/",
     "annotation": "metas/stage3_v5_20240402_std/gpt4v_data/info_markdown_v2_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 10,
-    "length": 10025,
-    "max_dynamic_patch": 12
+    "length": 10025
   },
   "kvqa_24k_en_20240402": {
     "root": "langchao:s3://xc_mirror/",
@@ -1123,8 +1047,7 @@
     "annotation": "metas/stage3_v5_20240402_std/xc2/mmc_inst_qa_600k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 5,
-    "length": 600000,
-    "max_dynamic_patch": 12
+    "length": 600000
   },
   "art500k_train_30k_en_20240403": {
     "root": "langchao:s3://multi_modal/playground/data/art500k/",

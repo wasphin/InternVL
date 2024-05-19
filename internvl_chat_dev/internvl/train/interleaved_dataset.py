@@ -34,7 +34,6 @@ def load_json(json_url_or_path, _client=None):
             except Exception as e:
                 print(f'Failed to get {json_url_or_path}, retry {try_times}')
                 try_times += 1
-                time.sleep(1)
         return json.load(io.BytesIO(bytes))
     else:
         return json.load(open(json_url_or_path, 'r'))
@@ -64,9 +63,9 @@ def load_jsonl(jsonl_url_or_path, _client=None):
                 bytes = _client.get(jsonl_url_or_path)
                 break
             except Exception as e:
+                print(e)
                 print(f'Failed to get {jsonl_url_or_path}, retry {try_times}')
                 try_times += 1
-                time.sleep(1)
         lines = io.BytesIO(bytes).readlines()
     else:
         lines = open(jsonl_url_or_path, 'r').readlines()
@@ -108,7 +107,7 @@ class InterleavedDataset(Dataset):
         self.max_num_images = max_num_images
         self.train_num_samples = train_num_samples
         self.dataset_resampled = dataset_resampled
-        self.tcs_loader = tcs_loader
+        self.tcs_loader = tcs_loader.client
         self.num_image_token = num_image_token
         self.image_size = image_size
         self.is_train = is_train
@@ -123,8 +122,10 @@ class InterleavedDataset(Dataset):
 
         self.random = random.Random(seed)
         shard_order = list(range(6144))
-        self.world_size = torch.distributed.get_world_size()
-        current_rank = torch.distributed.get_rank()
+        # self.world_size = torch.distributed.get_world_size()
+        # current_rank = torch.distributed.get_rank()
+        self.world_size = 32
+        current_rank = 0
         shard_order = partition_for_rank(shard_order, rank=current_rank, world_num=self.world_size)
         if self.dataset_resampled:
             self.random.shuffle(shard_order)
@@ -166,14 +167,14 @@ class InterleavedDataset(Dataset):
 
     def load_data(self, index):
         assert self.shard_mode
-        if index >= self._length:
-            index = index % self._length
+        index = index % self._length
         start, end = self.shard_id_range[self.current_shard_name]
+        print(f'start: {start}, end: {end}, index: {index}')
         if start <= index <= end:
             return deepcopy(self.current_shard_data[index - start])
         else:
             for shard_name, (start, end) in self.shard_id_range.items():
-                if start <= index < end:
+                if start <= index <= end:
                     self.current_shard_name = shard_name
                     self.current_shard_data = self.load_ann_file(
                         os.path.join(self.data_path, shard_name))
@@ -235,6 +236,7 @@ class InterleavedDataset(Dataset):
     def getitem(self, index):
         # dict_keys(['general_metadata', 'images', 'texts', 'metadata', 'doc_loc'])
         sample = self.load_data(index)
+        assert sample is not None, 'sample is None'
         # parse sample and check
         images, texts, metadata, valid_image = self.parse_sample(sample)
         # get valid images
@@ -271,7 +273,7 @@ class InterleavedDataset(Dataset):
         text = text.replace('<image>', image_tokens, len(images))
         tokenized = self.tokenizer(
             text,
-            max_length=tokenizer.model_max_length,
+            max_length=self.tokenizer.model_max_length,
             truncation=True,
             padding=False,
             return_tensors='pt',
@@ -280,9 +282,9 @@ class InterleavedDataset(Dataset):
         num_patches = pixel_values.size(0)
         input_ids = tokenized['input_ids']
         labels = input_ids.clone()
-        image_start_token_id = tokenizer.convert_tokens_to_ids(IMG_START_TOKEN)
-        image_end_token_id = tokenizer.convert_tokens_to_ids(IMG_END_TOKEN)
-        image_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
+        image_start_token_id = self.tokenizer.convert_tokens_to_ids(IMG_START_TOKEN)
+        image_end_token_id = self.tokenizer.convert_tokens_to_ids(IMG_END_TOKEN)
+        image_context_token_id = self.tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         assert (labels == image_context_token_id).sum() == self.num_image_token * len(images), 'image tokens are truncated'
         labels[labels == image_start_token_id] = -100
         labels[labels == image_end_token_id] = -100
@@ -290,7 +292,7 @@ class InterleavedDataset(Dataset):
         ret = dict(
             input_ids=input_ids[0],
             labels=labels[0],
-            attention_mask=input_ids[0].ne(tokenizer.pad_token_id),
+            attention_mask=input_ids[0].ne(self.tokenizer.pad_token_id),
             pixel_values=pixel_values,
             image_flags=torch.tensor([1] * num_patches, dtype=torch.long)
         )
@@ -299,28 +301,23 @@ class InterleavedDataset(Dataset):
     def __getitem__(self, index):
         while True:
             try:
+                index = index % self._length
                 item = self.getitem(index)
                 break
             except Exception as err:
-                print(err)
-                index = (index + 1) % len(self)
-                print(f'Try to load next index: {index}')
+                start, end = random.choice(list(self.shard_id_range.values()))
+                index = random.randint(start, end)
+                # index = index + 1
+                print(f'Try to load index {index} again, due to {err}')
         return item
 
 
 if __name__ == '__main__':
-    import argparse
+    from tqdm import tqdm
 
-    from petrel_client.client import Client as PetrelClient
-
-    args = argparse.ArgumentParser()
-    args.rank = 0
-    args.world_size = 1
-    args.batch_size_mmc4 = 1
-    args.workers = 1
     model_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/release/InternVL-Chat-V1-5'
     tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=True)
-    client = PetrelClient('~/petreloss.conf')
+    tokenizer.model_max_length = 4096
 
     metas = {
         'lmm_interleaved_data0417_shuffled': {
@@ -331,10 +328,12 @@ if __name__ == '__main__':
             'length': 210063360
         },
     }
+    from internvl.train.dataset import TCSLoader
+    tcs_loader = TCSLoader('~/petreloss.conf')
     dataset = InterleavedDataset(meta=metas['lmm_interleaved_data0417_shuffled'],
                                  tokenizer=tokenizer,
-                                 tcs_loader=client,
+                                 tcs_loader=tcs_loader,
                                  )
-    item = dataset.__getitem__(0)
-    print(item)
+    for i in tqdm(range(1000)):
+        item = dataset.__getitem__(i)
     print(f'length: {len(dataset)}')

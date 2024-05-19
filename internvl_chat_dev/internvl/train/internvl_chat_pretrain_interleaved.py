@@ -394,39 +394,39 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
             logger.info(f'max_dynamic_patch is set to {max_num} according to the meta file')
         else:
             max_num = max_dynamic_patch
-        try:
-            if 'lmm_interleaved' in ds_name:
-                dataset = InterleavedDataset(
-                    meta=ds_collections[ds_name],
-                    tokenizer=tokenizer,
-                    tcs_loader=tcs_loader,
-                    num_image_token=model.num_image_token,
-                    image_size=data_args.force_image_size,
-                    is_train=ds_collections[ds_name]['data_augment'],
-                    pad2square=data_args.pad2square,
-                    group_by_length=group_by_length,
-                    normalize_type=normalize_type,
-                    max_num_images=6,
-                )
-            else:
-                dataset = LazySupervisedDataset(
-                    data_args.conv_style, ds_collections[ds_name],
-                    tokenizer,
-                    tcs_loader,
-                    num_image_token=model.num_image_token,
-                    image_size=data_args.force_image_size,
-                    is_train=ds_collections[ds_name]['data_augment'],
-                    pad2square=data_args.pad2square,
-                    group_by_length=group_by_length,
-                    dynamic_image_size=dynamic_image_size,
-                    use_thumbnail=use_thumbnail,
-                    min_dynamic_patch=min_dynamic_patch,
-                    max_dynamic_patch=max_num,
-                    normalize_type=normalize_type,
-                )
-        except Exception:
-            logger.info(f'Error in loading dataset: {ds_name}')
-            exit()
+        # try:
+        if 'lmm_interleaved' in ds_name:
+            dataset = InterleavedDataset(
+                meta=ds_collections[ds_name],
+                tokenizer=tokenizer,
+                tcs_loader=tcs_loader,
+                num_image_token=model.num_image_token,
+                image_size=data_args.force_image_size,
+                is_train=ds_collections[ds_name]['data_augment'],
+                pad2square=data_args.pad2square,
+                group_by_length=group_by_length,
+                normalize_type=normalize_type,
+                max_num_images=6,
+            )
+        else:
+            dataset = LazySupervisedDataset(
+                data_args.conv_style, ds_collections[ds_name],
+                tokenizer,
+                tcs_loader,
+                num_image_token=model.num_image_token,
+                image_size=data_args.force_image_size,
+                is_train=ds_collections[ds_name]['data_augment'],
+                pad2square=data_args.pad2square,
+                group_by_length=group_by_length,
+                dynamic_image_size=dynamic_image_size,
+                use_thumbnail=use_thumbnail,
+                min_dynamic_patch=min_dynamic_patch,
+                max_dynamic_patch=max_num,
+                normalize_type=normalize_type,
+            )
+        # except Exception:
+        #     logger.info(f'Error in loading dataset: {ds_name}')
+        #     exit()
         dataset.ds_name = ds_name
         for i in range(repeat_time):
             logger.info(f'Add dataset:{ds_name}_{i} with length: {len(dataset)}')
