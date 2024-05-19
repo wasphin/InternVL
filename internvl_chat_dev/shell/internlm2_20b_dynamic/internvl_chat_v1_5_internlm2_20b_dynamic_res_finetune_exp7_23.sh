@@ -1,34 +1,34 @@
 set -x
 
 PARTITION=${PARTITION:-"INTERN2"}
-GPUS=${GPUS:-128}
+GPUS=${GPUS:-256}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
-CPUS_PER_TASK=${CPUS_PER_TASK:-1}
+CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
-BATCH_SIZE=${BATCH_SIZE:-512}
+BATCH_SIZE=${BATCH_SIZE:-1024}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34229
+export MASTER_PORT=34227
+export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7_5_new_ablation8'
+OUTPUT_DIR='work_dirs/internvl_chat_v1_5/internvl_chat_v1_5_internlm2_20b_dynamic_res_finetune_exp7_23'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 128
+# number of gpus: 256
 # batch size per gpu: 4
 # gradient accumulation steps: 1
-# total batch size: 512
+# total batch size: 1024
 # epoch: 1
 srun -p ${PARTITION} \
-  --gres=gpu:0 \
-  -w SH-IDC1-10-140-37-[67-69,71-80,82,99,103] \
+  --gres=gpu:${GPUS_PER_NODE} \
   --nodes=${NODES} \
   --ntasks=${GPUS} \
   --ntasks-per-node=${GPUS_PER_NODE} \
@@ -37,10 +37,10 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_internlm2_20b_448_dynamic_chinese_finetune_exp7_5_new" \
+  --model_name_or_path "./work_dirs/internvl_chat_v1_5/internvl_chat_v1_5_internlm2_20b_dynamic_res_pretrain4/checkpoint-800" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_5_ablation8.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_23.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
@@ -48,10 +48,10 @@ srun -p ${PARTITION} \
   --pad2square False \
   --freeze_llm False \
   --freeze_mlp False \
-  --freeze_backbone True \
+  --freeze_backbone False \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 8 \
+  --dataloader_num_workers 4 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
@@ -60,7 +60,7 @@ srun -p ${PARTITION} \
   --save_strategy "steps" \
   --save_steps 200 \
   --save_total_limit 3 \
-  --learning_rate 1e-5 \
+  --learning_rate 2e-5 \
   --weight_decay 0.05 \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
