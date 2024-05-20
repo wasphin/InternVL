@@ -122,10 +122,8 @@ class InterleavedDataset(Dataset):
 
         self.random = random.Random(seed)
         shard_order = list(range(6144))
-        # self.world_size = torch.distributed.get_world_size()
-        # current_rank = torch.distributed.get_rank()
-        self.world_size = 32
-        current_rank = 0
+        self.world_size = torch.distributed.get_world_size()
+        current_rank = torch.distributed.get_rank()
         shard_order = partition_for_rank(shard_order, rank=current_rank, world_num=self.world_size)
         if self.dataset_resampled:
             self.random.shuffle(shard_order)
