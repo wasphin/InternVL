@@ -1,0 +1,16 @@
+{
+  "lmm_interleaved_data0417_shuffled": {
+    "root": "wwhnew_pssd:s3://mllm-cc/raw-images/",
+    "annotation": "langchao:s3://liqingyun/projects/lmm_interleaved/data0417_shuffled/",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 210000000
+  },
+  "grit_w_box_28k_zh_det": {
+    "root": "langchao:s3://GRIT/",
+    "annotation": "metas/stage2_v5/grit_w_box_28k_zh_det.jsonl",
+    "data_augment": true,
+    "repeat_time": 5,
+    "length": 28052
+  }
+}

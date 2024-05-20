@@ -32,7 +32,7 @@ def load_json(json_url_or_path, _client=None):
                 bytes = _client.get(json_url_or_path)
                 break
             except Exception as e:
-                print(f'Failed to get {json_url_or_path}, retry {try_times}')
+                # print(f'Failed to get {json_url_or_path}, retry {try_times}')
                 try_times += 1
         return json.load(io.BytesIO(bytes))
     else:
@@ -47,7 +47,7 @@ def load_json_line(line_str, try_times=20):
             break
         except Exception as e:
             data = None
-            print(f'Failed to load line, retry {_try_times}')
+            # print(f'Failed to load line, retry {_try_times}')
             _try_times += 1
             line_str = line_str[:-1]
     if data is None:
@@ -169,7 +169,6 @@ class InterleavedDataset(Dataset):
         assert self.shard_mode
         index = index % self._length
         start, end = self.shard_id_range[self.current_shard_name]
-        print(f'start: {start}, end: {end}, index: {index}')
         if start <= index <= end:
             return deepcopy(self.current_shard_data[index - start])
         else:
@@ -179,8 +178,17 @@ class InterleavedDataset(Dataset):
                     self.current_shard_data = self.load_ann_file(
                         os.path.join(self.data_path, shard_name))
                     self.random.shuffle(self.current_shard_data)
-                    print(f'Change shard file to {self.current_shard_name}')
+                    # print(f'Change shard file to {self.current_shard_name}')
                     return deepcopy(self.current_shard_data[index - start])
+            else:
+                shard_name = random.choice(list(self.shard_id_range.keys()))
+                self.current_shard_data = self.load_ann_file(
+                    os.path.join(self.data_path, shard_name))
+                self.random.shuffle(self.current_shard_data)
+                # print(f'Change shard file to {self.current_shard_name}')
+                start, end = self.shard_id_range[shard_name]
+                index = random.randint(start, end)
+                return deepcopy(self.current_shard_data[index - start])
 
     def get_img_filename(self, web_url):
         return self.encode_hash_sha256(web_url)

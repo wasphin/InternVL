@@ -746,6 +746,22 @@ register_conv_template(
 
 register_conv_template(
     Conversation(
+        name='llama3-internvl-chat',
+        system_template='<|im_start|>system\n{system_message}',
+        system_message='You are an AI assistant whose name is InternVL.',
+        roles=('<|im_start|>user\n', '<|im_start|>assistant\n'),
+        sep_style=SeparatorStyle.MPT,
+        sep='<|im_end|>',
+        stop_token_ids=[
+            128257,
+            128001
+        ]
+    )
+)
+
+
+register_conv_template(
+    Conversation(
         name='phi3-chat',
         system_template='<|system|>\n{system_message}',
         system_message='You are an AI assistant whose name is Phi-3.',

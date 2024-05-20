@@ -7,7 +7,7 @@ QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-1}
 SRUN_ARGS=${SRUN_ARGS:-""}
-BATCH_SIZE=${BATCH_SIZE:-8192}
+BATCH_SIZE=${BATCH_SIZE:-4096}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
@@ -16,16 +16,16 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34227
 export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/interleaved/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_pretrain_interleaved'
+OUTPUT_DIR='work_dirs/interleaved/internvl_chat_v1_5_vicuna_7b_dynamic_res_pretrain_interleaved'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
 # number of gpus: 512
-# batch size per gpu: 8
-# gradient accumulation steps: 2
-# total batch size: 8192
+# batch size per gpu: 4
+# gradient accumulation steps: 1
+# total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -38,22 +38,22 @@ srun -p ${PARTITION} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain_interleaved.py \
   --vision_path "./pretrained/intern_vit_300m_448px_v1_5" \
-  --mlp_path "./pretrained/intern_vit_300m_448px_v1_5/mlp_projector.pth" \
-  --llm_path "./pretrained/internlm2-chat-1_8b" \
-  --conv_style "internlm2-chat" \
+  --llm_path "./pretrained/vicuna-7b-v1.5" \
+  --conv_style "vicuna_v1.1" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_0404_zh_pretrain_v3.json" \
+  --meta_path "./shell/data/data_0404_zh_pretrain_v3_debug.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
+  --max_dynamic_patch 6 \
   --down_sample_ratio 0.5 \
-  --drop_path_rate 0.1 \
+  --drop_path_rate 0.0 \
   --pad2square False \
-  --freeze_llm True \
+  --freeze_llm False \
   --freeze_mlp False \
-  --freeze_backbone False \
+  --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 8 \
+  --dataloader_num_workers 16 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
@@ -67,7 +67,7 @@ srun -p ${PARTITION} \
   --warmup_steps 100 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 4096 \
+  --max_seq_length 2560 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length False \
