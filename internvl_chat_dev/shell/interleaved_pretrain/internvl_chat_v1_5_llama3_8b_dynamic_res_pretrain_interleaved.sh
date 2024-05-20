@@ -41,7 +41,7 @@ srun -p ${PARTITION} \
   --llm_path "./pretrained/Meta-Llama-3-8B-Add-Token" \
   --conv_style "llama3-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_0404_zh_pretrain_v3_debug.json" \
+  --meta_path "./shell/data/data_0404_zh_pretrain_v3.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --max_dynamic_patch 5 \

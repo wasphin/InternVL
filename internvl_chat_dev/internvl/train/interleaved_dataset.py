@@ -284,14 +284,30 @@ class InterleavedDataset(Dataset):
             padding=False,
             return_tensors='pt',
         )
-        pixel_values = self.preprocess_image(images)
-        num_patches = pixel_values.size(0)
         input_ids = tokenized['input_ids']
-        labels = input_ids.clone()
         image_start_token_id = self.tokenizer.convert_tokens_to_ids(IMG_START_TOKEN)
         image_end_token_id = self.tokenizer.convert_tokens_to_ids(IMG_END_TOKEN)
         image_context_token_id = self.tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
-        # assert (labels == image_context_token_id).sum() == self.num_image_token * len(images), 'image tokens are truncated'
+        # count IMG_END_TOKEN
+        num_image_end_tokens = input_ids.eq(image_end_token_id).sum().item()
+        if num_image_end_tokens != len(images):
+            text = text.replace(image_tokens, '<image>', len(images))
+            images = images[:num_image_end_tokens]
+            text = text.replace('<image>', image_tokens, len(images))
+            text = text.replace('<image>', '')
+            tokenized = self.tokenizer(
+                text,
+                max_length=self.tokenizer.model_max_length,
+                truncation=True,
+                padding=False,
+                return_tensors='pt',
+            )
+            input_ids = tokenized['input_ids']
+
+        pixel_values = self.preprocess_image(images)
+        num_patches = pixel_values.size(0)
+        labels = input_ids.clone()
+        assert (labels == image_context_token_id).sum() == self.num_image_token * len(images), 'image tokens are truncated'
         labels[labels == image_start_token_id] = -100
         labels[labels == image_end_token_id] = -100
         labels[labels == image_context_token_id] = -100
