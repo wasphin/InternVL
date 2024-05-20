@@ -746,7 +746,7 @@ register_conv_template(
 
 register_conv_template(
     Conversation(
-        name='llama3-internvl-chat',
+        name='llama3-chat',
         system_template='<|im_start|>system\n{system_message}',
         system_message='You are an AI assistant whose name is InternVL.',
         roles=('<|im_start|>user\n', '<|im_start|>assistant\n'),
