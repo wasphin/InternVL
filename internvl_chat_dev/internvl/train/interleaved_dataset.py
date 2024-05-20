@@ -115,7 +115,6 @@ class InterleavedDataset(Dataset):
         self.normalize_type = normalize_type
 
         # 0-6143 each 34195 samples
-        self.shard_mode = True
         self.num_samples_each_shard = 34190  # even if the actual num is more
         self._length = self.num_samples_each_shard * 6144
 
@@ -127,7 +126,6 @@ class InterleavedDataset(Dataset):
 
         if self.dataset_resampled:
             self.random.shuffle(shard_order)
-        self.shard_order = shard_order
 
         self.raw_data = []
         for i in range(len(shard_order)):
