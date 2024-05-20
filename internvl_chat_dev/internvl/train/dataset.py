@@ -296,9 +296,9 @@ def preprocess_mpt(
 
             # Ignore the user instructions
             target[cur_len: cur_len + instruction_len] = IGNORE_TOKEN_ID
-            print(f'[question {i}]', tokenizer.decode(input_ids[:, cur_len: cur_len + instruction_len][0]))
-            print(f'[answer {i}]', tokenizer.decode(input_ids[:, cur_len + instruction_len: cur_len + turn_len][0]))
-            print(f'[label {i}]', target[cur_len + instruction_len: cur_len + turn_len])
+            # print(f'[question {i}]', tokenizer.decode(input_ids[:, cur_len: cur_len + instruction_len][0]))
+            # print(f'[answer {i}]', tokenizer.decode(input_ids[:, cur_len + instruction_len: cur_len + turn_len][0]))
+            # print(f'[label {i}]', target[cur_len + instruction_len: cur_len + turn_len])
             cur_len += turn_len
 
         target[cur_len:] = IGNORE_TOKEN_ID
@@ -394,9 +394,9 @@ def preprocess_phi3(
 
             # Ignore the user instructions
             target[cur_len: cur_len + instruction_len] = IGNORE_TOKEN_ID
-            print(f'[question {i}]', tokenizer.decode(input_ids[:, cur_len: cur_len + instruction_len][0]))
-            print(f'[answer {i}]', tokenizer.decode(input_ids[:, cur_len + instruction_len: cur_len + turn_len][0]))
-            print(f'[label {i}]', target[cur_len + instruction_len: cur_len + turn_len])
+            # print(f'[question {i}]', tokenizer.decode(input_ids[:, cur_len: cur_len + instruction_len][0]))
+            # print(f'[answer {i}]', tokenizer.decode(input_ids[:, cur_len + instruction_len: cur_len + turn_len][0]))
+            # print(f'[label {i}]', target[cur_len + instruction_len: cur_len + turn_len])
             cur_len += turn_len
 
         target[cur_len:] = IGNORE_TOKEN_ID
