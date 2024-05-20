@@ -60,8 +60,8 @@ srun -p ${PARTITION} \
   --gradient_accumulation_steps ${GRADIENT_ACC} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
-  --save_steps 100 \
-  --save_total_limit 5 \
+  --save_steps 500 \
+  --save_total_limit 20 \
   --learning_rate 2e-5 \
   --weight_decay 0.05 \
   --warmup_steps 1000 \

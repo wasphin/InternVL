@@ -53,7 +53,7 @@ srun -p ${PARTITION} \
   --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 8 \
+  --dataloader_num_workers 2 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
