@@ -1,7 +1,9 @@
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 model_path = './pretrained/Meta-Llama-3-8B'
-model = AutoModelForCausalLM.from_pretrained(model_path)
+model = AutoModelForCausalLM.from_pretrained(model_path,
+                                             torch_dtype=torch.bfloat16)
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 num_new_tokens = tokenizer.add_tokens([

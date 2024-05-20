@@ -3,8 +3,6 @@ import io
 import json
 import os
 import random
-import time
-from copy import deepcopy
 
 import torch
 from internvl.train.constants import (IMG_CONTEXT_TOKEN, IMG_END_TOKEN,
@@ -55,7 +53,7 @@ def load_json_line(line_str, try_times=20):
     return data
 
 
-def load_jsonl(jsonl_url_or_path, _client=None):
+def load_jsonl(jsonl_url_or_path, _client=None, decode=True):
     if 's3://' in jsonl_url_or_path:
         try_times = 0
         while try_times < 10:
@@ -70,14 +68,17 @@ def load_jsonl(jsonl_url_or_path, _client=None):
     else:
         lines = open(jsonl_url_or_path, 'r').readlines()
 
-    data = []
-    for line in lines:
-        if len(line.strip()) > 2:
-            try:
-                sample = load_json_line(line)
-                data.append(sample)
-            except Exception as e:
-                raise ValueError(f'Failed to load line: {line}') from e
+    if decode:
+        data = []
+        for line in lines:
+            if len(line.strip()) > 2:
+                try:
+                    sample = load_json_line(line)
+                    data.append(sample)
+                except Exception as e:
+                    raise ValueError(f'Failed to load line: {line}') from e
+    else:
+        data = lines
     return data
 
 
@@ -88,10 +89,8 @@ def encode_hash_sha256(txt):
 
 
 def partition_for_rank(all_rank_item_list: list, rank: int, world_num: int) -> list:
-    this_rank_item_list = []
-    this_rank_index = range(rank, len(all_rank_item_list), world_num)
-    for idx in this_rank_index:
-        this_rank_item_list.append(all_rank_item_list[idx])
+    num_per_rank = len(all_rank_item_list) // world_num
+    this_rank_item_list = all_rank_item_list[rank * num_per_rank: (rank + 1) * num_per_rank]
     return this_rank_item_list
 
 
@@ -125,23 +124,20 @@ class InterleavedDataset(Dataset):
         self.world_size = torch.distributed.get_world_size()
         current_rank = torch.distributed.get_rank()
         shard_order = partition_for_rank(shard_order, rank=current_rank, world_num=self.world_size)
+
         if self.dataset_resampled:
             self.random.shuffle(shard_order)
         self.shard_order = shard_order
 
-        # hard code a shard_id_range
-        self.shard_id_range = {
-            f'data0417_shuffled_shard_{shard_order[i]}.jsonl': (
-                self.num_samples_each_shard * i,
-                self.num_samples_each_shard * (i + 1) - 1
-            )
-            for i in range(len(shard_order))
-        }
-
-        self.current_shard_name = f'data0417_shuffled_shard_{shard_order[0]}.jsonl'
-        print(f'Initialize shard file to {self.current_shard_name}')
-        self.current_shard_data = load_jsonl(os.path.join(self.data_path, self.current_shard_name), self.tcs_loader)
-        self.random.shuffle(self.current_shard_data)
+        self.raw_data = []
+        for i in range(len(shard_order)):
+            shard_name = f'data0417_shuffled_shard_{shard_order[i]}.jsonl'
+            shard_data = load_jsonl(os.path.join(self.data_path, shard_name), self.tcs_loader, decode=False)
+            print(f'{shard_name} has {len(shard_data)} samples')
+            self.raw_data.extend(shard_data)
+        print('raw_data has', len(self.raw_data), 'samples')
+        self.local_length = len(self.raw_data)
+        self.random.shuffle(self.raw_data)
 
     def load_ann_file(self, file_path):
         if file_path.endswith('.json'):
@@ -152,41 +148,12 @@ class InterleavedDataset(Dataset):
             raise NotImplementedError(f'Unsupported annotation file format: {file_path}')
 
     def __len__(self):
-        if self.train_num_samples is not None:
-            return min(self.train_num_samples, self._length) // self.world_size
         return self._length
 
-    @staticmethod
-    def check_shard_id_range(shard_id_range, length):
-        ids = []
-        for start, end in shard_id_range.values():
-            ids.extend(range(start, end))
-        assert sorted(ids)[:length] == list(range(0, length))
-
     def load_data(self, index):
-        assert self.shard_mode
-        index = index % self._length
-        start, end = self.shard_id_range[self.current_shard_name]
-        if start <= index <= end:
-            return deepcopy(self.current_shard_data[index - start])
-        else:
-            for shard_name, (start, end) in self.shard_id_range.items():
-                if start <= index <= end:
-                    self.current_shard_name = shard_name
-                    self.current_shard_data = self.load_ann_file(
-                        os.path.join(self.data_path, shard_name))
-                    self.random.shuffle(self.current_shard_data)
-                    # print(f'Change shard file to {self.current_shard_name}')
-                    return deepcopy(self.current_shard_data[index - start])
-            else:
-                shard_name = random.choice(list(self.shard_id_range.keys()))
-                self.current_shard_data = self.load_ann_file(
-                    os.path.join(self.data_path, shard_name))
-                self.random.shuffle(self.current_shard_data)
-                # print(f'Change shard file to {self.current_shard_name}')
-                start, end = self.shard_id_range[shard_name]
-                index = random.randint(start, end)
-                return deepcopy(self.current_shard_data[index - start])
+        index = index % self.local_length
+        data = json.loads(self.raw_data[index])
+        return data
 
     def get_img_filename(self, web_url):
         return self.encode_hash_sha256(web_url)
@@ -239,33 +206,30 @@ class InterleavedDataset(Dataset):
         images = torch.stack(images, dim=0)
         return images
 
-    def getitem(self, index):
-        # dict_keys(['general_metadata', 'images', 'texts', 'metadata', 'doc_loc'])
-        sample = self.load_data(index)
-        assert sample is not None, 'sample is None'
-        # parse sample and check
-        images, texts, metadata, valid_image = self.parse_sample(sample)
-        # get valid images
-        images = [os.path.join(self.image_path, self.get_img_filename(img)) for img, _ in
-                  zip(images, metadata) if img is not None]
+    def pure_text_get_item(self, texts):
+        text = '\n\n'.join([_ for _ in texts if _])
+        tokenized = self.tokenizer(
+            text,
+            max_length=self.tokenizer.model_max_length,
+            truncation=True,
+            padding=False,
+            return_tensors='pt',
+        )
+        input_ids = tokenized['input_ids']
+        images = [Image.new('RGB', (224, 224), (255, 255, 255))]
+        pixel_values = self.preprocess_image(images)
+        num_patches = pixel_values.size(0)
+        labels = input_ids.clone()
+        ret = dict(
+            input_ids=input_ids[0],
+            labels=labels[0],
+            attention_mask=input_ids[0].ne(self.tokenizer.pad_token_id),
+            pixel_values=pixel_values,
+            image_flags=torch.tensor([0] * num_patches, dtype=torch.long)
+        )
+        return ret
 
-        loaded_images = []
-        valid_count = 0
-        for idx, (img, valid) in enumerate(zip(images, valid_image)):
-            if valid:
-                if valid_count >= self.max_num_images:
-                    valid_image[idx] = False
-                else:
-                    _image = self.load_image(img)
-                    if _image is not None:
-                        loaded_images.append(_image)
-                        valid_count += 1
-                    else:
-                        valid_image[idx] = False
-        images = loaded_images
-
-        assert len(images) > 0 and sum(valid_image)
-
+    def multimodal_get_item(self, images, texts, valid_image, ):
         image_idx = 0
         for i in range(len(texts)):
             if texts[i] is None:
@@ -307,7 +271,8 @@ class InterleavedDataset(Dataset):
         pixel_values = self.preprocess_image(images)
         num_patches = pixel_values.size(0)
         labels = input_ids.clone()
-        assert (labels == image_context_token_id).sum() == self.num_image_token * len(images), 'image tokens are truncated'
+        assert (labels == image_context_token_id).sum() == self.num_image_token * len(
+            images), 'image tokens are truncated'
         labels[labels == image_start_token_id] = -100
         labels[labels == image_end_token_id] = -100
         labels[labels == image_context_token_id] = -100
@@ -320,6 +285,37 @@ class InterleavedDataset(Dataset):
         )
         return ret
 
+    def getitem(self, index):
+        # dict_keys(['general_metadata', 'images', 'texts', 'metadata', 'doc_loc'])
+        sample = self.load_data(index)
+        assert sample is not None
+
+        # parse sample and check
+        images, texts, metadata, valid_image = self.parse_sample(sample)
+        # get valid images
+        images = [os.path.join(self.image_path, self.get_img_filename(img)) for img, _ in
+                  zip(images, metadata) if img is not None]
+
+        loaded_images = []
+        valid_count = 0
+        for idx, (img, valid) in enumerate(zip(images, valid_image)):
+            if valid:
+                if valid_count >= self.max_num_images:
+                    valid_image[idx] = False
+                else:
+                    _image = self.load_image(img)
+                    if _image is not None:
+                        loaded_images.append(_image)
+                        valid_count += 1
+                    else:
+                        valid_image[idx] = False
+
+        if len(loaded_images) > 0:
+            ret = self.multimodal_get_item(loaded_images, texts, valid_image)
+        else:
+            ret = self.pure_text_get_item(texts)
+        return ret
+
     def __getitem__(self, index):
         while True:
             try:
@@ -327,9 +323,7 @@ class InterleavedDataset(Dataset):
                 item = self.getitem(index)
                 break
             except Exception as err:
-                start, end = random.choice(list(self.shard_id_range.values()))
-                index = random.randint(start, end)
-                # index = index + 1
+                index = index + 1
                 print(f'Try to load index {index} again, due to {err}')
         return item
 
@@ -351,11 +345,11 @@ if __name__ == '__main__':
         },
     }
     from internvl.train.dataset import TCSLoader
+
     tcs_loader = TCSLoader('~/petreloss.conf')
     dataset = InterleavedDataset(meta=metas['lmm_interleaved_data0417_shuffled'],
                                  tokenizer=tokenizer,
-                                 tcs_loader=tcs_loader,
-                                 )
+                                 tcs_loader=tcs_loader)
     for i in tqdm(range(1000)):
         item = dataset.__getitem__(i)
     print(f'length: {len(dataset)}')

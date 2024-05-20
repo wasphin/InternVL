@@ -25,7 +25,7 @@ fi
 # number of gpus: 512
 # batch size per gpu: 8
 # gradient accumulation steps: 1
-# total batch size: 2048
+# total batch size: 4096
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -53,7 +53,7 @@ srun -p ${PARTITION} \
   --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 8 \
+  --dataloader_num_workers 16 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
