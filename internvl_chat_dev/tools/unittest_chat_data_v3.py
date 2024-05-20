@@ -9,8 +9,8 @@ from transformers.trainer_pt_utils import LabelSmoother
 
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 from internvl.train.dataset import (build_transform, preprocess,
-                                    preprocess_internlm, preprocess_mpt,
-                                    preprocess_phi3)
+                                    preprocess_internlm, preprocess_llama3,
+                                    preprocess_mpt, preprocess_phi3)
 from PIL import ImageFile, PngImagePlugin
 from torch.utils.data import Dataset
 from tqdm import tqdm
@@ -34,8 +34,6 @@ from typing import Dict
 
 import torch
 import torchvision.transforms as T
-import transformers
-from internvl.conversation import get_conv_template
 from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
                                       IMG_CONTEXT_TOKEN, IMG_END_TOKEN,
                                       IMG_START_TOKEN, QUAD_END_TOKEN,
@@ -44,13 +42,6 @@ from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
 from PIL import Image
 from torch.utils.data import ConcatDataset, WeightedRandomSampler
 from torchvision.transforms.functional import InterpolationMode
-
-try:
-    from petrel_client.client import Client
-    from petrel_client.common.config import Config
-except ImportError as E:
-    print('please install petrel_client')
-import sys
 
 
 class WeightedConcatDataset(ConcatDataset):
@@ -131,288 +122,6 @@ def build_transform(is_train, input_size, pad2square=False):
     return transform
 
 
-def preprocess(
-        template_name,
-        sources,
-        tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
-        text_only: bool = False,
-        group_by_length: bool = False,
-        ds_name: str = None
-) -> Dict:
-    conv = get_conv_template(template_name)
-    roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
-
-    # Apply prompt templates
-    conversations = []
-    for i, source in enumerate(sources):
-        if roles[source[0]['from']] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
-
-        conv.messages = []
-        for j, sentence in enumerate(source):
-            role = roles[sentence['from']]
-            assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
-            conv.append_message(role, sentence['value'])
-        conversations.append(conv.get_prompt())
-
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
-
-    # Tokenize conversations
-    input_ids = tokenizer(
-        conversations,
-        return_tensors='pt',
-        padding=False if group_by_length else 'max_length',
-        max_length=tokenizer.model_max_length,
-        truncation=True,
-    ).input_ids
-    targets = input_ids.clone()
-
-    # assert conv.sep_style == SeparatorStyle.ADD_COLON_TWO
-
-    # Mask targets. Only compute loss on the assistant outputs.
-    sep = conv.sep + conv.roles[1] + ': '
-    for conversation, target in zip(conversations, targets):
-        total_len = int(target.ne(tokenizer.pad_token_id).sum())
-
-        turns = conversation.split(conv.sep2)
-        cur_len = 1
-        target[:cur_len] = IGNORE_TOKEN_ID
-        for i, turn in enumerate(turns):
-            if turn == '':
-                break
-            turn_len = len(tokenizer(turn).input_ids)
-
-            parts = turn.split(sep)
-            if len(parts) != 2:
-                break
-            parts[0] += sep
-            # "-2" is hardcoded for the Llama tokenizer to make the offset correct.
-            instruction_len = len(tokenizer(parts[0]).input_ids) - 2
-
-            if i != 0 and not tokenizer.legacy:
-                # The legacy and non-legacy modes handle special tokens differently
-                instruction_len -= 1
-
-            # Ignore the user instructions
-            target[cur_len: cur_len + instruction_len] = IGNORE_TOKEN_ID
-            cur_len += turn_len
-
-            if i != 0 and not tokenizer.legacy:
-                # The legacy and non-legacy modes handle special tokens differently
-                cur_len -= 1
-
-        target[cur_len:] = IGNORE_TOKEN_ID
-
-        if False:  # Inspect and check the correctness of masking
-            z = target.clone()
-            z = torch.where(z == IGNORE_TOKEN_ID, tokenizer.unk_token_id, z)
-            logger.info(tokenizer.decode(z))
-            exit()
-
-        if cur_len < tokenizer.model_max_length:
-            if cur_len != total_len:
-                target[:] = IGNORE_TOKEN_ID
-                print(
-                    f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.'
-                    f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
-                )
-                sys.stdout.flush()
-
-    return dict(
-        input_ids=input_ids,
-        labels=targets,
-        attention_mask=input_ids.ne(tokenizer.pad_token_id),
-    )
-
-
-def preprocess_mpt(
-        template_name,
-        sources,
-        tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
-        text_only: bool = False,
-        group_by_length: bool = False,
-        ds_name: str = None
-) -> Dict:
-    conv = get_conv_template(template_name)
-    roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
-
-    # Apply prompt templates
-    conversations = []
-    for i, source in enumerate(sources):
-        if roles[source[0]['from']] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
-
-        conv.messages = []
-        for j, sentence in enumerate(source):
-            role = roles[sentence['from']]
-            assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
-            conv.append_message(role, sentence['value'])
-        conversations.append(conv.get_prompt())
-
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
-
-    # Tokenize conversations
-    input_ids = tokenizer(
-        conversations,
-        return_tensors='pt',
-        padding=False if group_by_length else 'max_length',
-        max_length=tokenizer.model_max_length,
-        truncation=True,
-    ).input_ids
-    targets = input_ids.clone()
-
-    # Mask targets. Only compute loss on the assistant outputs.
-    sep = conv.sep + conv.roles[1]  # <|im_end|><|im_start|>assistant\n
-    for conversation, target in zip(conversations, targets):
-        total_len = int(target.ne(tokenizer.pad_token_id).sum())
-
-        turns = conversation.split(conv.sep)
-        re_turns = [conv.sep.join(turns[:3])]  # system + user + gpt
-        for conv_idx in range(3, len(turns), 2):
-            re_turns.append(conv.sep.join(turns[conv_idx:conv_idx + 2]))  # user + gpt
-        cur_len = 0
-        target[:cur_len] = IGNORE_TOKEN_ID
-        for i, turn in enumerate(re_turns):
-            if turn == '':
-                break
-            turn_len = len(tokenizer(turn).input_ids) + 1
-
-            parts = turn.split(sep)
-            if len(parts) != 2:
-                break
-            parts[0] += sep
-            instruction_len = len(tokenizer(parts[0]).input_ids)
-
-            # Ignore the user instructions
-            target[cur_len: cur_len + instruction_len] = IGNORE_TOKEN_ID
-            cur_len += turn_len
-
-        target[cur_len:] = IGNORE_TOKEN_ID
-
-        if cur_len < tokenizer.model_max_length:
-            if cur_len != total_len:
-                target[:] = IGNORE_TOKEN_ID
-                print(
-                    f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}.'
-                    f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
-                )
-                sys.stdout.flush()
-
-    return dict(
-        input_ids=input_ids,
-        labels=targets,
-        attention_mask=input_ids.ne(tokenizer.pad_token_id),
-    )
-
-
-def preprocess_internlm(
-        template_name,
-        sources,
-        tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
-        text_only: bool = False,
-        group_by_length: bool = False,
-        ds_name: str = None
-) -> Dict:
-    conv = get_conv_template(template_name)
-    roles = {'human': conv.roles[0], 'gpt': conv.roles[1]}
-
-    # Apply prompt templates
-    conversations = []
-    for i, source in enumerate(sources):
-        if roles[source[0]['from']] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
-
-        conv.messages = []
-        for j, sentence in enumerate(source):
-            role = roles[sentence['from']]
-            assert role == conv.roles[j % 2], f'{i}'
-            if text_only:
-                sentence['value'] = sentence['value'].replace('<image>', '').replace('<query>', '')
-            sentence['value'] = sentence['value'].strip()
-            if sentence['value'][0] == '\n':
-                sentence['value'] = sentence['value'][1:]
-            conv.append_message(role, sentence['value'])
-        conversations.append(conv.get_prompt())
-
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
-    new_conversations = []
-    for conversation in conversations:
-        conversation = conversation.replace('<image>', image_tokens)
-        new_conversations.append(conversation)
-    conversations = new_conversations
-
-    # Tokenize conversations
-    input_ids = tokenizer(
-        conversations,
-        return_tensors='pt',
-        padding=False if group_by_length else 'max_length',
-        max_length=tokenizer.model_max_length,
-        truncation=True,
-    ).input_ids
-    targets = input_ids.clone()
-
-    for conversation, target in zip(conversations, targets):
-        total_len = int(target.ne(tokenizer.pad_token_id).sum())  # 浦语里面 pad_token_id = eos_token_id
-        cur_len = 1
-        target[:cur_len] = IGNORE_TOKEN_ID  # <s>
-        parts = conversation.split(conv.roles[1])  # [UNUSED_TOKEN_146]assistant\n
-        info = parts[0] + conv.roles[1]
-        temp_len = len(tokenizer(info).input_ids) - 1  # 去除tokenizer的<s>
-        target[cur_len: cur_len + temp_len] = IGNORE_TOKEN_ID
-        cur_len = cur_len + temp_len
-
-        for index in range(1, len(parts) - 1):
-            info = parts[index]
-            part1, part2 = info.split(conv.roles[0])
-            temp_len = len(tokenizer(part1).input_ids) - 1
-            cur_len = cur_len + temp_len
-            part = conv.roles[0] + part2 + conv.roles[1]
-            temp_len = len(tokenizer(part).input_ids) - 1
-            target[cur_len: cur_len + temp_len] = IGNORE_TOKEN_ID
-            cur_len = cur_len + temp_len
-        last_info = parts[-1]
-        temp_len = len(tokenizer(last_info).input_ids) - 1
-        cur_len = cur_len + temp_len
-
-        target[cur_len:] = IGNORE_TOKEN_ID
-        if False:  # Inspect and check the correctness of masking
-            z = target.clone()
-            z = torch.where(z == IGNORE_TOKEN_ID, tokenizer.unk_token_id, z)
-            print(repr(tokenizer.decode(z)))
-
-        if cur_len < tokenizer.model_max_length:
-            if cur_len != total_len:
-                target[:] = IGNORE_TOKEN_ID
-                print(f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}. This dataset is {ds_name}.')
-                sys.stdout.flush()
-
-    return dict(
-        input_ids=input_ids,
-        labels=targets,
-        attention_mask=input_ids.ne(tokenizer.pad_token_id),
-    )
-
-
 IGNORE_INDEX = -100
 Image.MAX_IMAGE_PIXELS = None
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -425,7 +134,7 @@ logger = logging.getLogger(__name__)
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-f = open('shell/data/data_yi34b_finetune_v5_29.json')
+f = open('shell/data/debug.json')
 data = json.load(f)
 ds_collections = {}
 for k, v in data.items():
@@ -541,6 +250,8 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_internlm
         elif self.template_name == 'phi3-chat':
             preprocess_function = preprocess_phi3
+        elif self.template_name == 'llama3-chat':
+            preprocess_function = preprocess_llama3
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
@@ -569,6 +280,8 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_internlm
         elif self.template_name == 'phi3-chat':
             preprocess_function = preprocess_phi3
+        elif self.template_name == 'llama3-chat':
+            preprocess_function = preprocess_llama3
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
@@ -608,7 +321,7 @@ class LazySupervisedDataset(Dataset):
 
 def test_dataset(dataset):
     utilization_sum = 0
-    for _ in tqdm(range(100)):
+    for _ in tqdm(range(10)):
         index = random.randint(0, len(dataset) - 1)
         data = dataset.__getitem__(index)
         input_ids = data['input_ids']
@@ -619,12 +332,13 @@ def test_dataset(dataset):
 
 
 if __name__ == '__main__':
-    llm_path = './pretrained/Phi-3-mini-128k-instruct'
+    llm_path = './pretrained/Meta-Llama-3-8B-Add-Token'
     llm_tokenizer = AutoTokenizer.from_pretrained(
         llm_path, add_eos_token=False, trust_remote_code=True)
     token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
                   QUAD_START_TOKEN, QUAD_END_TOKEN, REF_START_TOKEN,
-                  REF_END_TOKEN, BOX_START_TOKEN, BOX_END_TOKEN]
+                  REF_END_TOKEN, BOX_START_TOKEN, BOX_END_TOKEN,
+                  '<|system|>', '<|user|>', '<|assistant|>', '<|end|>']
     num_new_tokens = llm_tokenizer.add_tokens(token_list, special_tokens=True)
     img_context_token_id = llm_tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
     llm_tokenizer.model_max_length = 3072
@@ -633,7 +347,7 @@ if __name__ == '__main__':
     for ds_name in ds_collections.keys():
         print(f'Testing {ds_name}...')
         dataset = LazySupervisedDataset(
-            'phi3-chat',
+            'llama3-chat',
             ds_collections[ds_name],
             llm_tokenizer,
             tcs_loader,

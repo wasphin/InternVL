@@ -747,13 +747,13 @@ register_conv_template(
 register_conv_template(
     Conversation(
         name='llama3-chat',
-        system_template='<|im_start|>system\n{system_message}',
+        system_template='<|system|>\n{system_message}',
         system_message='You are an AI assistant whose name is InternVL.',
-        roles=('<|im_start|>user\n', '<|im_start|>assistant\n'),
-        sep_style=SeparatorStyle.MPT,
-        sep='<|im_end|>',
+        roles=('<|user|>', '<|assistant|>'),
+        sep_style=SeparatorStyle.CHATML,
+        sep='<|end|>',
         stop_token_ids=[
-            128257,
+            128259,
             128001
         ]
     )

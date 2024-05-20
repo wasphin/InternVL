@@ -1,23 +1,23 @@
 {
-  "arxiv_equation_167k_en_20240403": {
-    "root": "langchao:s3://internvl-moe_sft_data/",
-    "annotation": "metas/stage3_v5_20240403_std/arxiv/arxiv_equation_167k_en_20240403.jsonl",
-    "data_augment": false,
-    "repeat_time": 1,
-    "length": 167156
+  "grit_w_box_28k_zh_det": {
+    "root": "langchao:s3://GRIT/",
+    "annotation": "metas/stage2_v5/grit_w_box_28k_zh_det.jsonl",
+    "data_augment": true,
+    "repeat_time": 5,
+    "length": 28052
   },
-  "arxiv_table_65k_en_20240403": {
-    "root": "langchao:s3://internvl-moe_sft_data/",
-    "annotation": "metas/stage3_v5_20240403_std/arxiv/arxiv_table_65k_en_20240403.jsonl",
-    "data_augment": false,
-    "repeat_time": 1,
-    "length": 64707
+  "coco_karpathy_train_567k": {
+    "root": "hzh:s3://multi_modal/coco/",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/coco_karpathy_train_567k.jsonl",
+    "data_augment": true,
+    "repeat_time": 5,
+    "length": 566747
   },
-  "arxiv_texteq_162k_en_20240403": {
-    "root": "langchao:s3://internvl-moe_sft_data/",
-    "annotation": "metas/stage3_v5_20240403_std/arxiv/arxiv_texteq_162k_en_20240403.jsonl",
+  "vqav2_train_83k": {
+    "root": "hzh:s3://multi_modal/coco/train2014",
+    "annotation": "data/metas/tianhao_data/stage3_v5_20240318_std/academic/vqav2_train_83k.jsonl",
     "data_augment": false,
-    "repeat_time": 1,
-    "length": 162464
+    "repeat_time": 5,
+    "length": 82783
   }
 }

@@ -29,8 +29,8 @@ from internvl.train.constants import (BOX_END_TOKEN, BOX_START_TOKEN,
 from internvl.train.dataset import (ConcatDataset, TCSLoader,
                                     WeightedConcatDataset, build_transform,
                                     dynamic_preprocess, preprocess,
-                                    preprocess_internlm, preprocess_mpt,
-                                    preprocess_phi3)
+                                    preprocess_internlm, preprocess_llama3,
+                                    preprocess_mpt, preprocess_phi3)
 from internvl.train.interleaved_dataset import InterleavedDataset
 from internvl.train.trainer_monkey_patch import replace_create_optimizer
 from PIL import Image, ImageFile, PngImagePlugin
@@ -310,8 +310,10 @@ class LazySupervisedDataset(Dataset):
             assert num_patches == 1, f'The number of patches should be 1, but got {num_patches}.'
         if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
-        elif self.template_name in ['internlm2-chat', 'llama3-chat']:
+        elif self.template_name == 'internlm2-chat':
             preprocess_function = preprocess_internlm
+        elif self.template_name == 'llama3-chat':
+            preprocess_function = preprocess_llama3
         elif self.template_name == 'phi3-chat':
             preprocess_function = preprocess_phi3
         else:
@@ -340,8 +342,10 @@ class LazySupervisedDataset(Dataset):
         assert num_patches == 1, f'The number of patches should be 1, but got {num_patches}.'
         if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
-        elif self.template_name in ['internlm2-chat', 'llama3-chat']:
+        elif self.template_name == 'internlm2-chat':
             preprocess_function = preprocess_internlm
+        elif self.template_name == 'llama3-chat':
+            preprocess_function = preprocess_llama3
         elif self.template_name == 'phi3-chat':
             preprocess_function = preprocess_phi3
         else:

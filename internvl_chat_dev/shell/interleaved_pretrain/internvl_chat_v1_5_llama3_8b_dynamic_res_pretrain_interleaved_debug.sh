@@ -8,7 +8,7 @@ NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-1}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-512}
-PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
+PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 #export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
@@ -23,7 +23,7 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 fi
 
 # number of gpus: 512
-# batch size per gpu: 4
+# batch size per gpu: 8
 # gradient accumulation steps: 1
 # total batch size: 2048
 # epoch: 1
@@ -44,7 +44,7 @@ srun -p ${PARTITION} \
   --meta_path "./shell/data/data_0404_zh_pretrain_v3_debug.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
-  --max_dynamic_patch 6 \
+  --max_dynamic_patch 5 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
   --pad2square False \
@@ -67,7 +67,7 @@ srun -p ${PARTITION} \
   --warmup_steps 1000 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 2560 \
+  --max_seq_length 2048 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length False \
