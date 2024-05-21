@@ -1,3 +1,4 @@
+import gc
 import logging
 import math
 import os
@@ -229,6 +230,7 @@ class LazySupervisedDataset(Dataset):
             if repeat_time < 1:
                 # choice top len(self.raw_data) * repeat_time samples
                 self.raw_data = self.raw_data[:int(len(self.raw_data) * repeat_time)]
+        gc.collect()
         self.root = meta['root']
         self.cached_data_dict = {}
         self.tcs_loader = tcs_loader
@@ -388,8 +390,8 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 repeat_time=repeat_time,
                 normalize_type=normalize_type,
             )
-        except Exception:
-            logger.info(f'Error in loading dataset: {ds_name}')
+        except Exception as e:
+            logger.info(f'Error in loading dataset: {ds_name} due to {e}')
             exit()
         dataset.ds_name = ds_name
         repeat_time = 1 if repeat_time < 1 else repeat_time  # don't repeat if repeat_time is less than 1
