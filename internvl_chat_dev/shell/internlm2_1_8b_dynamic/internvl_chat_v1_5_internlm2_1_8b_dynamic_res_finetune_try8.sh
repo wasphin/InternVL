@@ -1,13 +1,13 @@
 set -x
 
 PARTITION=${PARTITION:-"INTERN2"}
-GPUS=${GPUS:-96}
+GPUS=${GPUS:-128}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
-BATCH_SIZE=${BATCH_SIZE:-1536}
+BATCH_SIZE=${BATCH_SIZE:-1024}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
@@ -16,16 +16,16 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34227
 export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_finetune_try6'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_finetune_try8'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 96
+# number of gpus: 128
 # batch size per gpu: 4
-# gradient accumulation steps: 4
-# total batch size: 1536
+# gradient accumulation steps: 2
+# total batch size: 1024
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -40,7 +40,7 @@ srun -p ${PARTITION} \
   --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_pretrain/checkpoint-59100" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_31.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_30.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
@@ -51,7 +51,7 @@ srun -p ${PARTITION} \
   --freeze_backbone False \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 2 \
+  --dataloader_num_workers 4 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
@@ -65,7 +65,7 @@ srun -p ${PARTITION} \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 5120 \
+  --max_seq_length 8192 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length True \
