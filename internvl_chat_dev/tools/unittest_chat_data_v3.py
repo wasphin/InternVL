@@ -332,14 +332,15 @@ def test_dataset(dataset):
 
 
 if __name__ == '__main__':
-    llm_path = './pretrained/Meta-Llama-3-8B-Add-Token'
+    llm_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/pretrained/Phi-3-mini-4k-instruct'
     llm_tokenizer = AutoTokenizer.from_pretrained(
         llm_path, add_eos_token=False, trust_remote_code=True)
     token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
                   QUAD_START_TOKEN, QUAD_END_TOKEN, REF_START_TOKEN,
-                  REF_END_TOKEN, BOX_START_TOKEN, BOX_END_TOKEN,
-                  '<|system|>', '<|user|>', '<|assistant|>', '<|end|>']
+                  REF_END_TOKEN, BOX_START_TOKEN, BOX_END_TOKEN]
     num_new_tokens = llm_tokenizer.add_tokens(token_list, special_tokens=True)
+    # print("New tokens:", num_new_tokens)
+    # exit()
     img_context_token_id = llm_tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
     llm_tokenizer.model_max_length = 3072
     tcs_loader = TCSLoader('~/petreloss.conf')
@@ -347,7 +348,7 @@ if __name__ == '__main__':
     for ds_name in ds_collections.keys():
         print(f'Testing {ds_name}...')
         dataset = LazySupervisedDataset(
-            'llama3-chat',
+            'phi3-chat',
             ds_collections[ds_name],
             llm_tokenizer,
             tcs_loader,

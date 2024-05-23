@@ -1,7 +1,7 @@
 set -x
 
 PARTITION=${PARTITION:-"INTERN2"}
-GPUS=${GPUS:-128}
+GPUS=${GPUS:-256}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
@@ -22,9 +22,9 @@ if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
 fi
 
-# number of gpus: 128
+# number of gpus: 256
 # batch size per gpu: 8
-# gradient accumulation steps: 2
+# gradient accumulation steps: 1
 # total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
@@ -38,11 +38,11 @@ srun -p ${PARTITION} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain.py \
   --vision_path "./pretrained/intern_vit_300m_448px_v1_5" \
-  --llm_path "./pretrained/Phi-3-mini-128k-instruct" \
+  --llm_path "./pretrained/Phi-3-mini-4k-instruct" \
   --conv_style "phi3-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
-  --overwrite_output_dir True \
+  --overwrite_output_dir False \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
