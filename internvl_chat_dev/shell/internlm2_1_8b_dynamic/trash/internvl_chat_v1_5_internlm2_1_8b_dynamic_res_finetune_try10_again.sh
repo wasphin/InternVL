@@ -11,12 +11,12 @@ BATCH_SIZE=${BATCH_SIZE:-1024}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
-
+export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34227
 export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_phi3_3_8b_dynamic_res_finetune'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_finetune_try10_again'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -37,8 +37,8 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_v1_5_phi3_3_8b_dynamic_res_pretrain/checkpoint-6300" \
-  --conv_style "phi3-chat" \
+  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_pretrain/checkpoint-59100" \
+  --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_yi34b_finetune_v5_33.json" \
   --overwrite_output_dir True \
@@ -60,7 +60,7 @@ srun -p ${PARTITION} \
   --save_strategy "steps" \
   --save_steps 200 \
   --save_total_limit 3 \
-  --learning_rate 2e-5 \
+  --learning_rate 4e-5 \
   --weight_decay 0.01 \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
