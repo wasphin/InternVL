@@ -2,7 +2,7 @@ import torch
 from PIL import Image
 from transformers import AutoModel, AutoTokenizer, CLIPImageProcessor
 
-path = '/mnt/petrelfs/share_data/wangwenhai/internvl/release/InternVL-Chat-V1-5-Plus'
+path = '/mnt/petrelfs/share_data/wangwenhai/internvl/release/Mini-InternVL-Chat-2B-V1-5'
 # If your GPU has more than 40G memory, you can put the entire model on a single GPU.
 model = AutoModel.from_pretrained(
     path,
