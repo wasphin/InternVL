@@ -11,7 +11,7 @@ BATCH_SIZE=${BATCH_SIZE:-1024}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
-
+export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34227
 export TF_CPP_MIN_LOG_LEVEL=3

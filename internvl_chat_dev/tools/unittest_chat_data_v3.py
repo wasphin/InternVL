@@ -134,7 +134,7 @@ logger = logging.getLogger(__name__)
 
 os.environ['TOKENIZERS_PARALLELISM'] = 'true'
 
-f = open('shell/data/debug.json')
+f = open('shell/data/data_yi34b_finetune_v5_33.json')
 data = json.load(f)
 ds_collections = {}
 for k, v in data.items():
@@ -237,13 +237,15 @@ class LazySupervisedDataset(Dataset):
             image_path = self.root + data_item['image']
         else:
             image_path = os.path.join(self.root, data_item['image'])
-        image = self.tcs_loader(image_path)
-        images = self.dynamic_preprocess(image)
-        transform = build_transform(is_train=self.is_train, input_size=self.image_size,
-                                    pad2square=self.pad2square)
-        pixel_values = [transform(image) for image in images]
-        pixel_values = torch.stack(pixel_values)
-        num_patches = pixel_values.size(0)
+        # image = self.tcs_loader(image_path)
+        # images = self.dynamic_preprocess(image)
+        # transform = build_transform(is_train=self.is_train, input_size=self.image_size,
+        #                             pad2square=self.pad2square)
+        # pixel_values = [transform(image) for image in images]
+        # pixel_values = torch.stack(pixel_values)
+        # num_patches = pixel_values.size(0)
+        num_patches = 1
+        pixel_values = None
         if self.template_name == 'Hermes-2':
             preprocess_function = preprocess_mpt
         elif self.template_name == 'internlm2-chat':
@@ -321,7 +323,7 @@ class LazySupervisedDataset(Dataset):
 
 def test_dataset(dataset):
     utilization_sum = 0
-    for _ in tqdm(range(10)):
+    for _ in tqdm(range(1000)):
         index = random.randint(0, len(dataset) - 1)
         data = dataset.__getitem__(index)
         input_ids = data['input_ids']
@@ -332,9 +334,9 @@ def test_dataset(dataset):
 
 
 if __name__ == '__main__':
-    llm_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/pretrained/Phi-3-mini-4k-instruct'
+    llm_path = './pretrained/Phi-3-mini-128k-instruct'
     llm_tokenizer = AutoTokenizer.from_pretrained(
-        llm_path, add_eos_token=False, trust_remote_code=True)
+        llm_path, add_eos_token=False, trust_remote_code=True, use_fast=False)
     token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
                   QUAD_START_TOKEN, QUAD_END_TOKEN, REF_START_TOKEN,
                   REF_END_TOKEN, BOX_START_TOKEN, BOX_END_TOKEN]

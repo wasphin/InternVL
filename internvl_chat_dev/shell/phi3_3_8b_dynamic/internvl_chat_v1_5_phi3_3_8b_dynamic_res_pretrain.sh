@@ -11,7 +11,7 @@ BATCH_SIZE=${BATCH_SIZE:-2048}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
-
+export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34227
 export TF_CPP_MIN_LOG_LEVEL=3
@@ -38,11 +38,11 @@ srun -p ${PARTITION} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain.py \
   --vision_path "./pretrained/intern_vit_300m_448px_v1_5" \
-  --llm_path "./pretrained/Phi-3-mini-4k-instruct" \
+  --llm_path "./pretrained/Phi-3-mini-128k-instruct" \
   --conv_style "phi3-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
-  --overwrite_output_dir False \
+  --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
@@ -61,7 +61,7 @@ srun -p ${PARTITION} \
   --save_strategy "steps" \
   --save_steps 100 \
   --save_total_limit 5 \
-  --learning_rate 2e-5 \
+  --learning_rate 2e-4 \
   --weight_decay 0.01 \
   --warmup_steps 100 \
   --lr_scheduler_type "cosine" \

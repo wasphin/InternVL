@@ -375,6 +375,9 @@ def preprocess_phi3(
             re_turns.append(conv.sep.join(turns[conv_idx:conv_idx + 2]))  # user + gpt
         cur_len = 0
         target[:cur_len] = IGNORE_TOKEN_ID
+        endoftext_id = tokenizer.convert_tokens_to_ids('<|endoftext|>')
+        target[target == endoftext_id] = IGNORE_TOKEN_ID
+
         for i, turn in enumerate(re_turns):
             if turn == '':
                 break
