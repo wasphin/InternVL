@@ -41,7 +41,7 @@ srun -p ${PARTITION} \
   --llm_path "./pretrained/Phi-3-mini-128k-instruct" \
   --conv_style "phi3-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_0404_zh_pretrain.json" \
+  --meta_path "./shell/data/data_0404_zh_pretrain_tcluster.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
@@ -62,7 +62,7 @@ srun -p ${PARTITION} \
   --save_steps 100 \
   --save_total_limit 5 \
   --learning_rate 2e-4 \
-  --weight_decay 0.01 \
+  --weight_decay 0.05 \
   --warmup_steps 100 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
