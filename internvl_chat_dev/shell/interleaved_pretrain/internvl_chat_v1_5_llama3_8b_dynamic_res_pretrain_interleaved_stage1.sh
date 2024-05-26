@@ -52,7 +52,7 @@ srun -p ${PARTITION} \
   --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 8 \
+  --dataloader_num_workers 4 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
@@ -66,7 +66,7 @@ srun -p ${PARTITION} \
   --warmup_steps 1000 \
   --lr_scheduler_type "cosine" \
   --logging_steps 1 \
-  --max_seq_length 2048 \
+  --max_seq_length 512 \
   --do_train True \
   --grad_checkpoint True \
   --group_by_length False \
