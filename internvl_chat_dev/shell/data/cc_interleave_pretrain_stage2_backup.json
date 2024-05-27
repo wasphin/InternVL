@@ -692,5 +692,54 @@
     "tag": "chat",
     "language": "en",
     "comment": "长回答, 高质量"
+  },
+  "GPT4o_LongCaption_20240520_v1.0": {
+    "root": "langchao:s3://mm_dataset/gpt4o/longcaption_20240519/image/",
+    "annotation": "metas/stage3_v5_20240521_std/gpt4o/GPT4o_LongCaption_20240520_v1.0.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 36284
+  },
+  "sharegpt4v_instruct_gpt4-vision_cap100k_en_20240402": {
+    "root": "langchao:s3://multi_modal/playground/data/",
+    "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_instruct_gpt4-vision_cap100k_en_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 102025
+  },
+  "svit_300k": {
+    "root": "hzh:s3://mm_dataset/VG_100K/",
+    "annotation": "metas/stage3_v5_20240318_std/svit/svit_300k.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 318631
+  },
+  "lvis_instruct4v_220k": {
+    "root": "hzh:s3://mm_dataset/",
+    "annotation": "metas/stage3_v5_20240318_std/lvis_instruct4v/lvis_instruct4v_220k.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 222646
+  },
+  "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_20240402": {
+    "root": "langchao:s3://multi_modal/allava_laion/",
+    "annotation": "metas/stage3_v5_20240402_std/gpt4v_data/ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 457130
+  },
+  "laion_gpt4v_en_0316": {
+    "root": "hzh:s3://multi_modal/laion_gpt4v/images/",
+    "annotation": "metas/stage3_v5_20240318_std/chenzhe/laion_gpt4v_en_0316.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 10950
+  },
+  "textocr_gpt4v_en_0316": {
+    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
+    "annotation": "metas/stage3_v5_20240318_std/chenzhe/textocr_gpt4v_en_0316.jsonl",
+    "data_augment": true,
+    "repeat_time": 10,
+    "length": 21407
   }
 }
