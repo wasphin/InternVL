@@ -334,7 +334,8 @@ def test_dataset(dataset):
 
 
 if __name__ == '__main__':
-    llm_path = './pretrained/Meta-Llama-3-8B-Add-Token'
+    # llm_path = './pretrained/Meta-Llama-3-8B-Add-Token'
+    llm_path = './pretrained/Phi-3-mini-128k-instruct'
     llm_tokenizer = AutoTokenizer.from_pretrained(
         llm_path, add_eos_token=False, trust_remote_code=True, use_fast=False)
     token_list = [IMG_START_TOKEN, IMG_END_TOKEN, IMG_CONTEXT_TOKEN,
@@ -348,7 +349,8 @@ if __name__ == '__main__':
     for ds_name in ds_collections.keys():
         print(f'Testing {ds_name}...')
         dataset = LazySupervisedDataset(
-            'llama3-chat',
+            # 'llama3-chat',
+            'phi3-chat',
             ds_collections[ds_name],
             llm_tokenizer,
             tcs_loader,
