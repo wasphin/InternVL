@@ -255,6 +255,7 @@ class InterleavedDataset(Dataset):
         if num_image_end_tokens != len(images):
             text = text.replace(image_tokens, '<image>', len(images))
             images = images[:num_image_end_tokens]
+            assert len(images) > 0, 'The number of images should be greater than 0.'
             text = text.replace('<image>', image_tokens, len(images))
             text = text.replace('<image>', '')
             tokenized = self.tokenizer(

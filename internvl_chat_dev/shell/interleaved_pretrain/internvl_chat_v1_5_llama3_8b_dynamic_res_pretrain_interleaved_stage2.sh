@@ -34,6 +34,7 @@ srun -p ${PARTITION} \
   --cpus-per-task=${CPUS_PER_TASK} \
   --kill-on-bad-exit=1 \
   --quotatype=${QUOTA_TYPE} \
+  --jobid=3132183 \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain_interleaved.py \
   --model_name_or_path "./work_dirs/interleaved/internvl_chat_v1_5_llama3_8b_dynamic_res_pretrain_interleaved_stage1/checkpoint-24000" \
@@ -60,7 +61,7 @@ srun -p ${PARTITION} \
   --save_strategy "steps" \
   --save_steps 100 \
   --save_total_limit 5 \
-  --learning_rate 2e-5 \
+  --learning_rate 1e-5 \
   --weight_decay 0.05 \
   --warmup_steps 1000 \
   --lr_scheduler_type "cosine" \
