@@ -16,7 +16,7 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34227
 export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_phi3_3_8b_dynamic_res_finetune'
+OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_phi3_3_8b_dynamic_res_finetune_try2'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -60,7 +60,7 @@ srun -p ${PARTITION} \
   --save_strategy "steps" \
   --save_steps 200 \
   --save_total_limit 3 \
-  --learning_rate 2e-5 \
+  --learning_rate 4e-5 \
   --weight_decay 0.05 \
   --warmup_ratio 0.03 \
   --lr_scheduler_type "cosine" \
