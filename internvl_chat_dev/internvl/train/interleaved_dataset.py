@@ -98,7 +98,7 @@ class InterleavedDataset(Dataset):
 
     def __init__(self, meta, tokenizer, tcs_loader, num_image_token=256, image_size=448, is_train=False,
                  pad2square=False, group_by_length=False, normalize_type='imagenet', max_num_images=6,
-                 train_num_samples=None, dataset_resampled=True, seed=42):
+                 train_num_samples=None, dataset_resampled=True, seed=88):
 
         self.tokenizer = tokenizer
         self.data_path = meta['annotation']
@@ -113,6 +113,7 @@ class InterleavedDataset(Dataset):
         self.pad2square = pad2square
         self.group_by_length = group_by_length
         self.normalize_type = normalize_type
+        self.sep = '<|eot_id|>'
 
         # 0-6143 each 34195 samples
         self.num_samples_each_shard = 34190  # even if the actual num is more
@@ -205,12 +206,12 @@ class InterleavedDataset(Dataset):
         return images
 
     def pure_text_get_item(self, texts):
-        text = '\n\n'.join([_ for _ in texts if _])
+        text = '\n\n'.join([_ for _ in texts if _]) + self.sep
         tokenized = self.tokenizer(
             text,
             max_length=self.tokenizer.model_max_length,
             truncation=True,
-            padding=False,
+            padding=True,
             return_tensors='pt',
         )
         input_ids = tokenized['input_ids']
@@ -234,7 +235,7 @@ class InterleavedDataset(Dataset):
                 if valid_image[image_idx]:
                     texts[i] = '<image>'
                 image_idx += 1
-        text = '\n\n'.join([_ for _ in texts if _])
+        text = '\n\n'.join([_ for _ in texts if _]) + self.sep
         # format cleanup
         text = text.replace('<image>\n\n', '<image>').replace('\n\n<image>', '<image>')
         image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * self.num_image_token}{IMG_END_TOKEN}'
@@ -243,7 +244,7 @@ class InterleavedDataset(Dataset):
             text,
             max_length=self.tokenizer.model_max_length,
             truncation=True,
-            padding=False,
+            padding=True,
             return_tensors='pt',
         )
         input_ids = tokenized['input_ids']
@@ -262,7 +263,7 @@ class InterleavedDataset(Dataset):
                 text,
                 max_length=self.tokenizer.model_max_length,
                 truncation=True,
-                padding=False,
+                padding=True,
                 return_tensors='pt',
             )
             input_ids = tokenized['input_ids']
@@ -331,7 +332,7 @@ if __name__ == '__main__':
     from tqdm import tqdm
 
     model_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/release/InternVL-Chat-V1-5'
-    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=True)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=False)
     tokenizer.model_max_length = 4096
 
     metas = {

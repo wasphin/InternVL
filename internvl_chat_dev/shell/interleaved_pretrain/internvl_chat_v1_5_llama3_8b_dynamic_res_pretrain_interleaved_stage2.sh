@@ -7,7 +7,7 @@ QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
-BATCH_SIZE=${BATCH_SIZE:-2048}
+BATCH_SIZE=${BATCH_SIZE:-8192}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
@@ -24,7 +24,7 @@ fi
 # number of gpus: 512
 # batch size per gpu: 4
 # gradient accumulation steps: 1
-# total batch size: 2048
+# total batch size: 8192
 # epoch: 1
 srun -p ${PARTITION} \
   --gres=gpu:${GPUS_PER_NODE} \
@@ -48,7 +48,7 @@ srun -p ${PARTITION} \
   --drop_path_rate 0.0 \
   --pad2square False \
   --freeze_llm False \
-  --freeze_mlp False \
+  --freeze_mlp True \
   --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
@@ -60,8 +60,8 @@ srun -p ${PARTITION} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
   --save_steps 100 \
-  --save_total_limit 5 \
-  --learning_rate 1e-5 \
+  --save_total_limit 20 \
+  --learning_rate 2e-5 \
   --weight_decay 0.05 \
   --warmup_steps 1000 \
   --lr_scheduler_type "cosine" \
