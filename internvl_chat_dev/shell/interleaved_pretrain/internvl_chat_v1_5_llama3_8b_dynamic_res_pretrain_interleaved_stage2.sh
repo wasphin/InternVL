@@ -37,7 +37,9 @@ srun -p ${PARTITION} \
   --jobid=3132183 \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain_interleaved.py \
-  --model_name_or_path "./work_dirs/interleaved/internvl_chat_v1_5_llama3_8b_dynamic_res_pretrain_interleaved_stage1/checkpoint-24000" \
+  --vision_path "./pretrained/intern_vit_300m_448px_v1_5" \
+  --mlp_path "./pretrained/Meta-Llama-3-8B-Add-Token/mlp_projector.pth" \
+  --llm_path "./pretrained/Meta-Llama-3-8B-Add-Token" \
   --conv_style "llama3-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/cc_interleave_pretrain_stage2.json" \
@@ -48,7 +50,7 @@ srun -p ${PARTITION} \
   --drop_path_rate 0.0 \
   --pad2square False \
   --freeze_llm False \
-  --freeze_mlp True \
+  --freeze_mlp False \
   --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
