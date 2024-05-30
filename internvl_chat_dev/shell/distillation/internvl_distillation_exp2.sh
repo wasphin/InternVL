@@ -39,7 +39,7 @@ srun -p ${PARTITION} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_distillation.py \
   --student_path "./pretrained/intern_vit_300m_448px_v1_0" \
-  --teacher_path "./pretrained/intern_vit_6b_448px_v1_5" \
+  --teacher_path "./pretrained/InternViT-6B-448px-V1-5" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
   --overwrite_output_dir False \

@@ -23,8 +23,8 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 fi
 
 # number of gpus: 256
-# batch size per gpu: 4
-# gradient accumulation steps: 2
+# batch size per gpu: 2
+# gradient accumulation steps: 4
 # total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
@@ -37,14 +37,15 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain.py \
-  --vision_path "./pretrained/intern_vit_6b_448px_v1_5" \
-  --mlp_path "./pretrained/intern_vit_6b_448px_v1_2/mlp_projector.pth" \
+  --vision_path "./pretrained/InternViT-6B-448px-V1-5" \
+  --mlp_path "./pretrained/InternViT-6B-448px-V1-2/mlp_projector/hermes_2_yi_34b.pth" \
   --llm_path "./pretrained/Nous-Hermes-2-Yi-34B" \
   --conv_style "Hermes-2" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
+  --max_dynamic_patch 12 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.0 \
   --pad2square False \
@@ -53,15 +54,15 @@ srun -p ${PARTITION} \
   --freeze_backbone True \
   --vision_select_layer -1 \
   --use_data_resampling False \
-  --dataloader_num_workers 2 \
+  --dataloader_num_workers 4 \
   --bf16 True \
   --num_train_epochs 1 \
   --per_device_train_batch_size ${PER_DEVICE_BATCH_SIZE} \
   --gradient_accumulation_steps ${GRADIENT_ACC} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
-  --save_steps 100 \
-  --save_total_limit 5 \
+  --save_steps 200 \
+  --save_total_limit 3 \
   --learning_rate 1e-5 \
   --weight_decay 0.05 \
   --warmup_steps 100 \
@@ -74,6 +75,6 @@ srun -p ${PARTITION} \
   --dynamic_image_size True \
   --use_thumbnail True \
   --ps_version 'v2' \
-  --deepspeed "zero_stage3_config_new.json" \
+  --deepspeed "zero_stage3_config_34b.json" \
   --report_to "tensorboard" \
   2>&1 | tee -a "${OUTPUT_DIR}/training_log.txt"

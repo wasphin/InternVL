@@ -43,6 +43,7 @@ srun -p ${PARTITION} \
   --meta_path "./shell/data/data_yi34b_finetune_v5_23.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
+  --max_dynamic_patch 12 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.4 \
   --pad2square False \

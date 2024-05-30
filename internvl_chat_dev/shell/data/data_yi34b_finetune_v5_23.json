@@ -18,8 +18,7 @@
     "annotation": "metas/stage3_v5_20240410_std/academic/chartqa_trainval_30k_w_csv_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 2,
-    "length": 30219,
-    "max_dynamic_patch": 12
+    "length": 30219
   },
   "ai2d_train_12k_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/ai2d/",
@@ -48,8 +47,7 @@
     "annotation": "metas/stage3_v5_20240410_std/academic/infovqa_train_25k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 4,
-    "length": 25466,
-    "max_dynamic_patch": 12
+    "length": 25466
   },
   "infovqa_train_25k_24patch_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/infovqa/",
@@ -64,16 +62,14 @@
     "annotation": "metas/stage3_v5_20240410_std/academic/infographics_20240403_qa_20240407_v2.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 17682,
-    "max_dynamic_patch": 12
+    "length": 17682
   },
   "docvqa_train_56k_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/docvqa/",
     "annotation": "metas/stage3_v5_20240410_std/academic/docvqa_train_56k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 4,
-    "length": 56259,
-    "max_dynamic_patch": 12
+    "length": 56259
   },
   "synthdog_30k_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/synthdog-en/",
@@ -101,8 +97,7 @@
     "annotation": "metas/stage3_v5_20240410_std/academic/textcap_train_21k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 21461,
-    "max_dynamic_patch": 12
+    "length": 21461
   },
   "llavar_train_20k_en_20240402": {
     "root": "langchao:s3://mm_dataset/LLaVAR/images/",
@@ -137,8 +132,7 @@
     "annotation": "metas/stage3_v5_20240410_std/academic/textvqa_train_21k_wo_ocr_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 2,
-    "length": 21461,
-    "max_dynamic_patch": 12
+    "length": 21461
   },
   "CLEVR_train_70k_en_20240402": {
     "root": "langchao:s3://multi_modal/CLEVR/",
@@ -166,8 +160,7 @@
     "annotation": "metas/stage3_v5_20240410_std/academic/DocReason_20240402_v1_r25877_20240403_v1.jsonl",
     "data_augment": true,
     "repeat_time": 2,
-    "length": 25877,
-    "max_dynamic_patch": 12
+    "length": 25877
   },
   "art500k_train_30k_en_20240403": {
     "root": "langchao:s3://multi_modal/playground/data/art500k/",
@@ -314,16 +307,14 @@
     "annotation": "metas/stage3_v5_20240410_std/gpt4v_data/info_markdown_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 4455,
-    "max_dynamic_patch": 12
+    "length": 4455
   },
   "info_markdown_v2_en_20240402": {
     "root": "langchao:s3://multi_modal/infographic-aug/",
     "annotation": "metas/stage3_v5_20240410_std/gpt4v_data/info_markdown_v2_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 10025,
-    "max_dynamic_patch": 12
+    "length": 10025
   },
   "sharegpt4v_caption_coco50k_zh_20240402": {
     "root": "langchao:s3://mm_dataset/",
@@ -436,8 +427,7 @@
     "annotation": "metas/stage3_v5_20240410_std/xc2/mmc_inst_qa_600k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 0.06,
-    "length": 600000,
-    "max_dynamic_patch": 12
+    "length": 600000
   },
   "Baidu_Baike_500k_zh_20240402_filtered_v2": {
     "root": "wwy_s_new:s3://xcomposer_data/",
