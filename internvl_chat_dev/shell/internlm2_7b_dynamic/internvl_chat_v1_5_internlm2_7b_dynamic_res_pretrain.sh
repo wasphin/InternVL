@@ -37,7 +37,7 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain.py \
-  --vision_path "./pretrained/intern_vit_300m_448px_v1_5" \
+  --vision_path "./pretrained/InternViT-300M-448px" \
   --llm_path "./pretrained/internlm2-chat-7b" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
@@ -59,7 +59,7 @@ srun -p ${PARTITION} \
   --gradient_accumulation_steps ${GRADIENT_ACC} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
-  --save_steps 100 \
+  --save_steps 200 \
   --save_total_limit 3 \
   --learning_rate 1e-4 \
   --weight_decay 0.05 \

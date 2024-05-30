@@ -37,7 +37,7 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_finetune.py \
-  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_7b_dynamic_res_pretrain/checkpoint-59100" \
+  --model_name_or_path "./work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_7b_dynamic_res_pretrain/checkpoint-6500" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_yi34b_finetune_v5_33.json" \

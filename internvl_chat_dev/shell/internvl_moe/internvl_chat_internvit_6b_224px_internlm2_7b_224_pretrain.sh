@@ -36,7 +36,7 @@ srun -p ${PARTITION} \
   --quotatype=${QUOTA_TYPE} \
   ${SRUN_ARGS} \
   python -u internvl/train/internvl_chat_pretrain.py \
-  --vision_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/intern_vit_6b_224px" \
+  --vision_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/InternViT-6B-224px" \
   --llm_path "/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/pretrained/internlm2-chat-7b" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
