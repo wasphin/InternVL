@@ -5,7 +5,7 @@ GPUS=${GPUS:-128}
 GPUS_PER_NODE=${GPUS_PER_NODE:-8}
 QUOTA_TYPE=${QUOTA_TYPE:-"reserved"}
 NODES=$((GPUS / GPUS_PER_NODE))
-CPUS_PER_TASK=${CPUS_PER_TASK:-1}
+CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-2048}
 PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-8}
@@ -13,7 +13,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34227
+export MASTER_PORT=34229
 export TF_CPP_MIN_LOG_LEVEL=3
 
 OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_pretrain'
@@ -45,6 +45,7 @@ srun -p ${PARTITION} \
   --meta_path "./shell/data/data_0404_zh_pretrain.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
+  --max_dynamic_patch 12 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.1 \
   --pad2square False \
@@ -60,8 +61,8 @@ srun -p ${PARTITION} \
   --gradient_accumulation_steps ${GRADIENT_ACC} \
   --evaluation_strategy "no" \
   --save_strategy "steps" \
-  --save_steps 100 \
-  --save_total_limit 5 \
+  --save_steps 200 \
+  --save_total_limit 3 \
   --learning_rate 2e-5 \
   --weight_decay 0.01 \
   --warmup_steps 100 \

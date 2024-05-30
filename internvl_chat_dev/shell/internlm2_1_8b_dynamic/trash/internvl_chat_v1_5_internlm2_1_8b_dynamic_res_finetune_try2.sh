@@ -13,7 +13,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34223
+export MASTER_PORT=34229
 
 OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_internlm2_1_8b_dynamic_res_finetune_try2'
 

@@ -7,14 +7,14 @@
     "length": 210000000
   },
   "laion": {
-    "root": "hzh:",
+    "root": "langchao:",
     "annotation": "metas/stage2_v5/chat_laion_74m_valid.jsonl",
     "data_augment": false,
     "repeat_time": 1,
     "length": 70253415
   },
   "chat_grit_new": {
-    "root": "hzh:s3://GRIT/",
+    "root": "langchao:s3://GRIT/",
     "annotation": "metas/stage2_v5/chat_grit_new.jsonl",
     "data_augment": false,
     "repeat_time": 1,
@@ -708,14 +708,14 @@
     "length": 457130
   },
   "laion_gpt4v_en_0316": {
-    "root": "hzh:s3://multi_modal/laion_gpt4v/images/",
+    "root": "langchao:s3://multi_modal/laion_gpt4v/images/",
     "annotation": "metas/stage3_v5_20240318_std/chenzhe/laion_gpt4v_en_0316.jsonl",
     "data_augment": true,
     "repeat_time": 10,
     "length": 10950
   },
   "textocr_gpt4v_en_0316": {
-    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
+    "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
     "annotation": "metas/stage3_v5_20240318_std/chenzhe/textocr_gpt4v_en_0316.jsonl",
     "data_augment": true,
     "repeat_time": 10,

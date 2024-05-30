@@ -14,7 +14,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=31212
+export MASTER_PORT=34229
 
 # number of gpus: 128
 # batch size per gpu: 1

@@ -13,7 +13,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34227
+export MASTER_PORT=34229
 export TF_CPP_MIN_LOG_LEVEL=3
 
 OUTPUT_DIR='work_dirs/interleaved/internvl_chat_v1_5_internlm2_7b_448_res_pretrain_interleaved_stage1'
@@ -41,7 +41,7 @@ srun -p ${PARTITION} \
   --llm_path "./pretrained/internlm2-chat-7b" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/cc_interleave_pretrain_stage1.json" \
+  --meta_path "./shell/data/cc_interleave_pretrain_stage2.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --max_dynamic_patch 1 \

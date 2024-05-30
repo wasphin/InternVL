@@ -13,7 +13,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=32423
+export MASTER_PORT=34229
 export TF_CPP_MIN_LOG_LEVEL=3
 
 OUTPUT_DIR='work_dirs/vicuna/internvl_chat_vit_6b_vicuna7b_336_pretrain'

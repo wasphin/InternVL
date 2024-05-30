@@ -13,7 +13,7 @@ GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-export MASTER_PORT=34227
+export MASTER_PORT=34229
 export TF_CPP_MIN_LOG_LEVEL=3
 
 OUTPUT_DIR='work_dirs/internvl_chat_lite/internvl_chat_v1_5_phi3_3_8b_dynamic_res_finetune_try3'
