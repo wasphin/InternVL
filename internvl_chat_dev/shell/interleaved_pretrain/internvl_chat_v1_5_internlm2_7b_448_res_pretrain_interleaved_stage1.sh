@@ -40,7 +40,7 @@ srun -p ${PARTITION} \
   --llm_path "./pretrained/internlm2-chat-7b" \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/cc_interleave_pretrain_stage2.json" \
+  --meta_path "./shell/data/cc_interleave_pretrain_stage1.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --max_dynamic_patch 1 \
