@@ -8,7 +8,7 @@ NODES=$((GPUS / GPUS_PER_NODE))
 CPUS_PER_TASK=${CPUS_PER_TASK:-10}
 SRUN_ARGS=${SRUN_ARGS:-""}
 BATCH_SIZE=${BATCH_SIZE:-2048}
-PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-1}
+PER_DEVICE_BATCH_SIZE=${PER_DEVICE_BATCH_SIZE:-4}
 GRADIENT_ACC=$((BATCH_SIZE / PER_DEVICE_BATCH_SIZE / GPUS))
 
 export PYTHONPATH="/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/petrel-oss-python-sdk"
@@ -23,8 +23,8 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 fi
 
 # number of gpus: 512
-# batch size per gpu: 1
-# gradient accumulation steps: 4
+# batch size per gpu: 4
+# gradient accumulation steps: 1
 # total batch size: 2048
 # epoch: 1
 srun -p ${PARTITION} \
