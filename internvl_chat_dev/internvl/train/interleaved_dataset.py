@@ -113,7 +113,7 @@ class InterleavedDataset(Dataset):
         self.pad2square = pad2square
         self.group_by_length = group_by_length
         self.normalize_type = normalize_type
-        self.sep = '<|eot_id|>'
+        self.sep = '</s>'
 
         # 0-6143 each 34195 samples
         self.num_samples_each_shard = 34190  # even if the actual num is more
