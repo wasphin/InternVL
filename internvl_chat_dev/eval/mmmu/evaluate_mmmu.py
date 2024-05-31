@@ -18,19 +18,19 @@ from transformers import AutoTokenizer
 ds_collections = {
     'MMMU_validation': {
         'root': 'MMMU/MMMU',
-        'max_new_tokens': 100,
+        'max_new_tokens': 10,
         'min_new_tokens': 1,
         'split': 'validation'
     },
     'MMMU_test': {
         'root': 'MMMU/MMMU',
-        'max_new_tokens': 100,
+        'max_new_tokens': 10,
         'min_new_tokens': 1,
         'split': 'test'
     },
     'MMMU_dev': {
         'root': 'MMMU/MMMU',
-        'max_new_tokens': 100,
+        'max_new_tokens': 10,
         'min_new_tokens': 1,
         'split': 'dev'
     },
