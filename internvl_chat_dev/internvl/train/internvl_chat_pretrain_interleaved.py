@@ -235,9 +235,11 @@ class LazySupervisedDataset(Dataset):
                 pass
         temp_path = os.path.join(data_dir, f'{basename}_{current_rank}_of_{total_ranks}.jsonl')
         if os.path.exists(temp_path):
+            logger.info(f'Loading from {temp_path}')
             with open(temp_path, 'r') as f:
                 self.raw_data = f.readlines()
         else:
+            logger.info(f'Loading from {temp_path}')
             with open(meta['annotation'], 'r') as f:
                 self.raw_data = f.readlines()
             total_lines = len(self.raw_data)
@@ -283,6 +285,45 @@ class LazySupervisedDataset(Dataset):
 
     def __len__(self):
         return len(self.raw_data) * torch.distributed.get_world_size()
+
+    def multi_modal_multi_image_get_item(self, data_item):
+        transform = build_transform(is_train=self.is_train, input_size=self.image_size,
+                                    pad2square=self.pad2square, normalize_type=self.normalize_type)
+        images = []
+        for image_path in data_item['image']:
+            if image_path.startswith('s3://'):
+                image_path = self.root + image_path
+            else:
+                image_path = os.path.join(self.root, image_path)
+            if self.tcs_loader is not None:
+                image = self.tcs_loader(image_path)
+            else:
+                image = Image.open(image_path).convert('RGB')
+            images.append(image)
+        pixel_values = [transform(image) for image in images]
+        pixel_values = torch.stack(pixel_values)
+        num_patches = pixel_values.size(0)
+        if self.template_name == 'Hermes-2':
+            preprocess_function = preprocess_mpt
+        elif self.template_name == 'internlm2-chat':
+            preprocess_function = preprocess_internlm
+        elif self.template_name == 'llama3-chat':
+            preprocess_function = preprocess_llama3
+        elif self.template_name == 'phi3-chat':
+            preprocess_function = preprocess_phi3
+        else:
+            preprocess_function = preprocess
+        ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
+                                  self.tokenizer, self.num_image_token, group_by_length=self.group_by_length,
+                                  ds_name=self.ds_name, num_image=len(images))
+        ret = dict(
+            input_ids=ret['input_ids'][0],
+            labels=ret['labels'][0],
+            attention_mask=ret['attention_mask'][0],
+            pixel_values=pixel_values,
+            image_flags=torch.tensor([1] * num_patches, dtype=torch.long)
+        )
+        return ret
 
     def multi_modal_get_item(self, data_item):
         if '<image>' not in data_item['conversations'][0]['value']:
@@ -368,7 +409,10 @@ class LazySupervisedDataset(Dataset):
             try:
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item and len(data_item['image']) != 0:
-                    ret = self.multi_modal_get_item(data_item)
+                    if type(data_item['image']) == list:
+                        ret = self.multi_modal_multi_image_get_item(data_item)
+                    else:
+                        ret = self.multi_modal_get_item(data_item)
                 else:
                     ret = self.pure_text_get_item(data_item)
                 break
@@ -376,11 +420,15 @@ class LazySupervisedDataset(Dataset):
                 print(e)
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item:
-                    if data_item['image'].startswith('s3://'):
-                        data_path = self.root + data_item['image']
+                    if type(data_item['image']) == list:
+                        images = [self.root + item for item in data_item['image']]
+                        print(f'Failed to load image: {images}, the dataset is: {self.ds_name}')
                     else:
-                        data_path = os.path.join(self.root, data_item['image'])
-                    print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
+                        if data_item['image'].startswith('s3://'):
+                            data_path = self.root + data_item['image']
+                        else:
+                            data_path = os.path.join(self.root, data_item['image'])
+                        print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
                 i = random.randint(0, len(self.raw_data) - 1)
         return ret
 

@@ -1,0 +1,9 @@
+{
+  "merged_laion_en_100m": {
+    "root": "langchao:s3://LAION-5B-P/LAION-5B/laion2B-en/",
+    "annotation": "./metas/stage2_v5/merged_laion_en_100m.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 25000000
+  }
+}
