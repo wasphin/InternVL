@@ -5,8 +5,8 @@ from multiprocessing import Pool, cpu_count
 
 from tqdm import tqdm
 
-path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/metas/cleaned_laion_en_100m'
-out_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/metas/merged_laion_en_100m'
+path = '/mnt/petrelfs/wangwenhai/private_data/internvl_hr_data/laion_coco'
+out_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/metas/merged_laion_coco'
 merge_num = 4
 
 prompts = [
@@ -87,38 +87,41 @@ prompts = [
 
 
 def process_file(i):
-    global idx  # ensure we use a global index
-    txt_path = os.path.join(path, f'%07d.txt' % i)
-    with open(txt_path, 'r') as f:
-        lines = f.readlines()
+    try:
+        global idx  # ensure we use a global index
+        txt_path = os.path.join(path, f'%07d.jsonl' % i)
+        with open(txt_path, 'r') as f:
+            lines = f.readlines()
 
-    new_lines = []
-    for line in lines:
-        line = json.loads(line)
-        new_line = {
-            'image': line['image'].replace('hzh:s3://laion5b/LAION-5B/laion2B-en/', ''),
-            'caption': line['caption'],
-        }
-        new_lines.append(new_line)
-
-    new_lines = [new_lines[i:i + merge_num] for i in range(0, len(new_lines), merge_num)]
-    output_path = os.path.join(out_path, f'%07d.jsonl' % i)
-
-    with open(output_path, 'w') as writer:
-        for item in new_lines:
-            images = [temp['image'] for temp in item]
-            captions = [temp['caption'] for temp in item]
-            questions = ['<image>\n' + random.choice(prompts) for _ in range(len(images))]
-            output = {
-                'id': idx,
-                'image': images,
-                'conversations': []
+        new_lines = []
+        for line in lines:
+            line = json.loads(line)
+            new_line = {
+                'image': line['image'].replace('hzh:s3://public-dataset/laion-coco/images/', ''),
+                'caption': line['caption'],
             }
-            for question, answer in zip(questions, captions):
-                output['conversations'].append({'from': 'human', 'value': question})
-                output['conversations'].append({'from': 'gpt', 'value': answer})
-            writer.write(json.dumps(output) + '\n')
-            idx += 1
+            new_lines.append(new_line)
+
+        new_lines = [new_lines[i:i + merge_num] for i in range(0, len(new_lines), merge_num)]
+        output_path = os.path.join(out_path, f'%07d.jsonl' % i)
+
+        with open(output_path, 'w') as writer:
+            for item in new_lines:
+                images = [temp['image'] for temp in item]
+                captions = [temp['caption'] for temp in item]
+                questions = ['<image>\n' + random.choice(prompts) for _ in range(len(images))]
+                output = {
+                    'id': idx,
+                    'image': images,
+                    'conversations': []
+                }
+                for question, answer in zip(questions, captions):
+                    output['conversations'].append({'from': 'human', 'value': question})
+                    output['conversations'].append({'from': 'gpt', 'value': answer})
+                writer.write(json.dumps(output) + '\n')
+                idx += 1
+    except:
+        pass
 
 
 if __name__ == '__main__':
@@ -126,7 +129,7 @@ if __name__ == '__main__':
     num_processes = cpu_count()
     pool = Pool(processes=num_processes)
 
-    for _ in tqdm(pool.imap_unordered(process_file, range(10000)), total=10000):
+    for _ in tqdm(pool.imap_unordered(process_file, range(56753)), total=56753):
         pass
 
     pool.close()

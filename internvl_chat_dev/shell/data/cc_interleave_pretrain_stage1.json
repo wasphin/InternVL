@@ -6,6 +6,20 @@
     "repeat_time": 1,
     "length": 210000000
   },
+  "merged_laion_en_100m": {
+    "root": "langchao:s3://LAION-5B-P/LAION-5B/laion2B-en/",
+    "annotation": "./metas/stage2_v5/merged_laion_en_100m.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 25000000
+  },
+  "merged_laion_coco_120m": {
+    "root": "hzh:s3://public-dataset/laion-coco/images/",
+    "annotation": "./metas/stage2_v5/merged_laion_coco_120m.jsonl",
+    "data_augment": false,
+    "repeat_time": 1,
+    "length": 29613128
+  },
   "laion": {
     "root": "langchao:",
     "annotation": "metas/stage2_v5/chat_laion_74m_valid.jsonl",

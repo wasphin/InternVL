@@ -5,12 +5,13 @@ from tqdm import tqdm
 
 total_ranks = 512
 meta =  {
-    'root': 'langchao:s3://LAION-5B-P/LAION-5B/laion2B-en/',
-    'annotation': './metas/stage2_v5/merged_laion_en_100m.jsonl',
+    'root': 'hzh:s3://public-dataset/laion-coco/images/',
+    'annotation': './metas/stage2_v5/merged_laion_coco_120m.jsonl',
     'data_augment': False,
     'repeat_time': 1,
-    'length': 25000000
+    'length': 29613128
 }
+
 basename = os.path.basename(meta['annotation']).replace('.jsonl', '')
 data_dir = os.path.join(os.path.dirname(meta['annotation']), f'{basename}_temp')
 if not os.path.exists(data_dir):
