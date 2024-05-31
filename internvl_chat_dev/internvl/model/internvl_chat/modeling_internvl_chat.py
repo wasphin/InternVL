@@ -143,12 +143,14 @@ class InternVLChatModel(PreTrainedModel):
         selected = (input_ids == self.img_context_token_id)
         try:
             input_embeds[selected] = input_embeds[selected] * 0.0 + vit_embeds.reshape(-1, C)
+            ignore_flag = False
         except Exception as e:
             vit_embeds = vit_embeds.reshape(-1, C)
             print(f'warning: {e}, input_embeds[selected].shape={input_embeds[selected].shape}, '
                   f'vit_embeds.shape={vit_embeds.shape}')
             n_token = selected.sum()
             input_embeds[selected] = input_embeds[selected] * 0.0 + vit_embeds[:n_token]
+            ignore_flag = True
 
         input_embeds = input_embeds.reshape(B, N, C)
 
@@ -176,6 +178,8 @@ class InternVLChatModel(PreTrainedModel):
             # Enable model parallelism
             shift_labels = shift_labels.to(shift_logits.device)
             loss = loss_fct(shift_logits, shift_labels)
+            if ignore_flag:
+                loss = loss * 0.0
 
         if not return_dict:
             output = (logits,) + outputs[1:]
