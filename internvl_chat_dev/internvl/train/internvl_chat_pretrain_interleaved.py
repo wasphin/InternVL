@@ -4,6 +4,7 @@ import math
 import os
 import random
 import sys
+import traceback
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
@@ -417,7 +418,8 @@ class LazySupervisedDataset(Dataset):
                     ret = self.pure_text_get_item(data_item)
                 break
             except Exception as e:
-                print(e)
+                print(e, self.ds_name)
+                traceback.print_exc()
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item:
                     if type(data_item['image']) == list:
@@ -478,6 +480,7 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 )
         except Exception:
             logger.info(f'Error in loading dataset: {ds_name}')
+            traceback.print_exc()
             exit()
         dataset.ds_name = ds_name
         for i in range(repeat_time):
