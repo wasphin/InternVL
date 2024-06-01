@@ -20,22 +20,21 @@ for root, dirs, files in os.walk(path):
 
 def process_file(file_path):
     output_path = file_path.replace(path, output)
-    # mkdir dir for output_path
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     writer = open(output_path, 'w')
 
     count = 0
     with open(file_path, 'r') as f:
         data = f.readlines()
-        # for line in tqdm(data):
         for line in tqdm(data):
             line = json.loads(line)
             conversations = line['conversations']
+            print_flag = True
             for conv in conversations:
                 if conv['value'] is None or len(conv['value']) == 0:
-                    continue
-                else:
-                    writer.write(json.dumps(line, ensure_ascii=False) + '\n')
+                    print_flag = False
+            if print_flag:
+                writer.write(json.dumps(line, ensure_ascii=False) + '\n')
     writer.close()
 
     if count > 0:
