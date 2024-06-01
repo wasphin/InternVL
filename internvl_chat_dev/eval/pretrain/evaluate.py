@@ -58,64 +58,124 @@ IMG_END_TOKEN = '</img>'
 IMG_CONTEXT_TOKEN = '<IMG_CONTEXT>'
 
 
-ds_collections = {
-    'flickr': {
-        'image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/flickr30k/flickr30k-images',
-        'karpathy_json_path': '/mnt/hwfile/share_data/liqingyun/data/karpathy_caption/dataset_flickr30k.json',
-        'annotations_json_path': '/mnt/hwfile/share_data/liqingyun/data/flickr30k/dataset_flickr30k_coco_style.json',
-    },
-    'coco': {
-        'train_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/train2014',
-        'val_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/val2014',
-        'karpathy_json_path': '/mnt/hwfile/share_data/liqingyun/data/karpathy_caption/dataset_coco.json',
-        'annotations_json_path': '/mnt/hwfile/share_data/liqingyun/data/coco/annotations/captions_val2014.json',
-    },
-    'vqav2': {
-        'train_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/train2014',
-        'train_questions_json_path': '/mnt/hwfile/share_data/liqingyun/data/VQAv2/v2_OpenEnded_mscoco_train2014_questions.json',
-        'train_annotations_json_path': '/mnt/hwfile/share_data/liqingyun/data/VQAv2/v2_mscoco_train2014_annotations.json',
-        'test_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/test2015',
-        'test_questions_json_path': '/mnt/hwfile/share_data/liqingyun/data/VQAv2/v2_OpenEnded_mscoco_test-dev2015_questions.json',
-        'test_annotations_json_path': None,
-        'final_test_questions_json_path': '/mnt/hwfile/share_data/liqingyun/data/VQAv2/v2_OpenEnded_mscoco_test2015_questions.json',
-    },
-    "ok_vqa":{
-        "train_image_dir_path": '/mnt/hwfile/share_data/liqingyun/data/coco/train2014',
-        "train_questions_json_path": "/mnt/hwfile/share_data/liqingyun/data/OK-VQA/OpenEnded_mscoco_train2014_questions.json", 
-        "train_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/OK-VQA/mscoco_train2014_annotations.json", 
-        "test_image_dir_path": '/mnt/hwfile/share_data/liqingyun/data/coco/val2014',
-        "test_questions_json_path": "/mnt/hwfile/share_data/liqingyun/data/OK-VQA/OpenEnded_mscoco_val2014_questions.json", 
-        "test_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/OK-VQA/mscoco_val2014_annotations.json", 
-    }, 
-    "vizwiz":{
-        "train_image_dir_path": "/mnt/hwfile/share_data/liqingyun/data/VizWiz-VQA/train", 
-        "test_image_dir_path": "/mnt/hwfile/share_data/liqingyun/data/VizWiz-VQA/test", 
-        "train_questions_json_path": "/mnt/hwfile/share_data/liqingyun/data/VizWiz-VQA/openflamingo_eval_ann/train_questions_vqa_format.json", 
-        "train_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/VizWiz-VQA/openflamingo_eval_ann/train_annotations_vqa_format.json", 
-        "test_questions_json_path": "/mnt/hwfile/share_data/liqingyun/data/VizWiz-VQA/openflamingo_eval_ann/test_questions_vqa_format.json", 
-        "test_annotations_json_path": None, 
-    },
-    "textvqa": {
-        "image_dir_path": "/mnt/hwfile/share_data/liqingyun/data/TextVQA/train_images", 
-        "train_questions_json_path": "/mnt/hwfile/share_data/liqingyun/data/TextVQA/openflamingo_eval_ann/train_questions_vqa_format.json", 
-        "train_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/TextVQA/openflamingo_eval_ann/train_annotations_vqa_format.json",  
-        "test_questions_json_path": "/mnt/hwfile/share_data/liqingyun/data/TextVQA/openflamingo_eval_ann/val_questions_vqa_format.json",  
-        "test_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/TextVQA/openflamingo_eval_ann/val_annotations_vqa_format.json",  
-    },
-    "imagenet": {
-        "root": "/mnt/hwfile/share_data/liqingyun/imagenet-1k", 
-    },
-    "hateful_memes": {
-        "image_dir_path": "/mnt/hwfile/share_data/liqingyun/data/hateful_memes/img", 
-        "train_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/hateful_memes/train.jsonl", 
-        "test_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/hateful_memes/dev.jsonl", 
-    },
-    "rices": {
-        "vision_encoder_path": "ViT-L-14", 
-        "vision_encoder_pretrained": "openai", 
-        "cached_demonstration_features": "/mnt/hwfile/share_data/liqingyun/openflamingo_rices_cached_feature", 
-    },
-}
+if os.path.exists("/mnt/hwfile"):  # T
+    ds_collections = {
+        'flickr': {
+            'image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/flickr30k/flickr30k-images',
+            'karpathy_json_path': '/mnt/hwfile/share_data/liqingyun/data/karpathy_caption/dataset_flickr30k.json',
+            'annotations_json_path': '/mnt/hwfile/share_data/liqingyun/data/flickr30k/dataset_flickr30k_coco_style.json',
+        },
+        'coco': {
+            'train_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/train2014',
+            'val_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/val2014',
+            'karpathy_json_path': '/mnt/hwfile/share_data/liqingyun/data/karpathy_caption/dataset_coco.json',
+            'annotations_json_path': '/mnt/hwfile/share_data/liqingyun/data/coco/annotations/captions_val2014.json',
+        },
+        'vqav2': {
+            'train_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/train2014',
+            'train_questions_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_OpenEnded_mscoco_train2014_questions.json',
+            'train_annotations_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_mscoco_train2014_annotations.json',
+            'test_image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/coco/test2015',
+            'test_questions_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_OpenEnded_mscoco_test-dev2015_questions.json',
+            'test_annotations_json_path': None,
+            'final_test_questions_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_OpenEnded_mscoco_test2015_questions.json',
+        },
+        "ok_vqa":{
+            "train_image_dir_path": '/mnt/hwfile/share_data/liqingyun/data/coco/train2014',
+            "train_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/OpenEnded_mscoco_train2014_questions.json", 
+            "train_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/mscoco_train2014_annotations.json", 
+            "test_image_dir_path": '/mnt/hwfile/share_data/liqingyun/data/coco/val2014',
+            "test_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/OpenEnded_mscoco_val2014_questions.json", 
+            "test_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/mscoco_val2014_annotations.json", 
+        }, 
+        "vizwiz":{
+            "train_image_dir_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/train", 
+            "test_image_dir_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/test", 
+            "train_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/openflamingo_eval_ann/train_questions_vqa_format.json", 
+            "train_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/openflamingo_eval_ann/train_annotations_vqa_format.json", 
+            "test_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/openflamingo_eval_ann/test_questions_vqa_format.json", 
+            "test_annotations_json_path": None, 
+        },
+        "textvqa": {
+            "image_dir_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/train_images", 
+            "train_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/train_questions_vqa_format.json", 
+            "train_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/train_annotations_vqa_format.json",  
+            "test_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/val_questions_vqa_format.json",  
+            "test_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/val_annotations_vqa_format.json",  
+        },
+        "imagenet": {
+            "root": "/mnt/hwfile/share_data/liqingyun/imagenet-1k", 
+        },
+        "hateful_memes": {
+            "image_dir_path": "/mnt/hwfile/share_data/liqingyun/data/hateful_memes/img", 
+            "train_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/hateful_memes/train.jsonl", 
+            "test_annotations_json_path": "/mnt/hwfile/share_data/liqingyun/data/hateful_memes/dev.jsonl", 
+        },
+        "rices": {
+            "vision_encoder_path": "ViT-L-14", 
+            "vision_encoder_pretrained": "openai", 
+            "cached_demonstration_features": "/mnt/hwfile/share_data/liqingyun/openflamingo_rices_cached_feature", 
+        },
+    }
+else:  # P
+    ds_collections = {
+        'flickr': {
+            'image_dir_path': '/mnt/hwfile/share_data/liqingyun/data/flickr30k/flickr30k-images',
+            'karpathy_json_path': '/mnt/hwfile/share_data/liqingyun/data/karpathy_caption/dataset_flickr30k.json',
+            'annotations_json_path': '/mnt/hwfile/share_data/liqingyun/data/flickr30k/dataset_flickr30k_coco_style.json',
+        },
+        'coco': {
+            'train_image_dir_path': '/mnt/petrelfs/share_data/liqingyun/datasets/coco/train2014',
+            'val_image_dir_path': '/mnt/petrelfs/share_data/liqingyun/datasets/coco/val2014',
+            'karpathy_json_path': '/mnt/petrelfs/share_data/liqingyun/datasets/coco/annotations/karpathy_caption/dataset_coco.json',
+            'annotations_json_path': '/mnt/petrelfs/share_data/liqingyun/datasets/coco/annotations/captions_val2014.json',
+        },
+        'vqav2': {
+            'train_image_dir_path': '/mnt/petrelfs/share_data/liqingyun/datasets/coco/train2014',
+            'train_questions_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_OpenEnded_mscoco_train2014_questions.json',
+            'train_annotations_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_mscoco_train2014_annotations.json',
+            'test_image_dir_path': '/mnt/petrelfs/share_data/liqingyun/datasets/coco/test2015',
+            'test_questions_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_OpenEnded_mscoco_test-dev2015_questions.json',
+            'test_annotations_json_path': None,
+            'final_test_questions_json_path': '/mnt/petrelfs/share_data/wangweiyun/datasets/VQAv2/v2_OpenEnded_mscoco_test2015_questions.json',
+        },
+        "ok_vqa":{
+            "train_image_dir_path": '/mnt/petrelfs/share_data/liqingyun/datasets/coco/train2014',
+            "train_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/OpenEnded_mscoco_train2014_questions.json", 
+            "train_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/mscoco_train2014_annotations.json", 
+            "test_image_dir_path": '/mnt/petrelfs/share_data/liqingyun/datasets/coco/val2014',
+            "test_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/OpenEnded_mscoco_val2014_questions.json", 
+            "test_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/OK-VQA/mscoco_val2014_annotations.json", 
+        }, 
+        "vizwiz":{
+            "train_image_dir_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/train", 
+            "test_image_dir_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/test", 
+            "train_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/openflamingo_eval_ann/train_questions_vqa_format.json", 
+            "train_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/openflamingo_eval_ann/train_annotations_vqa_format.json", 
+            "test_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/VizWiz-VQA/openflamingo_eval_ann/test_questions_vqa_format.json", 
+            "test_annotations_json_path": None, 
+        },
+        "textvqa": {
+            "image_dir_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/train_images", 
+            "train_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/train_questions_vqa_format.json", 
+            "train_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/train_annotations_vqa_format.json",  
+            "test_questions_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/val_questions_vqa_format.json",  
+            "test_annotations_json_path": "/mnt/petrelfs/share_data/wangweiyun/datasets/TextVQA/openflamingo_eval_ann/val_annotations_vqa_format.json",  
+        },
+        "imagenet": {
+            "root": None, 
+        },
+        "hateful_memes": {
+            "image_dir_path": None, 
+            "train_annotations_json_path": None, 
+            "test_annotations_json_path": None, 
+        },
+        "rices": {
+            "vision_encoder_path": "ViT-L-14", 
+            "vision_encoder_pretrained": "openai", 
+            "cached_demonstration_features": "/mnt/petrelfs/share_data/liqingyun/lmm_baseline_llava/rices_cached_feature", 
+        },
+    }
 all_ds = [_ for _ in ds_collections.keys() if _ != "rices"]
 
 
