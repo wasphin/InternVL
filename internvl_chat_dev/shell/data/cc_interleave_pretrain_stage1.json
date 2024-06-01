@@ -56,15 +56,6 @@
     "tag": "exam",
     "language": "zh&en"
   },
-  "coigv03_01_chat_format_safety_filtered_v1_human1_chat_format": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/processed/sft_chat/human1_chat_format_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 3000,
-    "tag": "chat",
-    "language": "zh"
-  },
   "coigv03_01_chat_format_safety_filtered_v1_leetcode_chat_clean_v3": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/processed/sft_chat/leetcode_chat_clean_v3_20240520_v1.jsonl",
@@ -213,16 +204,6 @@
     "language": "zh",
     "comment": "商品文案生成"
   },
-  "ProseGeneration_chat": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/ProseGeneration_chat_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 658,
-    "tag": "chat",
-    "language": "zh",
-    "comment": "写文章"
-  },
   "firefly_split_chat_format_SentimentAnalyze_chat": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/SentimentAnalyze_chat_20240520_v1.jsonl",
@@ -303,16 +284,6 @@
     "language": "en",
     "comment": "cot回答, 但偏短"
   },
-  "flan_v2_official_chat_format_512_safety_filtered_v1_dialog": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/dialog_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 2040,
-    "tag": "chat",
-    "language": "en",
-    "comment": "对话补全"
-  },
   "flan_v2_official_chat_format_512_safety_filtered_v1_flan2021": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/flan2021_20240520_v1.jsonl",
@@ -343,16 +314,6 @@
     "language": "en",
     "comment": "简答"
   },
-  "gsm8k_chat_train_socratic": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/gsm8k_chat/processed/n1_m1_ir3v4_chat/train_socratic_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 2994,
-    "tag": "chat",
-    "language": "en",
-    "comment": "数学题"
-  },
   "know_saraswati_cot_know_saraswati_cot": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/internlm/know_saraswati_cot/processed/sft_chat_pseudo/know_saraswati_cot_20240520_v1.jsonl",
@@ -362,26 +323,6 @@
     "tag": "chat",
     "language": "en",
     "comment": "推理题,CoT不错"
-  },
-  "leetcode_filter_chat_refined_leetcode_filter_chat_refined": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/leetcode_filter_chat_refined/processed/sft_chat/leetcode_filter_chat_refined_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 1340,
-    "tag": "chat",
-    "language": "zh",
-    "comment": "中文代码题"
-  },
-  "lima_chat_format_safety_filtered_v1_lima_chat_format": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/lima_chat_format_safety_filtered_v1/processed/sft_chat/lima_chat_format_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 1026,
-    "tag": "chat",
-    "language": "en",
-    "comment": "长回答, 不错"
   },
   "long_alpaca_LongAlpaca-12k": {
     "root": null,
@@ -503,16 +444,6 @@
     "language": "zh",
     "comment": "多轮, 不错"
   },
-  "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_honest": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_honest_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "tag": "multi-turn",
-    "length": 1492,
-    "language": "zh",
-    "comment": "多轮,一般,关联性不强"
-  },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_rp": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_rp_20240520_v1.jsonl",
@@ -532,16 +463,6 @@
     "length": 268034,
     "language": "en",
     "comment": "多轮, 不错"
-  },
-  "no_robots_no_robots_test_filtered": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/no_robots/processed/sft_chat_pseudo/no_robots_test_filtered_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "tag": "chat",
-    "length": 500,
-    "language": "en",
-    "comment": "各种对话"
   },
   "no_robots_no_robots_train_filtered": {
     "root": null,
@@ -623,16 +544,6 @@
     "language": "en",
     "comment": "CoT对回答打分"
   },
-  "ultrafeedback_critique_truthful_qa": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/truthful_qa_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 3240,
-    "tag": "scoring",
-    "language": "en",
-    "comment": "CoT对回答打分"
-  },
   "ultrafeedback_critique_ultrachat": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/ultrachat_20240520_v1.jsonl",
@@ -672,16 +583,6 @@
     "tag": "multi-turn",
     "language": "en",
     "comment": "多轮, 高质量"
-  },
-  "zephyr_ultrafeedback_clean_filtered_zephyr-ultrafeedback_sft_test_clean": {
-    "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr_ultrafeedback_clean_filtered/processed/sft_chat_pseudo/zephyr-ultrafeedback_sft_test_clean_20240520_v1.jsonl",
-    "data_augment": true,
-    "repeat_time": 10,
-    "length": 1000,
-    "tag": "chat",
-    "language": "en",
-    "comment": "长回答, 高质量"
   },
   "zephyr_ultrafeedback_clean_filtered_zephyr-ultrafeedback_sft_train_clean": {
     "root": null,
