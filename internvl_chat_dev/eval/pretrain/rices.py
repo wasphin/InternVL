@@ -1,7 +1,6 @@
 import open_clip
 import torch
 from tqdm import tqdm
-import torch
 from utils import custom_collate_fn
 
 
@@ -11,8 +10,8 @@ class RICES:
         dataset,
         device,
         batch_size,
-        vision_encoder_path="ViT-B-32",
-        vision_encoder_pretrained="openai",
+        vision_encoder_path='ViT-B-32',
+        vision_encoder_pretrained='openai',
         cached_features=None,
     ):
         self.dataset = dataset
@@ -49,9 +48,9 @@ class RICES:
         with torch.no_grad():
             for batch in tqdm(
                 loader,
-                desc="Precomputing features for RICES",
+                desc='Precomputing features for RICES',
             ):
-                batch = batch["image"]
+                batch = batch['image']
                 inputs = torch.stack(
                     [self.image_processor(image) for image in batch]
                 ).to(self.device)

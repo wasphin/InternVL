@@ -1,24 +1,23 @@
-from typing import List, Dict
+from typing import Dict, List
 
-from PIL import Image
 import torch
 from einops import repeat
-
+from PIL import Image
 from torch import Tensor
 from torch.nn.parallel import DistributedDataParallel as DDP
 
 try:
     from open_flamingo.src.factory import create_model_and_transforms
 except ImportError as e:
-    raise ImportError("To evaluate open_flamingo, you should install with "
-                      "`pip install open_flamingo` firstly.")
+    raise ImportError('To evaluate open_flamingo, you should install with '
+                      '`pip install open_flamingo` firstly.')
 
-from utils import unwrap_model, get_autocast, get_cast_dtype, world_info_from_env
-
-from transformers import AutoTokenizer
-from transformers.modeling_outputs import CausalLMOutputWithPast
 from internvl.model.internvl_chat import InternVLChatModel
 from internvl.train.dataset import build_transform, dynamic_preprocess
+from transformers import AutoTokenizer
+from transformers.modeling_outputs import CausalLMOutputWithPast
+from utils import (get_autocast, get_cast_dtype, unwrap_model,
+                   world_info_from_env)
 
 
 class OpenFlamingoEvalModel:
@@ -32,19 +31,19 @@ class OpenFlamingoEvalModel:
 
     def __init__(self, model_args):
         assert (
-            "vision_encoder_path" in model_args
-            and "lm_path" in model_args
-            and "checkpoint_path" in model_args
-            and "lm_tokenizer_path" in model_args
-            and "cross_attn_every_n_layers" in model_args
-            and "vision_encoder_pretrained" in model_args
-            and "precision" in model_args
-        ), "OpenFlamingo requires vision_encoder_path, lm_path, device, checkpoint_path, lm_tokenizer_path, cross_attn_every_n_layers, vision_encoder_pretrained, and precision arguments to be specified"
+            'vision_encoder_path' in model_args
+            and 'lm_path' in model_args
+            and 'checkpoint_path' in model_args
+            and 'lm_tokenizer_path' in model_args
+            and 'cross_attn_every_n_layers' in model_args
+            and 'vision_encoder_pretrained' in model_args
+            and 'precision' in model_args
+        ), 'OpenFlamingo requires vision_encoder_path, lm_path, device, checkpoint_path, lm_tokenizer_path, cross_attn_every_n_layers, vision_encoder_pretrained, and precision arguments to be specified'
 
         self.device = (
-            model_args["device"]
-            if ("device" in model_args and model_args["device"] >= 0)
-            else "cpu"
+            model_args['device']
+            if ('device' in model_args and model_args['device'] >= 0)
+            else 'cpu'
         )
 
         (
@@ -52,27 +51,27 @@ class OpenFlamingoEvalModel:
             self.image_processor,
             self.tokenizer,
         ) = create_model_and_transforms(
-            model_args["vision_encoder_path"],
-            model_args["vision_encoder_pretrained"],
-            model_args["lm_path"],
-            model_args["lm_tokenizer_path"],
-            cross_attn_every_n_layers=int(model_args["cross_attn_every_n_layers"]),
+            model_args['vision_encoder_path'],
+            model_args['vision_encoder_pretrained'],
+            model_args['lm_path'],
+            model_args['lm_tokenizer_path'],
+            cross_attn_every_n_layers=int(model_args['cross_attn_every_n_layers']),
         )
-        checkpoint = torch.load(model_args["checkpoint_path"], map_location=self.device)
-        if "model_state_dict" in checkpoint:
-            checkpoint = checkpoint["model_state_dict"]
-            checkpoint = {k.replace("module.", ""): v for k, v in checkpoint.items()}
+        checkpoint = torch.load(model_args['checkpoint_path'], map_location=self.device)
+        if 'model_state_dict' in checkpoint:
+            checkpoint = checkpoint['model_state_dict']
+            checkpoint = {k.replace('module.', ''): v for k, v in checkpoint.items()}
         self.model.load_state_dict(checkpoint, strict=False)
         self.model.to(self.device)
         self.model.eval()
-        self.tokenizer.padding_side = "left"
+        self.tokenizer.padding_side = 'left'
 
-        self.lm_name = model_args["lm_path"].split("/")[-1]
+        self.lm_name = model_args['lm_path'].split('/')[-1]
 
         # autocast
-        self.autocast = get_autocast(model_args["precision"])
-        self.cast_dtype = get_cast_dtype(model_args["precision"])
-        
+        self.autocast = get_autocast(model_args['precision'])
+        self.cast_dtype = get_cast_dtype(model_args['precision'])
+
     def init_distributed(self):  # TODO: why openflamingo use ddp here??
         """Wrap model as DDP."""
         self.model = DDP(self.model, device_ids=[self.device])
@@ -112,7 +111,7 @@ class OpenFlamingoEvalModel:
     def _prepare_text(
         self,
         batch: List[List[str]],
-        padding="longest",
+        padding='longest',
         truncation=True,
         max_length=2000,
     ):
@@ -130,10 +129,10 @@ class OpenFlamingoEvalModel:
             batch,
             padding=padding,
             truncation=truncation,
-            return_tensors="pt",
+            return_tensors='pt',
             max_length=max_length,
         )
-        input_ids, attention_mask = encodings["input_ids"], encodings["attention_mask"]
+        input_ids, attention_mask = encodings['input_ids'], encodings['attention_mask']
         input_ids = input_ids.to(self.device, dtype=self.cast_dtype, non_blocking=True)
         attention_mask = attention_mask.to(
             self.device, dtype=self.cast_dtype, non_blocking=True
@@ -213,11 +212,11 @@ class OpenFlamingoEvalModel:
         for class_name in all_class_names:
             # Tokenize only the class name
             classname_tokens = self.tokenizer(
-                class_name, add_special_tokens=False, return_tensors="pt"
-            )["input_ids"].to(self.device)
+                class_name, add_special_tokens=False, return_tensors='pt'
+            )['input_ids'].to(self.device)
             assert classname_tokens.ndim == 2
             classname_tokens = repeat(
-                classname_tokens, "b s -> (repeat b) s", repeat=len(batch_text)
+                classname_tokens, 'b s -> (repeat b) s', repeat=len(batch_text)
             )
             num_tokens_in_classname = classname_tokens.shape[1]
 
@@ -357,32 +356,32 @@ class OpenFlamingoEvalModel:
 class InternVLChatEvalModel(OpenFlamingoEvalModel):
     def __init__(self, model_args):
         assert (
-            "checkpoint" in model_args
-            and "load_in_8bit" in model_args
-            and "dynamic" in model_args
-            and "max_num" in model_args
-        ), "InternVL requires checkpoint, load_in_8bit, dynamic, max_num arguments to be specified"
-        
+            'checkpoint' in model_args
+            and 'load_in_8bit' in model_args
+            and 'dynamic' in model_args
+            and 'max_num' in model_args
+        ), 'InternVL requires checkpoint, load_in_8bit, dynamic, max_num arguments to be specified'
+
         for k in model_args.keys():
-            if model_args[k] in ["false", "False"]:
+            if model_args[k] in ['false', 'False']:
                 model_args[k] = False
-            elif model_args[k] in ["true", "True"]:
+            elif model_args[k] in ['true', 'True']:
                 model_args[k] = True
-        
+
         self.tokenizer = AutoTokenizer.from_pretrained(
-            model_args["checkpoint"], trust_remote_code=True, use_fast=False)
+            model_args['checkpoint'], trust_remote_code=True, use_fast=False)
         self.model = InternVLChatModel.from_pretrained(
-            model_args["checkpoint"], low_cpu_mem_usage=True, torch_dtype=torch.bfloat16,
-            load_in_8bit=model_args["load_in_8bit"]).eval()
-        
-        self.load_in_8bit = model_args["load_in_8bit"]
-        self.dynamic = model_args["dynamic"]
-        self.max_num = int(model_args["max_num"])
+            model_args['checkpoint'], low_cpu_mem_usage=True, torch_dtype=torch.bfloat16,
+            load_in_8bit=model_args['load_in_8bit']).eval()
+
+        self.load_in_8bit = model_args['load_in_8bit']
+        self.dynamic = model_args['dynamic']
+        self.max_num = int(model_args['max_num'])
         self.image_size = self.model.config.force_image_size or self.model.config.vision_config.image_size
         self.use_thumbnail = self.model.config.use_thumbnail
         self.template = self.model.config.template
         total_params = sum(p.numel() for p in self.model.parameters()) / 1e9
-        
+
         _, self.rank, _ = world_info_from_env()
         if self.rank == 0:
             print(f'[test] total_params: {total_params}B')
@@ -391,13 +390,13 @@ class InternVLChatEvalModel(OpenFlamingoEvalModel):
             print(f'[test] dynamic_image_size: {model_args["dynamic"]}')
             print(f'[test] use_thumbnail: {self.use_thumbnail}')
             print(f'[test] max_num: {self.max_num}')
-            
+
         self.transform = build_transform(is_train=False, input_size=self.image_size)
-        
+
     def set_device(self, device):
         if not self.load_in_8bit:
             super().set_device(device)
-        
+
     def load_image(self, image, max_num=6):
         if isinstance(image, str):
             image = Image.open(image).convert('RGB')
@@ -411,10 +410,10 @@ class InternVLChatEvalModel(OpenFlamingoEvalModel):
         pixel_values = [self.transform(image) for image in images]
         pixel_values = torch.stack(pixel_values)
         return pixel_values
-    
+
     def get_model(self):
         return unwrap_model(self.model)
-        
+
     def get_outputs(
         self,
         batch_text: List[str],
@@ -423,19 +422,19 @@ class InternVLChatEvalModel(OpenFlamingoEvalModel):
         max_generation_length: int,
         num_beams: int,
         length_penalty: float,
-        IMG_CONTEXT_TOKEN='<IMG_CONTEXT>', 
+        IMG_CONTEXT_TOKEN='<IMG_CONTEXT>',
         eos_token=None,
     ) -> List[str]:
         """
         Get generation outputs.
         """
-        assert len(batch_text) == 1, "InternVLChat only supports batch size 1 temporarily."
+        assert len(batch_text) == 1, 'InternVLChat only supports batch size 1 temporarily.'
         query = batch_text[0]
         pixel_values = batch_images[0].to(torch.bfloat16).cuda()
-        
+
         img_context_token_id = self.tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
         self.get_model().img_context_token_id = img_context_token_id
-        
+
         if eos_token is not None:
             # refer to https://github.com/czczup/InternVL-dev2/commit/e66cc792c900a9b45dd2224d71d38dec21d16f62#diff-6fd8cfd0aa3817ba1a5a14cbe823aef613172e6e1dd6439d5cdea92c7e7db718L240-R270
             eos_token_id = self.tokenizer.convert_tokens_to_ids(eos_token)
@@ -445,11 +444,11 @@ class InternVLChatEvalModel(OpenFlamingoEvalModel):
         else:
             eos_token = self.tokenizer.eos_token
             eos_token_id = self.tokenizer.eos_token_id
-            
+
         model_inputs = self.tokenizer(query, return_tensors='pt')
         input_ids = model_inputs['input_ids'].cuda()
         attention_mask = model_inputs['attention_mask'].cuda()
-        
+
         generation_output = self.get_model().generate(  # TODO: why openflamingo use ddp here??
             pixel_values=pixel_values,
             input_ids=input_ids,
@@ -459,9 +458,9 @@ class InternVLChatEvalModel(OpenFlamingoEvalModel):
             max_new_tokens=max_generation_length,
             length_penalty=length_penalty,
             do_sample=False,
-            eos_token_id=eos_token_id, 
+            eos_token_id=eos_token_id,
         )
-                
+
         return [
             response.split(eos_token)[0].strip()
             for response in self.tokenizer.batch_decode(

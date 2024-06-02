@@ -12,11 +12,11 @@ def compute_cider(
 
     # create coco_eval object by taking coco and coco_result
     coco_eval = COCOEvalCap(coco, coco_result)
-    coco_eval.params["image_id"] = coco_result.getImgIds()
+    coco_eval.params['image_id'] = coco_result.getImgIds()
     coco_eval.evaluate()
 
     return coco_eval.eval
 
 
 def postprocess_captioning_generation(predictions):
-    return predictions.split("Output", 1)[0]
+    return predictions.split('Output', 1)[0]

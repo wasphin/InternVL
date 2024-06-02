@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# proxy  # TODO Delete private sensitive information before merging 
+# proxy  # TODO Delete private sensitive information before merging
 export http_proxy=http://liqingyun:yun_990608@10.1.8.50:33128/
 export https_proxy=http://liqingyun:yun_990608@10.1.8.50:33128/
 export HTTP_PROXY=http://liqingyun:yun_990608@10.1.8.50:33128/
