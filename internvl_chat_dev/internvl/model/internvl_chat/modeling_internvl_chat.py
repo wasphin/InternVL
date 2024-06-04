@@ -137,7 +137,7 @@ class InternVLChatModel(PreTrainedModel):
         B, N, C = input_embeds.shape
         input_embeds = input_embeds.reshape(B * N, C)
 
-        if torch.distributed.get_rank() == 0:
+        if torch.dist.is_initialized() and torch.distributed.get_rank() == 0:
             print(f'dynamic ViT batch size: {vit_batch_size}, images per sample: {vit_batch_size / B}, dynamic token length: {N}')
 
         input_ids = input_ids.reshape(B * N)
@@ -238,6 +238,45 @@ class InternVLChatModel(PreTrainedModel):
         vit_embeds = vit_embeds.reshape(vit_embeds.shape[0], -1, vit_embeds.shape[-1])
         vit_embeds = self.mlp1(vit_embeds)#.to(pixel_values.device)
         return vit_embeds
+
+    def batch_chat(self, tokenizer, pixel_values, image_counts, questions, generation_config, history=None,
+                         return_history=False, IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>',
+                         IMG_CONTEXT_TOKEN='<IMG_CONTEXT>'):
+        if history is not None or return_history:
+            print('Now multi-turn chat is not supported in batch_chat.')
+            raise NotImplementedError
+        img_context_token_id = tokenizer.convert_tokens_to_ids(IMG_CONTEXT_TOKEN)
+        self.img_context_token_id = img_context_token_id
+
+        from .conversation import get_conv_template
+
+        queries = []
+        image_bs = pixel_values.shape[0]
+        # print(f'dynamic ViT batch size: {image_bs}, image_counts: {image_counts}')
+        for idx, image_count in enumerate(image_counts):
+            image_token = IMG_START_TOKEN + IMG_CONTEXT_TOKEN * self.num_image_token * image_count + IMG_END_TOKEN
+            question = image_token + '\n' + questions[idx]
+            template = get_conv_template(self.template)
+            template.append_message(template.roles[0], question)
+            template.append_message(template.roles[1], None)
+            query = template.get_prompt()
+            queries.append(query)
+        tokenizer.padding_side = 'left'
+        model_inputs = tokenizer(queries, return_tensors='pt', padding=True)
+        input_ids = model_inputs['input_ids'].cuda()
+        attention_mask = model_inputs['attention_mask'].cuda()
+        eos_token_id = tokenizer.convert_tokens_to_ids(template.sep)
+        generation_config['eos_token_id'] = eos_token_id
+
+        generation_output = self.generate(
+            pixel_values=pixel_values,
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            **generation_config
+        )
+        responses = tokenizer.batch_decode(generation_output, skip_special_tokens=True)
+        responses = [response.split(template.sep)[0].strip() for response in responses]
+        return responses
 
     def chat(self, tokenizer, pixel_values, question, generation_config, history=None, return_history=False,
              IMG_START_TOKEN='<img>', IMG_END_TOKEN='</img>', IMG_CONTEXT_TOKEN='<IMG_CONTEXT>'):
