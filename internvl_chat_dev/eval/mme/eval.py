@@ -46,6 +46,8 @@ if __name__ == '__main__':
     parser.add_argument('--auto', action='store_true')
     args = parser.parse_args()
 
+    if args.auto:
+        os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
     kwargs = {'device_map': 'auto'} if args.auto else {}
     prompt = 'Answer the question using a single word or phrase.'
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint, trust_remote_code=True, use_fast=False)
