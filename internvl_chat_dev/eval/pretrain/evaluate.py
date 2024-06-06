@@ -1178,17 +1178,16 @@ def evaluate_vqa(
                 'Temporary file saved to ', f'{dataset_name}results_{random_uuid}.json'
             )
             return
-
         fill_fn(
             f'{dataset_name}results_{random_uuid}.json',
-            f"{dataset_name}-testdev_{eval_model.lm_name}_{num_shots}_{'rices' if args.rices else 'random'}_{seed}{'_dynamic' if eval_model.dynamic else ''}{'_2txtshots' if args.zero_shot_add_text_shots else ''}.json",
+            f"{dataset_name}-testdev_{args.model}_{num_shots}_{'rices' if args.rices else 'random'}_{seed}{'_dynamic' if eval_model.dynamic else ''}{'_2txtshots' if args.zero_shot_add_text_shots else ''}.json",
             args.vqav2_final_test_questions_json_path
             if dataset_name == 'vqav2'
             else args.vizwiz_test_questions_json_path,
         )
         print(
             'Test-dev results saved to ',
-            f"{dataset_name}-testdev_{eval_model.lm_name}_{num_shots}_{'rices' if args.rices else 'random'}_{seed}{'_dynamic' if eval_model.dynamic else ''}{'_2txtshots' if args.zero_shot_add_text_shots else ''}.json",
+            f"{dataset_name}-testdev_{args.model}_{num_shots}_{'rices' if args.rices else 'random'}_{seed}{'_dynamic' if eval_model.dynamic else ''}{'_2txtshots' if args.zero_shot_add_text_shots else ''}.json",
         )
         os.remove(f'{dataset_name}results_{random_uuid}.json')
 

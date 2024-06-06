@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 path = '/mnt/petrelfs/wangwenhai/private_data/internvl_hr_data/laion_coco'
 out_path = '/mnt/petrelfs/wangwenhai/workspace/InternVL-release/internvl_chat_dev/metas/merged_laion_coco'
-merge_num = 4
+merge_num = 1
 
 prompts = [
     'Please briefly describe the contents of the image.',
@@ -112,7 +112,7 @@ def process_file(i):
                 questions = ['<image>\n' + random.choice(prompts) for _ in range(len(images))]
                 output = {
                     'id': idx,
-                    'image': images,
+                    'image': images[0],
                     'conversations': []
                 }
                 for question, answer in zip(questions, captions):
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     num_processes = cpu_count()
     pool = Pool(processes=num_processes)
 
-    for _ in tqdm(pool.imap_unordered(process_file, range(56753)), total=56753):
+    for _ in tqdm(pool.imap_unordered(process_file, range(56753//2)), total=56753//2):
         pass
 
     pool.close()

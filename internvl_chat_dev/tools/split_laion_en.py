@@ -6,14 +6,15 @@ from tqdm import tqdm
 total_ranks = 512
 meta =  {
     'root': 'hzh:s3://public-dataset/laion-coco/images/',
-    'annotation': './metas/stage2_v5/merged_laion_coco_120m.jsonl',
+    'annotation': 'metas/stage2_v5/merged_laion_coco_59m.jsonl',
     'data_augment': False,
     'repeat_time': 1,
-    'length': 29613128
+    'length': 59173874
 }
 
 basename = os.path.basename(meta['annotation']).replace('.jsonl', '')
 data_dir = os.path.join(os.path.dirname(meta['annotation']), f'{basename}_temp')
+
 if not os.path.exists(data_dir):
     try:
         os.makedirs(data_dir)
