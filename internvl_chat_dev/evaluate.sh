@@ -12,11 +12,27 @@ GPUS=${GPUS:-8}
 export MASTER_PORT=${MASTER_PORT}
 export PORT=${PORT}
 
+# Save original arguments
+ARGS=("$@")
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --auto)
+      GPUS=1
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+echo "GPUS: ${GPUS}"
 
 if  [ ${DATASET} == "mme" ]; then
   cd eval/mme/
   DIRNAME=`basename ${CHECKPOINT}`
-  python eval.py --checkpoint ${CHECKPOINT} ${@:3}
+  python eval.py --checkpoint ${CHECKPOINT} "${ARGS[@]:2}"
   python calculation.py --results_dir ${DIRNAME}
   cd ../../
 fi
@@ -28,7 +44,7 @@ if  [ ${DATASET} == "caption" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} ${@:3}
+    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} "${ARGS[@]:2}"
 fi
 
 if  [ ${DATASET} == "caption-coco" ]; then
@@ -38,7 +54,7 @@ if  [ ${DATASET} == "caption-coco" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets coco ${@:3}
+    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets coco "${ARGS[@]:2}"
 fi
 
 if  [ ${DATASET} == "caption-flickr30k" ]; then
@@ -48,7 +64,7 @@ if  [ ${DATASET} == "caption-flickr30k" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets flickr30k ${@:3}
+    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets flickr30k "${ARGS[@]:2}"
 fi
 
 if  [ ${DATASET} == "caption-nocaps" ]; then
@@ -58,7 +74,7 @@ if  [ ${DATASET} == "caption-nocaps" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets nocaps ${@:3}
+    eval/caption/evaluate_caption.py --checkpoint ${CHECKPOINT} --datasets nocaps "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa" ]; then
@@ -68,7 +84,7 @@ if [ ${DATASET} == "vqa" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-okvqa-val" ]; then
@@ -78,7 +94,7 @@ if [ ${DATASET} == "vqa-okvqa-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets okvqa_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets okvqa_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-textvqa-val" ]; then
@@ -88,7 +104,7 @@ if [ ${DATASET} == "vqa-textvqa-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-textvqa-val-ocr" ]; then
@@ -98,7 +114,7 @@ if [ ${DATASET} == "vqa-textvqa-val-ocr" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val_ocr ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets textvqa_val_ocr "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-vizwiz-val" ]; then
@@ -108,7 +124,7 @@ if [ ${DATASET} == "vqa-vizwiz-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vizwiz_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vizwiz_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-vizwiz-test" ]; then
@@ -118,7 +134,7 @@ if [ ${DATASET} == "vqa-vizwiz-test" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vizwiz_test ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vizwiz_test "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-vqav2-testdev" ]; then
@@ -128,7 +144,7 @@ if [ ${DATASET} == "vqa-vqav2-testdev" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vqav2_testdev ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vqav2_testdev "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-ai2d-test" ]; then
@@ -138,7 +154,7 @@ if [ ${DATASET} == "vqa-ai2d-test" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets ai2diagram_test ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets ai2diagram_test "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-vqav2-val" ]; then
@@ -148,7 +164,7 @@ if [ ${DATASET} == "vqa-vqav2-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vqav2_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets vqav2_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-gqa-testdev" ]; then
@@ -158,7 +174,7 @@ if [ ${DATASET} == "vqa-gqa-testdev" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets gqa_testdev_llava ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets gqa_testdev_llava "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-docvqa-val" ]; then
@@ -168,7 +184,7 @@ if [ ${DATASET} == "vqa-docvqa-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets docvqa_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets docvqa_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-docvqa-test" ]; then
@@ -178,7 +194,7 @@ if [ ${DATASET} == "vqa-docvqa-test" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets docvqa_test ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets docvqa_test "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-chartqa-test" ]; then
@@ -188,7 +204,7 @@ if [ ${DATASET} == "vqa-chartqa-test" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_human,chartqa_test_augmented ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_human,chartqa_test_augmented "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-infovqa-val" ]; then
@@ -198,7 +214,7 @@ if [ ${DATASET} == "vqa-infovqa-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-infovqa-test" ]; then
@@ -208,7 +224,7 @@ if [ ${DATASET} == "vqa-infovqa-test" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_test ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets infographicsvqa_test "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-chartqa-test-human" ]; then
@@ -218,7 +234,7 @@ if [ ${DATASET} == "vqa-chartqa-test-human" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_human ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_human "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-chartqa-test-augmented" ]; then
@@ -228,7 +244,7 @@ if [ ${DATASET} == "vqa-chartqa-test-augmented" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_augmented ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets chartqa_test_augmented "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-ocrvqa-val" ]; then
@@ -238,7 +254,7 @@ if [ ${DATASET} == "vqa-ocrvqa-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets ocrvqa_val ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets ocrvqa_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "vqa-ocrvqa-test" ]; then
@@ -248,7 +264,7 @@ if [ ${DATASET} == "vqa-ocrvqa-test" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets ocrvqa_test ${@:3}
+    eval/vqa/evaluate_vqa.py --checkpoint ${CHECKPOINT} --datasets ocrvqa_test "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "refcoco" ]; then
@@ -258,7 +274,7 @@ if [ ${DATASET} == "refcoco" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/refcoco/evaluate_grounding.py --checkpoint ${CHECKPOINT} ${@:3}
+    eval/refcoco/evaluate_grounding.py --checkpoint ${CHECKPOINT} "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "refcoco-val" ]; then
@@ -268,12 +284,12 @@ if [ ${DATASET} == "refcoco-val" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/refcoco/evaluate_grounding.py --checkpoint ${CHECKPOINT} --datasets refcoco_val ${@:3}
+    eval/refcoco/evaluate_grounding.py --checkpoint ${CHECKPOINT} --datasets refcoco_val "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "llava-bench" ]; then
     rm -rf results/llava_bench_results_review.jsonl
-    python eval/llava_bench/evaluate_llava_bench.py --checkpoint ${CHECKPOINT} ${@:3}
+    python eval/llava_bench/evaluate_llava_bench.py --checkpoint ${CHECKPOINT} "${ARGS[@]:2}"
     python -u eval/llava_bench/eval_gpt_review_bench.py \
       --question data/llava-bench-in-the-wild/questions.jsonl \
       --context data/llava-bench-in-the-wild/context.jsonl \
@@ -293,7 +309,7 @@ if [ ${DATASET} == "pope" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/pope/evaluate_pope.py --checkpoint ${CHECKPOINT} --datasets pope ${@:3}
+    eval/pope/evaluate_pope.py --checkpoint ${CHECKPOINT} --datasets pope "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "tiny_lvlm" ]; then
@@ -303,20 +319,20 @@ if [ ${DATASET} == "tiny_lvlm" ]; then
     --master_addr=127.0.0.1 \
     --nproc_per_node=${GPUS} \
     --master_port=${MASTER_PORT} \
-    eval/tiny_lvlm/evaluate_lvlm.py --checkpoint ${CHECKPOINT} --datasets updated_datasets ${@:3}
+    eval/tiny_lvlm/evaluate_lvlm.py --checkpoint ${CHECKPOINT} --datasets updated_datasets "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "mmvet" ]; then
-    python eval/mmvet/evaluate_mmvet.py --checkpoint ${CHECKPOINT} --datasets mmvet ${@:3}
+    python eval/mmvet/evaluate_mmvet.py --checkpoint ${CHECKPOINT} --datasets mmvet "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "cmmmu" ]; then
-  CUDA_VISIBLE_DEVICES=0 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets art_and_design ${@:3} &
-  CUDA_VISIBLE_DEVICES=1 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets business ${@:3} &
-  CUDA_VISIBLE_DEVICES=2 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets health_and_medicine ${@:3} &
-  CUDA_VISIBLE_DEVICES=3 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets humanities_and_social_sciences ${@:3} &
-  CUDA_VISIBLE_DEVICES=4 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets science ${@:3} &
-  CUDA_VISIBLE_DEVICES=5 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets technology_and_engineering ${@:3} &
+  CUDA_VISIBLE_DEVICES=0 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets art_and_design "${ARGS[@]:2}" &
+  CUDA_VISIBLE_DEVICES=1 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets business "${ARGS[@]:2}" &
+  CUDA_VISIBLE_DEVICES=2 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets health_and_medicine "${ARGS[@]:2}" &
+  CUDA_VISIBLE_DEVICES=3 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets humanities_and_social_sciences "${ARGS[@]:2}" &
+  CUDA_VISIBLE_DEVICES=4 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets science "${ARGS[@]:2}" &
+  CUDA_VISIBLE_DEVICES=5 python eval/cmmmu/evaluate_cmmmu.py --checkpoint ${CHECKPOINT} --datasets technology_and_engineering "${ARGS[@]:2}" &
   wait
 fi
 
@@ -327,7 +343,7 @@ if [ ${DATASET} == "mmbench-dev-en" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_dev_20230712 ${@:3}
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_dev_20230712 "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "mmbench-dev-cn" ]; then
@@ -337,7 +353,7 @@ if [ ${DATASET} == "mmbench-dev-cn" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_dev_cn_20231003 ${@:3}
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_dev_cn_20231003 "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "mmbench-test-en" ]; then
@@ -347,7 +363,7 @@ if [ ${DATASET} == "mmbench-test-en" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_test_en_20231003 ${@:3}
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_test_en_20231003 "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "mmbench-test-cn" ]; then
@@ -357,7 +373,7 @@ if [ ${DATASET} == "mmbench-test-cn" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_test_cn_20231003 ${@:3}
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets mmbench_test_cn_20231003 "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "ccbench-dev" ]; then
@@ -367,7 +383,7 @@ if [ ${DATASET} == "ccbench-dev" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets ccbench_dev_cn ${@:3}
+      eval/mmbench/evaluate_mmbench.py --checkpoint ${CHECKPOINT} --datasets ccbench_dev_cn "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "scienceqa" ]; then
@@ -377,7 +393,7 @@ if [ ${DATASET} == "scienceqa" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/scienceqa/evaluate_scienceqa.py --checkpoint ${CHECKPOINT} --datasets sqa_test ${@:3}
+      eval/scienceqa/evaluate_scienceqa.py --checkpoint ${CHECKPOINT} --datasets sqa_test "${ARGS[@]:2}"
 fi
 
 
@@ -388,7 +404,7 @@ if [ ${DATASET} == "mmmu-dev" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_dev ${@:3}
+      eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_dev "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "mmmu-val" ]; then
@@ -398,7 +414,7 @@ if [ ${DATASET} == "mmmu-val" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_validation ${@:3}
+      eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_validation "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "mmmu-test" ]; then
@@ -408,7 +424,7 @@ if [ ${DATASET} == "mmmu-test" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_test ${@:3}
+      eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_test "${ARGS[@]:2}"
 fi
 
 
@@ -419,7 +435,7 @@ if [ ${DATASET} == "mmvp" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mmvp/evaluate_mmvp.py --checkpoint ${CHECKPOINT} --datasets MMVP ${@:3}
+      eval/mmvp/evaluate_mmvp.py --checkpoint ${CHECKPOINT} --datasets MMVP "${ARGS[@]:2}"
 fi
 
 
@@ -430,7 +446,7 @@ if [ ${DATASET} == "mathvista-testmini" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mathvista/evaluate_mathvista.py --checkpoint ${CHECKPOINT} --datasets MathVista_testmini ${@:3}
+      eval/mathvista/evaluate_mathvista.py --checkpoint ${CHECKPOINT} --datasets MathVista_testmini "${ARGS[@]:2}"
 fi
 
 
@@ -441,7 +457,7 @@ if [ ${DATASET} == "mathvista-test" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/mathvista/evaluate_mathvista.py --checkpoint ${CHECKPOINT} --datasets MathVista_test ${@:3}
+      eval/mathvista/evaluate_mathvista.py --checkpoint ${CHECKPOINT} --datasets MathVista_test "${ARGS[@]:2}"
 fi
 
 if [ ${DATASET} == "seed" ]; then
@@ -451,5 +467,5 @@ if [ ${DATASET} == "seed" ]; then
       --master_addr=127.0.0.1 \
       --nproc_per_node=${GPUS} \
       --master_port=${MASTER_PORT} \
-      eval/seed/evaluate_seed.py --checkpoint ${CHECKPOINT} --datasets SEEDv1 ${@:3}
+      eval/seed/evaluate_seed.py --checkpoint ${CHECKPOINT} --datasets SEEDv1 "${ARGS[@]:2}"
 fi
