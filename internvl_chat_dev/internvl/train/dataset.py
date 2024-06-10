@@ -221,6 +221,7 @@ def preprocess(
                     f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
                 )
                 sys.stdout.flush()
+                raise Exception
 
     return dict(
         input_ids=input_ids,
@@ -313,6 +314,7 @@ def preprocess_mpt(
                     f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
                 )
                 sys.stdout.flush()
+                raise Exception
 
     return dict(
         input_ids=input_ids,
@@ -420,6 +422,7 @@ def preprocess_phi3(
                     f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
                 )
                 sys.stdout.flush()
+                raise Exception
 
     return dict(
         input_ids=input_ids,
@@ -524,6 +527,7 @@ def preprocess_llama3(
                     f' #turn = {len(turns) - 1}. (ignored). This dataset is {ds_name}.'
                 )
                 sys.stdout.flush()
+                raise Exception
 
     return dict(
         input_ids=input_ids,
@@ -614,6 +618,7 @@ def preprocess_internlm(
                 target[:] = IGNORE_TOKEN_ID
                 print(f'WARNING: tokenization mismatch: {cur_len} vs. {total_len}. This dataset is {ds_name}.')
                 sys.stdout.flush()
+                raise Exception
 
     return dict(
         input_ids=input_ids,
