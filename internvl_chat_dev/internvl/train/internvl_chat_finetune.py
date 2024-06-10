@@ -4,6 +4,7 @@ import math
 import os
 import random
 import sys
+import traceback
 import warnings
 from copy import deepcopy
 from dataclasses import dataclass, field
@@ -307,6 +308,43 @@ class LazySupervisedDataset(Dataset):
         )
         return ret
 
+    def multi_modal_multi_image_get_item(self, data_item):
+        transform = build_transform(is_train=self.is_train, input_size=self.image_size,
+                                    pad2square=self.pad2square, normalize_type=self.normalize_type)
+        images = []
+        for image_path in data_item['image']:
+            if image_path.startswith('s3://'):
+                image_path = self.root + image_path
+            else:
+                image_path = os.path.join(self.root, image_path)
+            if self.tcs_loader is not None:
+                image = self.tcs_loader(image_path)
+            else:
+                image = Image.open(image_path).convert('RGB')
+            images.append(image)
+        pixel_values = [transform(image) for image in images]
+        pixel_values = torch.stack(pixel_values)
+        num_patches = pixel_values.size(0)
+        if self.template_name == 'Hermes-2':
+            preprocess_function = preprocess_mpt
+        elif self.template_name == 'internlm2-chat':
+            preprocess_function = preprocess_internlm
+        elif self.template_name == 'phi3-chat':
+            preprocess_function = preprocess_phi3
+        else:
+            preprocess_function = preprocess
+        ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
+                                  self.tokenizer, self.num_image_token, group_by_length=self.group_by_length,
+                                  ds_name=self.ds_name, num_image=len(images))
+        ret = dict(
+            input_ids=ret['input_ids'][0],
+            labels=ret['labels'][0],
+            attention_mask=ret['attention_mask'][0],
+            pixel_values=pixel_values,
+            image_flags=torch.tensor([1] * num_patches, dtype=torch.long)
+        )
+        return ret
+
     def pure_text_get_item(self, data_item):
         image = Image.new('RGB', (224, 224), (255, 255, 255))
         images = dynamic_preprocess(image, min_num=self.min_dynamic_patch, max_num=self.max_dynamic_patch,
@@ -343,19 +381,27 @@ class LazySupervisedDataset(Dataset):
             try:
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item and len(data_item['image']) != 0:
-                    ret = self.multi_modal_get_item(data_item)
+                    if type(data_item['image']) == list:
+                        ret = self.multi_modal_multi_image_get_item(data_item)
+                    else:
+                        ret = self.multi_modal_get_item(data_item)
                 else:
                     ret = self.pure_text_get_item(data_item)
                 break
             except Exception as e:
-                print(e)
+                print(e, self.ds_name)
+                traceback.print_exc()
                 data_item = json.loads(self.raw_data[i])
                 if 'image' in data_item:
-                    if data_item['image'].startswith('s3://'):
-                        data_path = self.root + data_item['image']
+                    if type(data_item['image']) == list:
+                        images = [self.root + item for item in data_item['image']]
+                        print(f'Failed to load image: {images}, the dataset is: {self.ds_name}')
                     else:
-                        data_path = os.path.join(self.root, data_item['image'])
-                    print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
+                        if data_item['image'].startswith('s3://'):
+                            data_path = self.root + data_item['image']
+                        else:
+                            data_path = os.path.join(self.root, data_item['image'])
+                        print(f'Failed to load image: {data_path}, the dataset is: {self.ds_name}')
                 i = random.randint(0, len(self.raw_data) - 1)
         return ret
 
