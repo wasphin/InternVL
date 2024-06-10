@@ -154,7 +154,7 @@ def evaluate_chat_model():
 
         image_ids, captions = [], []
         for _, (pixel_values, ids, _, _) in tqdm(enumerate(dataloader)):
-            pixel_values = pixel_values.to(torch.float16).cuda()
+            pixel_values = pixel_values.to(torch.bfloat16).cuda()
             generation_config = dict(
                 num_beams=args.num_beams,
                 max_new_tokens=ds_collections[ds_name]['max_new_tokens'],
@@ -257,7 +257,7 @@ if __name__ == '__main__':
     kwargs = {'device_map': 'auto'} if args.auto else {}
     tokenizer = AutoTokenizer.from_pretrained(args.checkpoint, trust_remote_code=True, use_fast=False)
     model = InternVLChatModel.from_pretrained(
-        args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.float16,
+        args.checkpoint, low_cpu_mem_usage=True, torch_dtype=torch.bfloat16,
         load_in_8bit=args.load_in_8bit, **kwargs).eval()
     if not args.load_in_8bit and not args.auto:
         model = model.cuda()
