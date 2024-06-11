@@ -230,7 +230,6 @@ class LazySupervisedDataset(Dataset):
             if repeat_time < 1:
                 # choice top len(self.raw_data) * repeat_time samples
                 self.raw_data = self.raw_data[:int(len(self.raw_data) * repeat_time)]
-        gc.collect()
         self.root = meta['root']
         self.cached_data_dict = {}
         self.tcs_loader = tcs_loader
@@ -260,6 +259,7 @@ class LazySupervisedDataset(Dataset):
                     else:
                         token_length = self.conv2length[str_length]
                 self.length.append(token_length)
+        gc.collect()
 
     def __len__(self):
         return len(self.raw_data)

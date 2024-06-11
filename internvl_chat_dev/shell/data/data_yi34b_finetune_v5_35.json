@@ -148,12 +148,12 @@
     "repeat_time": 1,
     "length": 7311
   },
-  "textvqa_train_21k_wo_ocr_en_20240402": {
+  "textvqa_train_21k_wo_ocr_en_20240611": {
     "root": "langchao:s3://mm_dataset/ocr_data/TextVQA/train_images/",
-    "annotation": "metas/stage3_v5_20240521_std/academic/textvqa_train_21k_wo_ocr_en_20240402.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/academic/textvqa_train_21k_wo_ocr_en_20240611.jsonl",
     "data_augment": true,
     "repeat_time": 2,
-    "length": 21461
+    "length": 34602
   },
   "CLEVR_train_70k_en_20240402": {
     "root": "langchao:s3://multi_modal/CLEVR/",
@@ -414,13 +414,6 @@
     "repeat_time": 0.025,
     "length": 903636
   },
-  "gpt4v_mathqa_en_20240402": {
-    "root": "",
-    "annotation": "metas/stage3_v5_20240521_std/gpt4v/gpt4v_mathqa_en_20240402.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 7000
-  },
   "conversations_gpt4v_reflux_20240413": {
     "root": "langchao:s3://multi_modal/serve_images/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/conversations_gpt4v_reflux_20240413.jsonl",
@@ -467,7 +460,7 @@
     "root": "langchao:s3://xc_mirror/",
     "annotation": "metas/stage3_v5_20240521_std/xc2/mmc_inst_qa_600k_en_20240402.jsonl",
     "data_augment": true,
-    "repeat_time": 0.06,
+    "repeat_time": 0.12,
     "length": 600000
   },
   "Baidu_Baike_500k_zh_20240402_filtered_v2": {
@@ -476,34 +469,6 @@
     "data_augment": true,
     "repeat_time": 1,
     "length": 90222
-  },
-  "SystemConversations_en_20240402": {
-    "root": "",
-    "annotation": "metas/stage3_v5_20240521_std/nlp_data/SystemConversations_en_20240402.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 7020
-  },
-  "k12_en_20240402": {
-    "root": "",
-    "annotation": "metas/stage3_v5_20240521_std/nlp_data/k12_en_20240402.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 4001
-  },
-  "COIG-CQIA-full_zh_20240402": {
-    "root": "",
-    "annotation": "metas/stage3_v5_20240521_std/nlp_data/COIG-CQIA-full_zh_20240402.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 14872
-  },
-  "logiqa_train_zh_20240406": {
-    "root": "",
-    "annotation": "metas/stage3_v5_20240521_std/nlp_data/logiqa_train_zh_20240406.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 12751
   },
   "markdown_table": {
     "root": "langchao:s3://multi_modal/ocr_data/chart_data/png",
@@ -623,13 +588,6 @@
     "data_augment": true,
     "repeat_time": 1,
     "length": 397
-  },
-  "TextVQA_en_naf_v1.0_woBox": {
-    "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/naf/NAF_dataset/groups/",
-    "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_en_naf_v1.0_woBox.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 711
   },
   "TextVQA_en_naf_v1.0_woBox_gpt4o": {
     "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/naf/NAF_dataset/groups/",
@@ -772,13 +730,6 @@
     "repeat_time": 1,
     "length": 338
   },
-  "mathqa_en_20240402": {
-    "root": "",
-    "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/mathqa_en_20240402.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 5705
-  },
   "unigeo_calc_en_20240402": {
     "root": "langchao:s3://multi_modal/UniGeo/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/unigeo_calc_en_20240402.jsonl",
@@ -825,28 +776,28 @@
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240521_std/arxiv/arxiv_equation_167k_en_20240403.jsonl",
     "data_augment": true,
-    "repeat_time": 0.03,
+    "repeat_time": 0.06,
     "length": 167156
   },
   "arxiv_table_65k_en_20240403": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240521_std/arxiv/arxiv_table_65k_en_20240403.jsonl",
     "data_augment": true,
-    "repeat_time": 0.08,
+    "repeat_time": 0.16,
     "length": 64707
   },
   "arxiv_texteq_162k_en_20240403": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240521_std/arxiv/arxiv_texteq_162k_en_20240403.jsonl",
     "data_augment": true,
-    "repeat_time": 0.03,
+    "repeat_time": 0.06,
     "length": 162464
   },
   "arxiv_ocr_162k_en_20240403": {
     "root": "langchao:s3://internvl-moe_sft_data/",
     "annotation": "metas/stage3_v5_20240521_std/arxiv/arxiv_ocr_162k_en_20240403.jsonl",
     "data_augment": true,
-    "repeat_time": 0.03,
+    "repeat_time": 0.06,
     "length": 162464
   },
   "AndroidUI_longcaption_0312to0327_20240409_v1": {
@@ -871,6 +822,48 @@
     "length": 570212,
     "note": "需要用语言模型对回答的格式进行整理"
   },
+  "gpt4v_mathqa_en_20240402": {
+    "root": null,
+    "annotation": "metas/stage3_v5_20240521_std/gpt4v/gpt4v_mathqa_en_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 7000
+  },
+  "SystemConversations_en_20240402": {
+    "root": null,
+    "annotation": "metas/stage3_v5_20240521_std/nlp_data/SystemConversations_en_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 7020
+  },
+  "k12_en_20240402": {
+    "root": null,
+    "annotation": "metas/stage3_v5_20240521_std/nlp_data/k12_en_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 4001
+  },
+  "COIG-CQIA-full_zh_20240402": {
+    "root": null,
+    "annotation": "metas/stage3_v5_20240521_std/nlp_data/COIG-CQIA-full_zh_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 14872
+  },
+  "logiqa_train_zh_20240406": {
+    "root": null,
+    "annotation": "metas/stage3_v5_20240521_std/nlp_data/logiqa_train_zh_20240406.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 12751
+  },
+  "mathqa_en_20240402": {
+    "root": null,
+    "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/mathqa_en_20240402.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 5705
+  },
   "k12_llm_en": {
     "root": null,
     "annotation": "metas/stage3_v5_20240521_std/mmmu_data/llm_en_fixFrom.jsonl",
@@ -884,27 +877,6 @@
     "data_augment": true,
     "repeat_time": 0.18,
     "length": 500000
-  },
-  "medical_sft_sample500k": {
-    "root": "langchao:s3://medical_preprocessed/extract_images_20240419/",
-    "annotation": "metas/stage3_v5_20240521_std/mmmu_data/medical_sft_sample500k_0509.jsonl",
-    "data_augment": true,
-    "repeat_time": 0.1,
-    "length": 499712
-  },
-  "k12_a_en_single_image": {
-    "root": "langchao:s3://mm_dataset/maji/k12_images_all/",
-    "annotation": "metas/stage3_v5_20240521_std/mmmu_data/k12_a_en_single_image_final.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 1917
-  },
-  "k12_b_en_single_image": {
-    "root": "langchao:s3://mm_dataset/maji/k12_images_all/",
-    "annotation": "metas/stage3_v5_20240521_std/mmmu_data/k12_b_en_single_image_final.jsonl",
-    "data_augment": true,
-    "repeat_time": 1,
-    "length": 1936
   },
   "EvolCode_v4x_r47_9_fixn_polishedcode-v4.x-r47.10": {
     "root": null,
@@ -1613,5 +1585,19 @@
     "data_augment": true,
     "repeat_time": 1,
     "length": 36284
+  },
+  "mmmu_test_gpt4o_0513_cot_d240607": {
+    "root": "langchao:s3://mm_dataset/mmmu/images/",
+    "annotation": "metas/stage3_v5_20240521_std/gpt4o/mmmu_test_gpt4o_0513_cot_d240607.jsonl",
+    "data_augment": true,
+    "repeat_time": 2,
+    "length": 10751
+  },
+  "SenseChat_Vision_0429_To_0517_gpt4o": {
+    "root": "langchao:s3://multi_modal/DataReflow/raw_data/",
+    "annotation": "metas/stage3_v5_20240521_std/gpt4o/SenseChat_Vision_0429_To_0517_gpt4o.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 410
   }
 }

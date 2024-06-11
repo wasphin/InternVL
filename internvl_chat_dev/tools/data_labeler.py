@@ -196,4 +196,4 @@ with gr.Blocks() as demo:
         fn=save_conversations
     )
 
-demo.launch(server_name='0.0.0.0', server_port=10065)
+demo.launch(server_name='0.0.0.0', server_port=10027)

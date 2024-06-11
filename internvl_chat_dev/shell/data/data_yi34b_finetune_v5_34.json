@@ -148,12 +148,12 @@
     "repeat_time": 1,
     "length": 7311
   },
-  "textvqa_train_21k_wo_ocr_en_20240402": {
+  "textvqa_train_21k_wo_ocr_en_20240611": {
     "root": "langchao:s3://mm_dataset/ocr_data/TextVQA/train_images/",
-    "annotation": "metas/stage3_v5_20240521_std/academic/textvqa_train_21k_wo_ocr_en_20240402.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/academic/textvqa_train_21k_wo_ocr_en_20240611.jsonl",
     "data_augment": true,
     "repeat_time": 2,
-    "length": 21461
+    "length": 34602
   },
   "CLEVR_train_70k_en_20240402": {
     "root": "langchao:s3://multi_modal/CLEVR/",
@@ -1613,5 +1613,12 @@
     "data_augment": true,
     "repeat_time": 1,
     "length": 36284
+  },
+  "mmmu_test_gpt4o_0513_cot_d240607": {
+    "root": "langchao:s3://mm_dataset/mmmu/images/",
+    "annotation": "metas/stage3_v5_20240521_std/gpt4o/mmmu_test_gpt4o_0513_cot_d240607.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 10751
   }
 }
