@@ -12,8 +12,8 @@ try_to_load_image = True
 
 # set your path and output path here
 # this code will find all `.jsonl` files and count the token length
-path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240521_std/'
-output = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/'
+path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/mmmu_data/'
+output = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/mmmu_data2/'
 
 model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/work_dirs/internvl_chat_v1_5/' \
              'internvl_chat_v1_5_internlm2_20b_dynamic_res_finetune_exp7_26'
