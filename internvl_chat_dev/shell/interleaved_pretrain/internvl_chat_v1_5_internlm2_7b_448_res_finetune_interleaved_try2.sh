@@ -40,7 +40,7 @@ srun -p ${PARTITION} \
   --conv_style "internlm2-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/cc_interleave_finetune.json" \
-  --overwrite_output_dir True \
+  --overwrite_output_dir False \
   --force_image_size 448 \
   --max_dynamic_patch 1 \
   --down_sample_ratio 0.5 \

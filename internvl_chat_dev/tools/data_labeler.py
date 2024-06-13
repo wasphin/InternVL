@@ -1,9 +1,10 @@
 import json
 import os
+import re
 
 import gradio as gr
 from internvl.train.dataset import TCSLoader
-from PIL import Image
+from PIL import Image, ImageDraw
 
 tcs_loader = TCSLoader('~/petreloss.conf')
 
@@ -47,6 +48,25 @@ def query_gpt4(question, image_path):
     return 'GPT-4 generated answer for the question.'
 
 
+def draw_box(image, conversations):
+    PATTERN = re.compile(r'\[*\[(.*?),(.*?),(.*?),(.*?)\]\]*')
+    image_width, image_height = image.size  # 获取图像的宽度和高度
+    for conversation in conversations:
+        value = conversation['value']
+        bbox = re.findall(PATTERN, value)
+        try:
+            bbox = (float(bbox[0][0]), float(bbox[0][1]), float(bbox[0][2]), float(bbox[0][3]))
+            # 将归一化的坐标转换为实际图像坐标
+            bbox = (bbox[0] / 1000 * image_width, bbox[1] / 1000 * image_height,
+                    bbox[2] / 1000 * image_width, bbox[3] / 1000 * image_height)
+        except:
+            bbox = None
+        if bbox is not None:
+            draw = ImageDraw.Draw(image)
+            draw.rectangle(bbox, outline='red')
+    return image
+
+
 def load_data(prefix, file_path):
     f = open(file_path, 'r')
     global data_lines
@@ -62,6 +82,7 @@ def load_data(prefix, file_path):
     else:
         image = tcs_loader(image_path)
     conversations = item['conversations']
+    image = draw_box(image, conversations)
     outputs = [data_index, item['image'], image]
     # 填充对话文本框
     for i in range(10):
@@ -88,7 +109,7 @@ def load_prev_data(question1, answer1, question2, answer2, question3, answer3, q
     else:
         image = tcs_loader(image_path)
     conversations = item['conversations']
-    print(item, len(conversations))
+    image = draw_box(image, conversations)
     outputs = [data_index, item['image'], image]
     # 填充对话文本框
     for i in range(10):
@@ -115,7 +136,7 @@ def load_next_data(question1, answer1, question2, answer2, question3, answer3, q
     else:
         image = tcs_loader(image_path)
     conversations = item['conversations']
-    print(item, len(conversations))
+    image = draw_box(image, conversations)
     outputs = [data_index, item['image'], image]
     # 填充对话文本框
     for i in range(10):

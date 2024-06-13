@@ -12,8 +12,8 @@ try_to_load_image = True
 
 # set your path and output path here
 # this code will find all `.jsonl` files and count the token length
-path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/mmmu_data/'
-output = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/mmmu_data2/'
+path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/medical_data/merged_share_datasets/'
+output = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/medical/'
 
 model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/work_dirs/internvl_chat_v1_5/' \
              'internvl_chat_v1_5_internlm2_20b_dynamic_res_finetune_exp7_26'
@@ -35,6 +35,7 @@ for root, dirs, files in os.walk(path):
         # ignore temp directories and files
         if '_temp' not in file_path:
             file_paths.append(file_path)
+file_paths = [f for f in file_paths if f.endswith('.jsonl')]
 
 
 def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
@@ -88,6 +89,8 @@ def process_file(file_path):
                 # image只有多余1条时才能用list
                 if 'image' in line and type(line['image']) == list and len(line['image']) == 1:
                     line['image'] = line['image'][0]
+                if 'image' in line and type(line['image']) == str:
+                    line['image'] = line['image'].replace('s3://medical_preprocessed/', '')
 
                 if 'image' in line:
                     if type(line['image']) == list:
