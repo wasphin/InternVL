@@ -76,7 +76,11 @@ def load_data(prefix, file_path):
     item = json.loads(data_lines[data_index])
     global prefix_str
     prefix_str = prefix
-    image_path = os.path.join(prefix_str, item['image'])
+    if item['image'].startswith('s3://'):
+        image_path = prefix_str + item['image']
+    else:
+        image_path = prefix_str + '/' + item['image']
+    print(image_path)
     if image_path.startswith('/'):
         image = Image.open(image_path).convert('RGB')
     else:
@@ -103,7 +107,11 @@ def load_prev_data(question1, answer1, question2, answer2, question3, answer3, q
         data_index -= 1
     item = json.loads(data_lines[data_index])
     global prefix_str
-    image_path = os.path.join(prefix_str, item['image'])
+    if item['image'].startswith('s3://'):
+        image_path = prefix_str + item['image']
+    else:
+        image_path = prefix_str + '/' + item['image']
+    print(image_path)
     if image_path.startswith('/'):
         image = Image.open(image_path).convert('RGB')
     else:
@@ -130,7 +138,11 @@ def load_next_data(question1, answer1, question2, answer2, question3, answer3, q
         data_index += 1
     item = json.loads(data_lines[data_index])
     global prefix_str
-    image_path = os.path.join(prefix_str, item['image'])
+    if item['image'].startswith('s3://'):
+        image_path = prefix_str + item['image']
+    else:
+        image_path = prefix_str + '/' + item['image']
+    print(image_path)
     if image_path.startswith('/'):
         image = Image.open(image_path).convert('RGB')
     else:

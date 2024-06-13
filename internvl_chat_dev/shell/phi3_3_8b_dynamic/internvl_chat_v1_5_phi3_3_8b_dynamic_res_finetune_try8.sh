@@ -41,7 +41,7 @@ srun -p ${PARTITION} \
   --conv_style "phi3-chat" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_yi34b_finetune_v5_37.json" \
-  --overwrite_output_dir True \
+  --overwrite_output_dir False \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.1 \

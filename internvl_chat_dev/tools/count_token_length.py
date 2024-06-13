@@ -7,13 +7,18 @@ from internvl.train.dataset import TCSLoader
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
+
+def is_chinese(text):
+    return any('\u4e00' <= char <= '\u9fff' for char in text)
+
+
 tcs_loader = TCSLoader('~/petreloss.conf')
 try_to_load_image = True
 
 # set your path and output path here
 # this code will find all `.jsonl` files and count the token length
-path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/medical_data/merged_share_datasets/'
-output = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/medical/'
+path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/medical_data/VQA/'
+output = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/medical_vqa/'
 
 model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/work_dirs/internvl_chat_v1_5/' \
              'internvl_chat_v1_5_internlm2_20b_dynamic_res_finetune_exp7_26'
@@ -35,7 +40,7 @@ for root, dirs, files in os.walk(path):
         # ignore temp directories and files
         if '_temp' not in file_path:
             file_paths.append(file_path)
-file_paths = [f for f in file_paths if f.endswith('.jsonl')]
+file_paths = [f for f in file_paths if f.endswith('internvl.jsonl')]
 
 
 def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
@@ -136,6 +141,19 @@ def process_file(file_path):
                 except:
                     print(file_path)
                     exit()
+                # 医疗影像VQA预处理
+                for conv in conversations:
+                    if conv['from'] == 'human':
+                        if is_chinese(conv['value']):
+                            conv['value'] = conv['value'] + '\n请简要回答，不要出现多余的内容。'
+                        else:
+                            conv['value'] = conv[
+                                                'value'] + '\nPlease answer briefly, without including extraneous information.'
+                    if 'Please generate a caption for this medical image' in conv['value']:
+                        conv['value'] = conv['value'].replace(
+                            '\nPlease answer briefly, without including extraneous information.', '')
+                        conv['value'] = conv['value'].replace('Please generate a caption for this medical image.',
+                                                              'Please generate a short caption for this medical image.')
                 conversations = '\n'.join([item['value'] for item in conversations])
                 tokenized = tokenizer(
                     conversations, return_tensors='pt', padding=False, max_length=99999, truncation=True).input_ids
