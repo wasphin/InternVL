@@ -1,48 +1,48 @@
 {
   "coco_karpathy_train_567k": {
-    "root": "hzh:s3://multi_modal/coco/",
+    "root": "langchao:s3://multi_modal/coco/",
     "annotation": "metas/stage3_v5_20240611_std/academic/coco_karpathy_train_567k.jsonl",
     "data_augment": true,
     "repeat_time": 0.0002,
     "length": 566747
   },
   "vqav2_en_20240402": {
-    "root": "hzh:s3://multi_modal/coco/train2014",
+    "root": "langchao:s3://multi_modal/coco/train2014",
     "annotation": "metas/stage3_v5_20240611_std/academic/vqav2_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 82783
   },
   "gqa_train_en_20240402": {
-    "root": "hzh:s3://mm_dataset/gqa/images/",
+    "root": "langchao:s3://mm_dataset/gqa/images/",
     "annotation": "metas/stage3_v5_20240611_std/academic/gqa_train_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 72140
   },
   "chartqa_trainval_30k_w_csv_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/chartqa/",
+    "root": "langchao:s3://multi_modal/playground/data/chartqa/",
     "annotation": "metas/stage3_v5_20240611_std/academic/chartqa_trainval_30k_w_csv_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 2,
     "length": 30219
   },
   "ai2d_train_12k_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/ai2d/",
+    "root": "langchao:s3://multi_modal/playground/data/ai2d/",
     "annotation": "metas/stage3_v5_20240611_std/academic/ai2d_train_12k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 12413
   },
   "ai2d_train_12k_new_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/ai2d/",
+    "root": "langchao:s3://multi_modal/playground/data/ai2d/",
     "annotation": "metas/stage3_v5_20240611_std/academic/ai2d_train_12k_new_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 12413
   },
   "ai2d_train_12k_en_20240410": {
-    "root": "hzh:s3://multi_modal/playground/data/ai2d/",
+    "root": "langchao:s3://multi_modal/playground/data/ai2d/",
     "annotation": "metas/stage3_v5_20240611_std/academic/ai2d_train_12k_en_20240410.jsonl",
     "data_augment": true,
     "repeat_time": 4,
@@ -50,28 +50,28 @@
     "update": "从xc2的ai2d转换得到，修复abc_images的问题 [FINISHED]"
   },
   "ai2d_train_12k_en_20240410_gpt4o": {
-    "root": "hzh:s3://multi_modal/playground/data/ai2d/",
+    "root": "langchao:s3://multi_modal/playground/data/ai2d/",
     "annotation": "metas/stage3_v5_20240611_std/gpt4o/ai2d_train_12k_en_20240410_gpt4o.jsonl",
     "data_augment": true,
     "repeat_time": 2,
     "length": 3953
   },
   "infovqa_train_25k_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/infovqa/",
+    "root": "langchao:s3://multi_modal/playground/data/infovqa/",
     "annotation": "metas/stage3_v5_20240611_std/academic/infovqa_train_25k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 4,
     "length": 25466
   },
   "infovqa_train_25k_en_20240402_gpt4o": {
-    "root": "hzh:s3://multi_modal/playground/data/infovqa/",
+    "root": "langchao:s3://multi_modal/playground/data/infovqa/",
     "annotation": "metas/stage3_v5_20240611_std/gpt4o/infovqa_train_25k_en_20240402_gpt4o.jsonl",
     "data_augment": true,
     "repeat_time": 4,
     "length": 4407
   },
   "infovqa_train_25k_24patch_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/infovqa/",
+    "root": "langchao:s3://multi_modal/playground/data/infovqa/",
     "annotation": "metas/stage3_v5_20240611_std/academic/infovqa_train_25k_24patch_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 4,

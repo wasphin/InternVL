@@ -415,7 +415,7 @@
     "length": 903636
   },
   "gpt4v_mathqa_en_20240402": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/gpt4v_mathqa_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
@@ -478,28 +478,28 @@
     "length": 90222
   },
   "SystemConversations_en_20240402": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/nlp_data/SystemConversations_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 7020
   },
   "k12_en_20240402": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/nlp_data/k12_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 4001
   },
   "COIG-CQIA-full_zh_20240402": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/nlp_data/COIG-CQIA-full_zh_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 14872
   },
   "logiqa_train_zh_20240406": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/nlp_data/logiqa_train_zh_20240406.jsonl",
     "data_augment": true,
     "repeat_time": 1,
@@ -773,7 +773,7 @@
     "length": 338
   },
   "mathqa_en_20240402": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/mathqa_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
@@ -871,14 +871,14 @@
     "length": 570212
   },
   "k12_llm_en": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/mmmu_data/llm_en_fixFrom.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 11969
   },
   "k12_llm_zh": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/mmmu_data/llm_zh_converted_fixFrom_subset.jsonl",
     "data_augment": true,
     "repeat_time": 0.18,

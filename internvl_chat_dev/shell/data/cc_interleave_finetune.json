@@ -1,27 +1,27 @@
 {
   "vqav2_en_20240402": {
-    "root": "hzh:s3://multi_modal/coco/train2014",
+    "root": "langchao:s3://multi_modal/coco/train2014",
     "annotation": "metas/stage3_v5_20240521_std/academic/vqav2_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 3,
     "length": 82783
   },
   "gqa_train_en_20240402": {
-    "root": "hzh:s3://mm_dataset/gqa/images/",
+    "root": "langchao:s3://mm_dataset/gqa/images/",
     "annotation": "metas/stage3_v5_20240521_std/academic/gqa_train_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 72140
   },
   "chartqa_trainval_30k_w_csv_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/chartqa/",
+    "root": "langchao:s3://multi_modal/playground/data/chartqa/",
     "annotation": "metas/stage3_v5_20240521_std/academic/chartqa_trainval_30k_w_csv_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 30219
   },
   "ai2d_train_12k_en_20240410": {
-    "root": "hzh:s3://multi_modal/playground/data/ai2d/",
+    "root": "langchao:s3://multi_modal/playground/data/ai2d/",
     "annotation": "metas/stage3_v5_20240521_std/academic/ai2d_train_12k_en_20240410.jsonl",
     "data_augment": true,
     "repeat_time": 2,
@@ -29,77 +29,77 @@
     "update": "从xc2的ai2d转换得到，修复abc_images的问题 [FINISHED]"
   },
   "infovqa_train_25k_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/infovqa/",
+    "root": "langchao:s3://multi_modal/playground/data/infovqa/",
     "annotation": "metas/stage3_v5_20240521_std/academic/infovqa_train_25k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 25466
   },
   "docvqa_train_56k_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/docvqa/",
+    "root": "langchao:s3://multi_modal/playground/data/docvqa/",
     "annotation": "metas/stage3_v5_20240521_std/academic/docvqa_train_56k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 56259
   },
   "synthdog_30k_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/synthdog-en/",
+    "root": "langchao:s3://multi_modal/playground/data/synthdog-en/",
     "annotation": "metas/stage3_v5_20240521_std/academic/synthdog_30k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 29765
   },
   "scienceqa_choice_augment_en_20240402": {
-    "root": "hzh:s3://multi_modal/ScienceQA/",
+    "root": "langchao:s3://multi_modal/ScienceQA/",
     "annotation": "metas/stage3_v5_20240521_std/academic/scienceqa_choice_augment_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 34718
   },
   "scienceqa_multi_choice_en_20240402": {
-    "root": "hzh:s3://multi_modal/ScienceQA/",
+    "root": "langchao:s3://multi_modal/ScienceQA/",
     "annotation": "metas/stage3_v5_20240521_std/academic/scienceqa_multi_choice_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 19024
   },
   "textcap_train_21k_en_20240402": {
-    "root": "hzh:s3://mm_dataset/ocr_data/TextVQA/train_images/",
+    "root": "langchao:s3://mm_dataset/ocr_data/TextVQA/train_images/",
     "annotation": "metas/stage3_v5_20240521_std/academic/textcap_train_21k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 21461
   },
   "llavar_train_20k_en_20240402": {
-    "root": "hzh:s3://mm_dataset/LLaVAR/images/",
+    "root": "langchao:s3://mm_dataset/LLaVAR/images/",
     "annotation": "metas/stage3_v5_20240521_std/academic/llavar_train_20k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 19800
   },
   "vsr_train_8k_en_20240402": {
-    "root": "hzh:s3://multi_modal/coco/",
+    "root": "langchao:s3://multi_modal/coco/",
     "annotation": "metas/stage3_v5_20240521_std/academic/vsr_train_8k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 7680
   },
   "okvqa_train_9k_en_20240402": {
-    "root": "hzh:s3://multi_modal/coco/train2014",
+    "root": "langchao:s3://multi_modal/coco/train2014",
     "annotation": "metas/stage3_v5_20240521_std/academic/okvqa_train_9k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 8996
   },
   "lrv_chart_7k_en_20240402": {
-    "root": "hzh:s3://mm_dataset/LRV-Instruction/chart_image/",
+    "root": "langchao:s3://mm_dataset/LRV-Instruction/chart_image/",
     "annotation": "metas/stage3_v5_20240521_std/academic/lrv_chart_7k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 7311
   },
   "CLEVR_train_70k_en_20240402": {
-    "root": "hzh:s3://multi_modal/CLEVR/",
+    "root": "langchao:s3://multi_modal/CLEVR/",
     "annotation": "metas/stage3_v5_20240521_std/academic/CLEVR_train_70k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
@@ -113,84 +113,84 @@
     "length": 21984
   },
   "sharegpt4v_instruct_gpt4-vision_cap100k_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/",
+    "root": "langchao:s3://multi_modal/playground/data/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_instruct_gpt4-vision_cap100k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 102021
   },
   "sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k_reformat_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/",
+    "root": "langchao:s3://multi_modal/playground/data/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k_reformat_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 664743
   },
   "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_20240402": {
-    "root": "hzh:s3://multi_modal/allava_laion/",
+    "root": "langchao:s3://multi_modal/allava_laion/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 457082
   },
   "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_zh_20240408": {
-    "root": "hzh:s3://multi_modal/allava_laion/",
+    "root": "langchao:s3://multi_modal/allava_laion/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/ALLaVA-Instruct-MultiRound-Cap-LAION-4V_zh_20240408.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
     "length": 457041
   },
   "laion_gpt4v_en_20240402": {
-    "root": "hzh:s3://multi_modal/laion_gpt4v/images/",
+    "root": "langchao:s3://multi_modal/laion_gpt4v/images/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/laion_gpt4v_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 10950
   },
   "textocr_gpt4v_en_20240402": {
-    "root": "pcluster:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
+    "root": "langchao:s3://ocr/20240223/TextVQA-dataset-EN/textocr/train_images/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/textocr_gpt4v_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 21407
   },
   "sharegpt4v_caption_coco50k_zh_20240402": {
-    "root": "hzh:s3://mm_dataset/",
+    "root": "langchao:s3://mm_dataset/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_caption_coco50k_zh_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 49911
   },
   "sharegpt4v_caption_llava30k_zh_20240402": {
-    "root": "hzh:s3://mm_dataset/BlipLaionCCSbu",
+    "root": "langchao:s3://mm_dataset/BlipLaionCCSbu",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_caption_llava30k_zh_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 29762
   },
   "sharegpt4v_caption_sam14k_zh_20240402": {
-    "root": "hzh:s3://sam-all/images/",
+    "root": "langchao:s3://sam-all/images/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_caption_sam14k_zh_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 14306
   },
   "sharegpt4v_caption_wwws2k_zh_20240402": {
-    "root": "hzh:s3://mm_dataset/ShareGPT4V/data/",
+    "root": "langchao:s3://mm_dataset/ShareGPT4V/data/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_caption_wwws2k_zh_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 1995
   },
   "lvis_instruct4v_220k_en_20240402": {
-    "root": "hzh:s3://mm_dataset/coco/",
+    "root": "langchao:s3://mm_dataset/coco/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/lvis_instruct4v_220k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 0.25,
     "length": 222646
   },
   "svit_instruct_900k_zh_20240402": {
-    "root": "hzh:s3://mm_dataset/VG_100K/",
+    "root": "langchao:s3://mm_dataset/VG_100K/",
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/svit_instruct_900k_zh_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 0.025,
@@ -218,112 +218,112 @@
     "length": 600000
   },
   "TextVQA_cn_ICDAR2019_ArT_task1_3_train_v1.0_woBox": {
-    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ArT/task1&3/train_images/",
+    "root": "langchao:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ArT/task1&3/train_images/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_cn_ICDAR2019_ArT_task1_3_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 5514
   },
   "TextVQA_en_cocotextv2_train_v1.0_woBox": {
-    "root": "pcluster:s3://ocr/coco/train2014/",
+    "root": "langchao:s3://ocr/coco/train2014/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_en_cocotextv2_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
     "length": 16216
   },
   "TextVQA_cn_CTW_train_v1.0_woBox": {
-    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/CTW/images-trainval/ctw-images/",
+    "root": "langchao:s3://ocr/TextVQA-dataset-CHN/CTW/images-trainval/ctw-images/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_cn_CTW_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
     "length": 24199
   },
   "TextVQA_cn_ICDAR2019_LSVT_train_v1.0_woBox": {
-    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-LSVT/train-full/",
+    "root": "langchao:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-LSVT/train-full/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_cn_ICDAR2019_LSVT_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
     "length": 29737
   },
   "chart_PlotQA1_v1_merge_2.0_v1.0": {
-    "root": "pcluster:s3://ocr/table/PlotQA/png/",
+    "root": "langchao:s3://ocr/table/PlotQA/png/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/chart_PlotQA1_v1_merge_2.0_v1.0.jsonl",
     "data_augment": true,
     "repeat_time": 0.05,
     "length": 272725
   },
   "TextVQA_cn_ICDAR2017_RCTW_17_train_v1.0_woBox": {
-    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2017-RCTW-17/train/train_images/",
+    "root": "langchao:s3://ocr/TextVQA-dataset-CHN/ICDAR2017-RCTW-17/train/train_images/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_cn_ICDAR2017_RCTW_17_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 7930
   },
   "TextVQA_cn_ICDAR2019_ReCTS_train_v1.0_woBox": {
-    "root": "pcluster:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ReCTS/img/",
+    "root": "langchao:s3://ocr/TextVQA-dataset-CHN/ICDAR2019-ReCTS/img/",
     "annotation": "metas/stage3_v5_20240521_std/ocr/TextVQA_cn_ICDAR2019_ReCTS_train_v1.0_woBox.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
     "length": 19827
   },
   "refcoco_grounding_en_20240402": {
-    "root": "hzh:s3://multi_modal/coco/train2014",
+    "root": "langchao:s3://multi_modal/coco/train2014",
     "annotation": "metas/stage3_v5_20240521_std/grounding/refcoco_grounding_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 27676
   },
   "refcoco_grounding_aug_en_20240402": {
-    "root": "hzh:s3://multi_modal/coco/train2014",
+    "root": "langchao:s3://multi_modal/coco/train2014",
     "annotation": "metas/stage3_v5_20240521_std/grounding/refcoco_grounding_aug_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 141880
   },
   "geoqa+_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/geoqa+/",
+    "root": "langchao:s3://multi_modal/playground/data/geoqa+/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/geoqa+_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 72318
   },
   "dvqa_en_20240402": {
-    "root": "hzh:s3://multi_modal/playground/data/dvqa/",
+    "root": "langchao:s3://multi_modal/playground/data/dvqa/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/dvqa_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 200000
   },
   "tabmwp_en_20240402": {
-    "root": "hzh:s3://multi_modal/TabMWP/",
+    "root": "langchao:s3://multi_modal/TabMWP/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/tabmwp_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 74921
   },
   "tqa_en_20240402": {
-    "root": "hzh:s3://multi_modal/TQA/",
+    "root": "langchao:s3://multi_modal/TQA/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/tqa_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 20117
   },
   "CLEVR_math_en_20240402": {
-    "root": "hzh:s3://multi_modal/CLEVR/",
+    "root": "langchao:s3://multi_modal/CLEVR/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/CLEVR_math_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 0.07,
     "length": 70000
   },
   "geometry3k_en_20240402": {
-    "root": "hzh:s3://multi_modal/Geometry3K/",
+    "root": "langchao:s3://multi_modal/Geometry3K/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/geometry3k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
     "length": 10505
   },
   "superCLEVR_merge_en_20240402": {
-    "root": "hzh:s3://multi_modal/Super-CLEVR/",
+    "root": "langchao:s3://multi_modal/Super-CLEVR/",
     "annotation": "metas/stage3_v5_20240521_std/mathvista_indomain/superCLEVR_merge_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
