@@ -427,6 +427,36 @@ if [ ${DATASET} == "mmmu-test" ]; then
       eval/mmmu/evaluate_mmmu.py --checkpoint ${CHECKPOINT} --datasets MMMU_test "${ARGS[@]:2}"
 fi
 
+if [ ${DATASET} == "mmmu-dev-cot" ]; then
+    torchrun \
+      --nnodes=1 \
+      --node_rank=0 \
+      --master_addr=127.0.0.1 \
+      --nproc_per_node=${GPUS} \
+      --master_port=${MASTER_PORT} \
+      eval/mmmu/evaluate_mmmu_cot.py --checkpoint ${CHECKPOINT} --datasets MMMU_dev "${ARGS[@]:2}"
+fi
+
+if [ ${DATASET} == "mmmu-val-cot" ]; then
+    torchrun \
+      --nnodes=1 \
+      --node_rank=0 \
+      --master_addr=127.0.0.1 \
+      --nproc_per_node=${GPUS} \
+      --master_port=${MASTER_PORT} \
+      eval/mmmu/evaluate_mmmu_cot.py --checkpoint ${CHECKPOINT} --datasets MMMU_validation "${ARGS[@]:2}"
+fi
+
+if [ ${DATASET} == "mmmu-test-cot" ]; then
+    torchrun \
+      --nnodes=1 \
+      --node_rank=0 \
+      --master_addr=127.0.0.1 \
+      --nproc_per_node=${GPUS} \
+      --master_port=${MASTER_PORT} \
+      eval/mmmu/evaluate_mmmu_cot.py --checkpoint ${CHECKPOINT} --datasets MMMU_test "${ARGS[@]:2}"
+fi
+
 
 if [ ${DATASET} == "mmvp" ]; then
     torchrun \
