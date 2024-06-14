@@ -1609,7 +1609,7 @@
     "root": "medical:s3://medical_preprocessed/",
     "annotation": "metas/stage3_v5_20240611_std/medical/longanswer_cls_files_english.jsonl",
     "data_augment": true,
-    "repeat_time": 1,
+    "repeat_time": 0.1,
     "length": 301766
   },
   "medical_longanswer_det_files": {
@@ -1630,7 +1630,63 @@
     "root": "medical:s3://medical_preprocessed/",
     "annotation": "metas/stage3_v5_20240611_std/medical/longanswer_seg_3d_files.jsonl",
     "data_augment": true,
-    "repeat_time": 1,
+    "repeat_time": 0.1,
     "length": 244182
+  },
+  "ImageClef-2019-VQA-Med": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/ImageClef-2019-VQA-Med/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 3200
+  },
+  "Medical-Diff-VQA": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/Medical-Diff-VQA/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 0.2,
+    "length": 129232
+  },
+  "Pathology_VQA": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/Pathology_VQA/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 2599
+  },
+  "PMC-CaseReport": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/PMC-CaseReport/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 0.5,
+    "length": 56164
+  },
+  "PMC-VQA": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/PMC-VQA/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 0.1,
+    "length": 251160
+  },
+  "ROCOV2": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/ROCOV2/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 0.5,
+    "length": 60163
+  },
+  "Slake": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/Slake/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 586
+  },
+  "VQA_RAD": {
+    "root": "medical:s3://medical_preprocessed/",
+    "annotation": "metas/stage3_v5_20240611_std/medical_vqa/VQA_RAD/train_reports_internvl.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 313
   }
 }

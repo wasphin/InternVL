@@ -1626,7 +1626,7 @@
     "repeat_time": 1,
     "length": 33113
   },
-  "medical_longanswer_seg_3d_files.jsonl": {
+  "medical_longanswer_seg_3d_files": {
     "root": "medical:s3://medical_preprocessed/",
     "annotation": "metas/stage3_v5_20240611_std/medical/longanswer_seg_3d_files.jsonl",
     "data_augment": true,
