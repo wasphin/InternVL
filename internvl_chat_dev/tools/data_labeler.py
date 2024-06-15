@@ -42,12 +42,6 @@ def save_conversations(question1, answer1, question2, answer2, question3, answer
     return 'Saved successfully.'
 
 
-def query_gpt4(question, image_path):
-    # 伪代码示例，实际实现需要根据你的GPT-4 API进行
-    # 假设返回GPT-4生成的答案
-    return 'GPT-4 generated answer for the question.'
-
-
 def draw_box(image, conversations):
     PATTERN = re.compile(r'\[*\[(.*?),(.*?),(.*?),(.*?)\]\]*')
     image_width, image_height = image.size  # 获取图像的宽度和高度
@@ -67,19 +61,17 @@ def draw_box(image, conversations):
     return image
 
 
-def load_data(prefix, file_path):
-    f = open(file_path, 'r')
-    global data_lines
-    data_lines = f.readlines()
-    global data_index
-    data_index = 0
-    item = json.loads(data_lines[data_index])
+def load_image(item, prefix=None):
+    image_path = item['image']
+    if type(image_path) == list:
+        image_path = image_path[0]
     global prefix_str
-    prefix_str = prefix
-    if item['image'].startswith('s3://'):
-        image_path = prefix_str + item['image']
+    if prefix is not None:
+        prefix_str = prefix
+    if image_path.startswith('s3://'):
+        image_path = prefix_str + image_path
     else:
-        image_path = prefix_str + '/' + item['image']
+        image_path = os.path.join(prefix_str, image_path)
     print(image_path)
     if image_path.startswith('/'):
         image = Image.open(image_path).convert('RGB')
@@ -87,6 +79,18 @@ def load_data(prefix, file_path):
         image = tcs_loader(image_path)
     conversations = item['conversations']
     image = draw_box(image, conversations)
+    return image
+
+
+def load_data(prefix, file_path):
+    f = open(file_path, 'r')
+    global data_lines
+    data_lines = f.readlines()
+    global data_index
+    data_index = 0
+    item = json.loads(data_lines[data_index])
+    image = load_image(item, prefix)
+    conversations = item['conversations']
     outputs = [data_index, item['image'], image]
     # 填充对话文本框
     for i in range(10):
@@ -106,18 +110,8 @@ def load_prev_data(question1, answer1, question2, answer2, question3, answer3, q
     if data_index > 0:
         data_index -= 1
     item = json.loads(data_lines[data_index])
-    global prefix_str
-    if item['image'].startswith('s3://'):
-        image_path = prefix_str + item['image']
-    else:
-        image_path = prefix_str + '/' + item['image']
-    print(image_path)
-    if image_path.startswith('/'):
-        image = Image.open(image_path).convert('RGB')
-    else:
-        image = tcs_loader(image_path)
+    image = load_image(item)
     conversations = item['conversations']
-    image = draw_box(image, conversations)
     outputs = [data_index, item['image'], image]
     # 填充对话文本框
     for i in range(10):
@@ -137,18 +131,8 @@ def load_next_data(question1, answer1, question2, answer2, question3, answer3, q
     if data_index < len(data_lines) - 1:
         data_index += 1
     item = json.loads(data_lines[data_index])
-    global prefix_str
-    if item['image'].startswith('s3://'):
-        image_path = prefix_str + item['image']
-    else:
-        image_path = prefix_str + '/' + item['image']
-    print(image_path)
-    if image_path.startswith('/'):
-        image = Image.open(image_path).convert('RGB')
-    else:
-        image = tcs_loader(image_path)
+    image = load_image(item)
     conversations = item['conversations']
-    image = draw_box(image, conversations)
     outputs = [data_index, item['image'], image]
     # 填充对话文本框
     for i in range(10):
@@ -161,7 +145,6 @@ def load_next_data(question1, answer1, question2, answer2, question3, answer3, q
     return outputs
 
 
-# Gradio界面
 with gr.Blocks() as demo:
     gr.Markdown('Image Description Annotation Tool')
 
