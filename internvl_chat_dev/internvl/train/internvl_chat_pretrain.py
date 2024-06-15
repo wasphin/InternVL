@@ -316,7 +316,7 @@ class LazySupervisedDataset(Dataset):
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token * num_patches,
+                                  self.tokenizer, [self.num_image_token * num_patches],
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
         ret = dict(
             input_ids=ret['input_ids'][0],
@@ -346,7 +346,7 @@ class LazySupervisedDataset(Dataset):
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token * num_patches, text_only=True,
+                                  self.tokenizer, [self.num_image_token * num_patches], text_only=True,
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
         ret = dict(
             input_ids=ret['input_ids'][0],

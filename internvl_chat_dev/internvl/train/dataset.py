@@ -130,7 +130,7 @@ def preprocess(
         template_name,
         sources,
         tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
+        num_image_token_list: list,
         text_only: bool = False,
         group_by_length: bool = False,
         ds_name: str = None,
@@ -153,11 +153,12 @@ def preprocess(
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
     if not text_only:
         new_conversations = []
         for conversation in conversations:
-            conversation = conversation.replace('<image>', image_tokens, num_image)
+            for i in range(num_image):
+                image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[i]}{IMG_END_TOKEN}'
+                conversation = conversation.replace('<image>', image_tokens, 1)
             new_conversations.append(conversation)
         conversations = new_conversations
 
@@ -233,7 +234,7 @@ def preprocess_mpt(
         template_name,
         sources,
         tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
+        num_image_token_list: list,
         text_only: bool = False,
         group_by_length: bool = False,
         ds_name: str = None,
@@ -256,11 +257,12 @@ def preprocess_mpt(
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
     if not text_only:
         new_conversations = []
         for conversation in conversations:
-            conversation = conversation.replace('<image>', image_tokens, num_image)
+            for i in range(num_image):
+                image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[i]}{IMG_END_TOKEN}'
+                conversation = conversation.replace('<image>', image_tokens, 1)
             new_conversations.append(conversation)
         conversations = new_conversations
 
@@ -325,7 +327,7 @@ def preprocess_phi3(
         template_name,
         sources,
         tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
+        num_image_token_list: list,
         text_only: bool = False,
         group_by_length: bool = False,
         ds_name: str = None,
@@ -348,11 +350,12 @@ def preprocess_phi3(
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
     if not text_only:
         new_conversations = []
         for conversation in conversations:
-            conversation = conversation.replace('<image>', image_tokens, num_image)
+            for i in range(num_image):
+                image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[i]}{IMG_END_TOKEN}'
+                conversation = conversation.replace('<image>', image_tokens, 1)
             new_conversations.append(conversation)
         conversations = new_conversations
 
@@ -432,7 +435,7 @@ def preprocess_llama3(
         template_name,
         sources,
         tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
+        num_image_token_list: list,
         text_only: bool = False,
         group_by_length: bool = False,
         ds_name: str = None,
@@ -455,11 +458,12 @@ def preprocess_llama3(
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
     if not text_only:
         new_conversations = []
         for conversation in conversations:
-            conversation = conversation.replace('<image>', image_tokens, num_image)
+            for i in range(num_image):
+                image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[i]}{IMG_END_TOKEN}'
+                conversation = conversation.replace('<image>', image_tokens, 1)
             new_conversations.append(conversation)
         conversations = new_conversations
 
@@ -536,7 +540,7 @@ def preprocess_internlm(
         template_name,
         sources,
         tokenizer: transformers.PreTrainedTokenizer,
-        num_image_token: int,
+        num_image_token_list: list,
         text_only: bool = False,
         group_by_length: bool = False,
         ds_name: str = None,
@@ -562,11 +566,12 @@ def preprocess_internlm(
             conv.append_message(role, sentence['value'])
         conversations.append(conv.get_prompt())
 
-    image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token}{IMG_END_TOKEN}'
     if not text_only:
         new_conversations = []
         for conversation in conversations:
-            conversation = conversation.replace('<image>', image_tokens, num_image)
+            for i in range(num_image):
+                image_tokens = f'{IMG_START_TOKEN}{IMG_CONTEXT_TOKEN * num_image_token_list[i]}{IMG_END_TOKEN}'
+                conversation = conversation.replace('<image>', image_tokens, 1)
             new_conversations.append(conversation)
         conversations = new_conversations
 

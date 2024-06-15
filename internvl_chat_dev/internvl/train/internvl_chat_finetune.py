@@ -300,7 +300,7 @@ class LazySupervisedDataset(Dataset):
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token * num_patches,
+                                  self.tokenizer, [self.num_image_token * num_patches],
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
         ret = dict(
             input_ids=ret['input_ids'][0],
@@ -314,7 +314,8 @@ class LazySupervisedDataset(Dataset):
     def multi_modal_multi_image_get_item(self, data_item):
         transform = build_transform(is_train=self.is_train, input_size=self.image_size,
                                     pad2square=self.pad2square, normalize_type=self.normalize_type)
-        images = []
+        images, num_tiles = [], []
+        num_image = len(data_item['image'])
         for image_path in data_item['image']:
             if image_path.startswith('s3://'):
                 image_path = self.root + image_path
@@ -324,7 +325,16 @@ class LazySupervisedDataset(Dataset):
                 image = self.tcs_loader(image_path)
             else:
                 image = Image.open(image_path).convert('RGB')
-            images.append(image)
+            if self.dynamic_image_size:
+                image = dynamic_preprocess(image, min_num=self.min_dynamic_patch,
+                                           max_num=self.max_dynamic_patch // num_image,
+                                           image_size=self.image_size, use_thumbnail=self.use_thumbnail)
+                images += image
+                num_tiles.append(len(image))
+            else:
+                images.append(image)
+                num_tiles.append(1)
+
         pixel_values = [transform(image) for image in images]
         pixel_values = torch.stack(pixel_values)
         num_patches = pixel_values.size(0)
@@ -336,9 +346,11 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_phi3
         else:
             preprocess_function = preprocess
+
+        num_image_tokens = [self.num_image_token * num_tile for num_tile in num_tiles]
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token, group_by_length=self.group_by_length,
-                                  ds_name=self.ds_name, num_image=len(images))
+                                  self.tokenizer, num_image_tokens, group_by_length=self.group_by_length,
+                                  ds_name=self.ds_name, num_image=num_image)
         ret = dict(
             input_ids=ret['input_ids'][0],
             labels=ret['labels'][0],
@@ -367,7 +379,7 @@ class LazySupervisedDataset(Dataset):
         else:
             preprocess_function = preprocess
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
-                                  self.tokenizer, self.num_image_token * num_patches, text_only=True,
+                                  self.tokenizer, [self.num_image_token * num_patches], text_only=True,
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
         ret = dict(
             input_ids=ret['input_ids'][0],
