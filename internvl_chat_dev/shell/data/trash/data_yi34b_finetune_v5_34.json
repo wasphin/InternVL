@@ -68,7 +68,7 @@
     "annotation": "metas/stage3_v5_20240521_std/gpt4o/infovqa_train_25k_en_20240402_gpt4o.jsonl",
     "data_augment": true,
     "repeat_time": 4,
-    "length": 4412
+    "length": 4407
   },
   "infovqa_train_25k_24patch_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/infovqa/",
@@ -148,12 +148,12 @@
     "repeat_time": 1,
     "length": 7311
   },
-  "textvqa_train_21k_wo_ocr_en_20240402": {
+  "textvqa_train_21k_wo_ocr_en_20240611": {
     "root": "langchao:s3://mm_dataset/ocr_data/TextVQA/train_images/",
-    "annotation": "metas/stage3_v5_20240521_std/academic/textvqa_train_21k_wo_ocr_en_20240402.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/academic/textvqa_train_21k_wo_ocr_en_20240611.jsonl",
     "data_augment": true,
     "repeat_time": 2,
-    "length": 21461
+    "length": 34602
   },
   "CLEVR_train_70k_en_20240402": {
     "root": "langchao:s3://multi_modal/CLEVR/",
@@ -201,7 +201,7 @@
     "root": "langchao:s3://multi_modal/playground/data/koniq-10k/",
     "annotation": "metas/stage3_v5_20240521_std/academic/koniq_10k_train_22k_en_20240403.jsonl",
     "data_augment": true,
-    "repeat_time": 0.50,
+    "repeat_time": 0.5,
     "length": 21984
   },
   "objects365_train_7k_en_20240403": {
@@ -216,7 +216,7 @@
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/sharegpt4v_instruct_gpt4-vision_cap100k_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 102025
+    "length": 102021
   },
   "sharegpt4v_mix665k_cap23k_coco-ap9k_lcs3k_sam9k_div2k_reformat_en_20240402": {
     "root": "langchao:s3://multi_modal/playground/data/",
@@ -230,7 +230,7 @@
     "annotation": "metas/stage3_v5_20240521_std/gpt4v/ALLaVA-Instruct-MultiRound-Cap-LAION-4V_en_20240402.jsonl",
     "data_augment": true,
     "repeat_time": 1,
-    "length": 457130
+    "length": 457082
   },
   "ALLaVA-Instruct-MultiRound-Cap-LAION-4V_zh_20240408": {
     "root": "langchao:s3://multi_modal/allava_laion/",
@@ -868,17 +868,18 @@
     "annotation": "metas/stage3_v5_20240521_std/mmmu_data/k12_merge_ab.jsonl",
     "data_augment": true,
     "repeat_time": 0.5,
-    "length": 570212
+    "length": 570212,
+    "note": "需要用语言模型对回答的格式进行整理"
   },
   "k12_llm_en": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/mmmu_data/llm_en_fixFrom.jsonl",
     "data_augment": true,
     "repeat_time": 1,
     "length": 11969
   },
   "k12_llm_zh": {
-    "root": "",
+    "root": null,
     "annotation": "metas/stage3_v5_20240521_std/mmmu_data/llm_zh_converted_fixFrom_subset.jsonl",
     "data_augment": true,
     "repeat_time": 0.18,
@@ -907,7 +908,7 @@
   },
   "EvolCode_v4x_r47_9_fixn_polishedcode-v4.x-r47.10": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/polished_code/processed/polishedcode-v4.x-r47.10_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/polishedcode-v4.x-r47.10_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 337143,
@@ -916,25 +917,25 @@
   },
   "WizardLM_alpaca_evol_instruct_70k": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/WizardLM/processed/sft_chat_wizardlm/alpaca_evol_instruct_70k_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/alpaca_evol_instruct_70k_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 70000,
+    "length": 69999,
     "tag": "code",
     "language": "en"
   },
   "coigv03_01_chat_format_safety_filtered_v1_cmcc_safety_filterd": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/processed/sft_chat/cmcc_safety_filterd_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/cmcc_safety_filterd_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 13492,
+    "length": 13483,
     "tag": "multi-turn",
     "language": "zh"
   },
   "coigv03_01_chat_format_safety_filtered_v1_exam_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/processed/sft_chat/exam_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/exam_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 63532,
@@ -943,16 +944,16 @@
   },
   "coigv03_01_chat_format_safety_filtered_v1_human1_chat_format": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/processed/sft_chat/human1_chat_format_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/human1_chat_format_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 3000,
+    "length": 2998,
     "tag": "chat",
     "language": "zh"
   },
   "coigv03_01_chat_format_safety_filtered_v1_leetcode_chat_clean_v3": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/processed/sft_chat/leetcode_chat_clean_v3_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/coigv03_01_chat_format_safety_filtered_v1/leetcode_chat_clean_v3_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 11737,
@@ -961,7 +962,7 @@
   },
   "dolly_chat_format_safety_filtered_v1_dolly": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/dolly_chat_format_safety_filtered_v1/processed/sft_chat/dolly_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/dolly_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 14952,
@@ -970,7 +971,7 @@
   },
   "firefly_split_chat_format_AncientPoem_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/AncientPoem_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/AncientPoem_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 69950,
@@ -980,7 +981,7 @@
   },
   "firefly_split_chat_format_ClassicalChinese_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/ClassicalChinese_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/ClassicalChinese_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -990,7 +991,7 @@
   },
   "firefly_split_chat_format_Composition_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/Composition_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/Composition_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1000,7 +1001,7 @@
   },
   "Couplet_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/Couplet_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/Couplet_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1010,7 +1011,7 @@
   },
   "firefly_split_chat_format_Dictionary_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/Dictionary_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/Dictionary_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 30895,
@@ -1020,7 +1021,7 @@
   },
   "firefly_split_chat_format_JinYongGeneration_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/JinYongGeneration_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/JinYongGeneration_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 49990,
@@ -1030,7 +1031,7 @@
   },
   "firefly_split_chat_format_KeywordRecognition_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/KeywordRecognition_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/KeywordRecognition_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1040,7 +1041,7 @@
   },
   "firefly_split_chat_format_LyricGeneration_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/LyricGeneration_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/LyricGeneration_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 49985,
@@ -1050,7 +1051,7 @@
   },
   "firefly_split_chat_format_MRC_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/MRC_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/MRC_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 70000,
@@ -1060,7 +1061,7 @@
   },
   "firefly_split_chat_format_MusicComment_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/MusicComment_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/MusicComment_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1070,7 +1071,7 @@
   },
   "firefly_split_chat_format_NER_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/NER_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/NER_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1080,7 +1081,7 @@
   },
   "firefly_split_chat_format_NLI_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/NLI_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/NLI_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1090,7 +1091,7 @@
   },
   "ProductDesc_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/ProductDesc_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/ProductDesc_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 70000,
@@ -1100,7 +1101,7 @@
   },
   "ProseGeneration_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/ProseGeneration_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/ProseGeneration_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 658,
@@ -1110,7 +1111,7 @@
   },
   "firefly_split_chat_format_SentimentAnalyze_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/SentimentAnalyze_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/SentimentAnalyze_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1120,7 +1121,7 @@
   },
   "firefly_split_chat_format_StoryGeneration_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/StoryGeneration_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/StoryGeneration_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 19048,
@@ -1130,7 +1131,7 @@
   },
   "firefly_split_chat_format_Summary_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/Summary_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/Summary_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1140,7 +1141,7 @@
   },
   "firefly_split_chat_format_TextCorrection_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/TextCorrection_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/TextCorrection_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1150,7 +1151,7 @@
   },
   "firefly_split_chat_format_TextMatching_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/TextMatching_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/TextMatching_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1160,7 +1161,7 @@
   },
   "firefly_split_chat_format_Translation_chat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split_chat_format/processed/firefly_split/Translation_chat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/firefly_split/Translation_chat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 50000,
@@ -1170,7 +1171,7 @@
   },
   "flan2022_sampling_each256_niv2_zh_chat_format_chat_format_niv2_zh": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan2022_sampling_each256_niv2_zh_chat_format/processed/sft_chat/chat_format_niv2_zh_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/chat_format_niv2_zh_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 153600,
@@ -1180,7 +1181,7 @@
   },
   "flan_v2_official_chat_format_512_safety_filtered_v1_cot": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/cot_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/cot_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 9207,
@@ -1190,7 +1191,7 @@
   },
   "flan_v2_official_chat_format_512_safety_filtered_v1_dialog": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/dialog_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/dialog_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 2040,
@@ -1200,37 +1201,37 @@
   },
   "flan_v2_official_chat_format_512_safety_filtered_v1_flan2021": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/flan2021_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/flan2021_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 35697,
+    "length": 35604,
     "tag": "short answer",
     "language": "en",
     "comment": "简答"
   },
   "flan_v2_official_chat_format_512_safety_filtered_v1_niv2": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/niv2_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/niv2_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 761861,
+    "length": 761692,
     "tag": "chat",
     "language": "en",
     "comment": "各种奇怪问题, 还有其他语言"
   },
   "flan_v2_official_chat_format_512_safety_filtered_v1_t0": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_v2_official_chat_format_512_safety_filtered_v1/processed/sft_chat/t0_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/t0_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 97586,
+    "length": 97585,
     "tag": "short answer",
     "language": "en",
     "comment": "简答"
   },
   "gsm8k_chat_train_socratic": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/gsm8k_chat/processed/n1_m1_ir3v4_chat/train_socratic_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/train_socratic_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 2994,
@@ -1240,7 +1241,7 @@
   },
   "know_saraswati_cot_know_saraswati_cot": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/know_saraswati_cot/processed/sft_chat_pseudo/know_saraswati_cot_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/know_saraswati_cot_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 149973,
@@ -1250,7 +1251,7 @@
   },
   "leetcode_filter_chat_refined_leetcode_filter_chat_refined": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/leetcode_filter_chat_refined/processed/sft_chat/leetcode_filter_chat_refined_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/leetcode_filter_chat_refined_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 1340,
@@ -1260,7 +1261,7 @@
   },
   "lima_chat_format_safety_filtered_v1_lima_chat_format": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/lima_chat_format_safety_filtered_v1/processed/sft_chat/lima_chat_format_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/lima_chat_format_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 1026,
@@ -1270,37 +1271,37 @@
   },
   "long_alpaca_LongAlpaca-12k": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/long_alpaca/processed/long_alpaca/LongAlpaca-12k_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/LongAlpaca-12k_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 12000,
+    "length": 11998,
     "tag": "chat",
     "language": "en",
     "comment": "长文分析, 不错"
   },
   "long_qlora_LongQLoRA-SFT-Data-39k": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/long_qlora/processed/long_qlora/LongQLoRA-SFT-Data-39k_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/LongQLoRA-SFT-Data-39k_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 38821,
+    "length": 38805,
     "tag": "chat",
     "language": "en",
     "comment": "高质量长回答, 不错"
   },
   "merged_math_20231220_merged_data_20231214debug": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/merged_math_20231220/processed/ep1_20231207/merged_data_20231214debug_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/merged_data_20231214debug_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 1594078,
+    "length": 1594069,
     "tag": "chat",
     "language": "zh&en",
     "comment": "各种回答混合"
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v1_awesome_en": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v1_awesome_en_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v1_awesome_en_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 45492,
@@ -1310,7 +1311,7 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v1_harmless_en": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v1_harmless_en_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v1_harmless_en_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 33856,
@@ -1320,7 +1321,7 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v1_harmless_zh_china-related_gpt4_fix_qmark_aug": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v1_harmless_zh_china-related_gpt4_fix_qmark_aug_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v1_harmless_zh_china-related_gpt4_fix_qmark_aug_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 12680,
@@ -1330,7 +1331,7 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v1_harmless_zh_non-chinarelated": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v1_harmless_zh_non-chinarelated_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v1_harmless_zh_non-chinarelated_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 25197,
@@ -1340,7 +1341,7 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v1_switching": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v1_switching_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v1_switching_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 7976,
@@ -1350,7 +1351,7 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_advice": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_advice_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_advice_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 93057,
@@ -1360,17 +1361,17 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_awesome_zh": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_awesome_zh_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_awesome_zh_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 44864,
+    "length": 44863,
     "tag": "multi-turn",
     "language": "zh",
     "comment": "多轮, 不错"
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_code": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_code_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_code_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 195498,
@@ -1380,17 +1381,17 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_continue": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_continue_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_continue_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "tag": "multi-turn",
-    "length": 8723,
+    "length": 8719,
     "language": "zh",
     "comment": "多轮, 不错"
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_honest": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_honest_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_honest_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "tag": "multi-turn",
@@ -1400,27 +1401,27 @@
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_rp": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_rp_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_rp_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "tag": "multi-turn",
-    "length": 222912,
+    "length": 222911,
     "language": "zh",
     "comment": "多轮, 不错"
   },
   "moss_no_moss_chat_fudan_format_safety_filtered_v2_moss_v2_writing": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_no_moss_chat_fudan_format_safety_filtered_v2/processed/sft_chat_pseudo/moss_v2_writing_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/moss_v2_writing_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "tag": "multi-turn",
-    "length": 268034,
+    "length": 268033,
     "language": "en",
     "comment": "多轮, 不错"
   },
   "no_robots_no_robots_test_filtered": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/no_robots/processed/sft_chat_pseudo/no_robots_test_filtered_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/no_robots_test_filtered_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "tag": "chat",
@@ -1430,17 +1431,17 @@
   },
   "no_robots_no_robots_train_filtered": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/no_robots/processed/sft_chat_pseudo/no_robots_train_filtered_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/no_robots_train_filtered_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 9497,
+    "length": 9482,
     "tag": "chat",
     "language": "en",
     "comment": "各种对话"
   },
   "openai_summary_tldr_3_filtered_train": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/openai_summary/processed/tldr_summary_data/tldr_3_filtered_train_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/tldr_3_filtered_train_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 116722,
@@ -1450,17 +1451,17 @@
   },
   "share_gpt_v6.jsonl": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/share_gpt_v6_chat_format_safety_filtered_v1/processed/sft_chat_share_gpt/share_gpt_v6_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/share_gpt_v6_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 59950,
+    "length": 59814,
     "tag": "chat",
     "language": "en",
     "comment": "各种对话"
   },
   "slimorca_dedup_slim_orca_dedup_filtered": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/slimorca_dedup/processed/sft_chat_pseudo/slim_orca_dedup_filtered_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/slim_orca_dedup_filtered_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 363168,
@@ -1470,7 +1471,7 @@
   },
   "ultrafeedback_critique_evol_instruct": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/evol_instruct_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/evol_instruct_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 39956,
@@ -1480,7 +1481,7 @@
   },
   "ultrafeedback_critique_false_qa": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/false_qa_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/false_qa_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 9356,
@@ -1490,7 +1491,7 @@
   },
   "ultrafeedback_critique_flan": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/flan_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/flan_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 83664,
@@ -1500,7 +1501,7 @@
   },
   "ultrafeedback_critique_sharegpt": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/sharegpt_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/sharegpt_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 79724,
@@ -1510,7 +1511,7 @@
   },
   "ultrafeedback_critique_truthful_qa": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/truthful_qa_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/truthful_qa_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 3240,
@@ -1520,7 +1521,7 @@
   },
   "ultrafeedback_critique_ultrachat": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrafeedback_critique/processed/critique_overallscore_permute_icl/ultrachat_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/ultrachat_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 39616,
@@ -1530,7 +1531,7 @@
   },
   "unnatural_instructions_chat_format_full_data": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/unnatural_instructions_chat_format/processed/sft_chat/full_data_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/unnatural_instructions_chat_format.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
     "length": 172192,
@@ -1540,43 +1541,71 @@
   },
   "zephyr_ultrachat_200k_filtered_zephyr-ultrachat-200k_sft_test": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr_ultrachat_200k_filtered/processed/sft_chat_pseudo/zephyr-ultrachat-200k_sft_test_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr-ultrachat-200k_sft_test_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 23086,
+    "length": 23083,
     "tag": "multi-turn",
     "language": "en",
     "comment": "多轮, 高质量"
   },
   "zephyr_ultrachat_200k_filtered_zephyr-ultrachat-200k_sft_train": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr_ultrachat_200k_filtered/processed/sft_chat_pseudo/zephyr-ultrachat-200k_sft_train_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr-ultrachat-200k_sft_train_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 207649,
+    "length": 207618,
     "tag": "multi-turn",
     "language": "en",
     "comment": "多轮, 高质量"
   },
   "zephyr_ultrafeedback_clean_filtered_zephyr-ultrafeedback_sft_test_clean": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr_ultrafeedback_clean_filtered/processed/sft_chat_pseudo/zephyr-ultrafeedback_sft_test_clean_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr-ultrafeedback_sft_test_clean_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 1000,
+    "length": 995,
     "tag": "chat",
     "language": "en",
     "comment": "长回答, 高质量"
   },
   "zephyr_ultrafeedback_clean_filtered_zephyr-ultrafeedback_sft_train_clean": {
     "root": null,
-    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr_ultrafeedback_clean_filtered/processed/sft_chat_pseudo/zephyr-ultrafeedback_sft_train_clean_20240520_v1.jsonl",
+    "annotation": "metas/stage3_v5_20240521_std/internlm/zephyr-ultrafeedback_sft_train_clean_20240520_v1.jsonl",
     "data_augment": true,
     "repeat_time": 0.2,
-    "length": 61924,
+    "length": 61779,
     "tag": "chat",
     "language": "en",
     "comment": "长回答, 高质量"
+  },
+  "llavar_inhouse_pretrain_chat_202040521": {
+    "root": "langchao:s3://mm_dataset/LLaVAR/pretrain_images/",
+    "annotation": "metas/stage3_v5_20240521_std/llavar_inhouse/llavar_inhouse_pretrain_chat_202040521.jsonl",
+    "data_augment": true,
+    "repeat_time": 0.1,
+    "length": 401280
+  },
+  "llavar_inhouse_pretrain_longcaption_20240521": {
+    "root": "langchao:s3://mm_dataset/LLaVAR/pretrain_images/",
+    "annotation": "metas/stage3_v5_20240521_std/llavar_inhouse/llavar_inhouse_pretrain_longcaption_20240521.jsonl",
+    "data_augment": true,
+    "repeat_time": 0.1,
+    "length": 404092
+  },
+  "llavar_inhouse_sft_chat_20240521": {
+    "root": "langchao:s3://mm_dataset/LLaVAR/images/",
+    "annotation": "metas/stage3_v5_20240521_std/llavar_inhouse/llavar_inhouse_sft_chat_20240521.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 16185
+  },
+  "llavar_inhouse_sft_longcaption_20240521": {
+    "root": "langchao:s3://mm_dataset/LLaVAR/images/",
+    "annotation": "metas/stage3_v5_20240521_std/llavar_inhouse/llavar_inhouse_sft_longcaption_20240521.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 16193
   },
   "GPT4o_LongCaption_20240520_v1.0": {
     "root": "langchao:s3://mm_dataset/gpt4o/longcaption_20240519/image/",
@@ -1584,5 +1613,12 @@
     "data_augment": true,
     "repeat_time": 1,
     "length": 36284
+  },
+  "mmmu_test_gpt4o_0513_cot_d240607": {
+    "root": "langchao:s3://mm_dataset/mmmu/images/",
+    "annotation": "metas/stage3_v5_20240521_std/gpt4o/mmmu_test_gpt4o_0513_cot_d240607.jsonl",
+    "data_augment": true,
+    "repeat_time": 1,
+    "length": 10751
   }
 }
