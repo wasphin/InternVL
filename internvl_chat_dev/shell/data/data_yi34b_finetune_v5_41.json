@@ -1593,7 +1593,7 @@
   },
   "mmmu_test_gpt4o_0513_cot_d240607": {
     "root": "langchao:s3://mm_dataset/mmmu/images/",
-    "annotation": "metas/stage3_v5_20240611_std/gpt4o/mmmu_test_gpt4o_0513_cot_d240607.jsonl",
+    "annotation": "metas/stage3_v5_20240611_std/mmmu_data/mmmu_test_gpt4o_0513_cot_d240607.jsonl",
     "data_augment": true,
     "repeat_time": 8,
     "length": 10751
