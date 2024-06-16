@@ -1,5 +1,7 @@
+import argparse
 import json
 import os
+import random
 from concurrent.futures import ProcessPoolExecutor
 
 import numpy as np
@@ -7,13 +9,16 @@ from internvl.train.dataset import TCSLoader
 from tqdm import tqdm
 from transformers import AutoTokenizer
 
+parser = argparse.ArgumentParser()
+parser.add_argument('ds_name', type=str, help='dataset name')
+args = parser.parse_args()
 # Initialize the dataset loader
 tcs_loader = TCSLoader('~/petreloss.conf')
 
 # Set your path and output path here
 # This code will find all `.jsonl` files and count the token length
-path = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/data/crawler_data/jsonl'
-output = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/crawler_data'
+ds_name = args.ds_name
+root = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/'
 
 # Model path for the tokenizer
 model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/work_dirs/internvl_chat_v1_5/' \
@@ -23,17 +28,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, us
 # Load metadata
 meta_path = './shell/data/data_yi34b_finetune_v5_42.json'
 meta = json.load(open(meta_path, 'r'))
-basename2meta = {os.path.basename(v['annotation']): v for k, v in meta.items()}
-
-# Collect all file paths
-file_paths = []
-for root, dirs, files in os.walk(path):
-    for file in files:
-        file_path = os.path.join(root, file)
-        if '_temp' not in file_path:
-            file_paths.append(file_path)
-file_paths = [f for f in file_paths if f.endswith('.jsonl')]
-print(file_paths)
+meta = meta[ds_name]
+print(meta)
+file_path = os.path.join(root, meta['annotation'])
 
 
 def find_closest_aspect_ratio(aspect_ratio, target_ratios, width, height, image_size):
@@ -66,42 +63,47 @@ def process_image(line, root):
 
 
 def process_image_list(line, root):
-    if 'width_list' not in line or 'height_list' not in line:
-        width_list, height_list, image_list = [], [], []
-        for url in line['image']:
-            image_path = os.path.join(root, url)
-            try:
-                image = tcs_loader(image_path)
-                width, height = image.size
-                width_list.append(width)
-                height_list.append(height)
-                image_list.append(url)
-            except:
-                continue
-        if not image_list:
-            return None
-        line['image'] = image_list
-        line['width_list'] = width_list
-        line['height_list'] = height_list
-        line['width'] = width_list[0]
-        line['height'] = height_list[0]
+    width_list, height_list, image_list = [], [], []
+    for url in line['image']:
+        image_path = os.path.join(root, url)
+        try:
+            if 'langchao:s3://' in image_path:
+                random_idx = random.randint(1, 20)
+                image_path = image_path.replace('langchao:s3://', f'langchao{random_idx}:s3://')
+            image = tcs_loader(image_path)
+            width, height = image.size
+            width_list.append(width)
+            height_list.append(height)
+            image_list.append(url)
+        except:
+            continue
+    if not image_list:
+        return None
+    line['image'] = image_list
+    line['width_list'] = width_list
+    line['height_list'] = height_list
+    line['width'] = width_list[0]
+    line['height'] = height_list[0]
     return line
 
 
 def process_single_image(line, root):
     image_path = os.path.join(root, line['image'])
-    if 'width' not in line or 'height' not in line:
-        try:
-            image = tcs_loader(image_path)
-            width, height = image.size
-            line['width'] = width
-            line['height'] = height
-            if 'width_list' in line:
-                del line['width_list']
-            if 'height_list' in line:
-                del line['height_list']
-        except:
-            pass
+    try:
+        if 'langchao:s3://' in image_path:
+            random_idx = random.randint(1, 20)
+            image_path = image_path.replace('langchao:s3://', f'langchao{random_idx}:s3://')
+        image = tcs_loader(image_path)
+        width, height = image.size
+        line['width'] = width
+        line['height'] = height
+        if 'width_list' in line:
+            del line['width_list']
+        if 'height_list' in line:
+            del line['height_list']
+    except Exception:
+        print('Error:', image_path)
+        pass
     return line
 
 
@@ -138,10 +140,9 @@ def tokenize_conversations(line):
 
 def process_file(file_path):
     basename = os.path.basename(file_path)
-    root = basename2meta.get(basename, {}).get('root', '')
 
-    output_path = file_path.replace(path, output)
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    output_path = file_path.replace('.jsonl', '_out.jsonl')
+    print(output_path)
     writer = open(output_path, 'w')
 
     diff_length = []
@@ -153,8 +154,7 @@ def process_file(file_path):
                     line = json.loads(line)
                 except:
                     continue
-
-                line = process_image(line, root)
+                line = process_image(line, meta['root'])
                 if line is None:
                     continue
 
@@ -177,6 +177,5 @@ def process_file(file_path):
         traceback.print_exc()
 
 
-# Use ProcessPoolExecutor to process files in parallel
-with ProcessPoolExecutor() as executor:
-    list(tqdm(executor.map(process_file, file_paths), total=len(file_paths)))
+if __name__ == '__main__':
+    process_file(file_path)

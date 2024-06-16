@@ -299,6 +299,8 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess_phi3
         else:
             preprocess_function = preprocess
+        if 'image_count' in data_item and num_patches != data_item['image_count']:
+            print(f'ds_name: {self.ds_name}, correct image_count: {num_patches}, expected: {data_item["image_count"]}')
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
                                   self.tokenizer, [self.num_image_token * num_patches],
                                   group_by_length=self.group_by_length, ds_name=self.ds_name)
@@ -348,6 +350,9 @@ class LazySupervisedDataset(Dataset):
             preprocess_function = preprocess
 
         num_image_tokens = [self.num_image_token * num_tile for num_tile in num_tiles]
+        total_tile_num = sum(num_tiles)
+        if 'image_count' in data_item and total_tile_num != data_item['image_count']:
+            print(f'ds_name: {self.ds_name}, correct image_count: {total_tile_num}, expected: {data_item["image_count"]}')
         ret = preprocess_function(self.template_name, [deepcopy(data_item['conversations'])],
                                   self.tokenizer, num_image_tokens, group_by_length=self.group_by_length,
                                   ds_name=self.ds_name, num_image=num_image)
@@ -452,6 +457,7 @@ def build_datasets(data_args, tokenizer, tcs_loader, model, group_by_length=Fals
                 normalize_type=normalize_type,
             )
         except Exception:
+            traceback.print_exc()
             logger.info(f'Error in loading dataset: {ds_name}')
             exit()
         dataset.ds_name = ds_name
