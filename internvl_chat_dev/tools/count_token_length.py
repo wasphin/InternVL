@@ -12,8 +12,8 @@ tcs_loader = TCSLoader('~/petreloss.conf')
 
 # Set your path and output path here
 # This code will find all `.jsonl` files and count the token length
-path = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/data/crawler_data/jsonl'
-output = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/crawler_data'
+path = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/gpt4o/temp'
+output = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/gpt4o/temp2'
 
 # Model path for the tokenizer
 model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/work_dirs/internvl_chat_v1_5/' \
@@ -21,7 +21,7 @@ model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/wor
 tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True, use_fast=False)
 
 # Load metadata
-meta_path = './shell/data/data_yi34b_finetune_v5_42.json'
+meta_path = './shell/data/data_yi34b_finetune_v5_45.json'
 meta = json.load(open(meta_path, 'r'))
 basename2meta = {os.path.basename(v['annotation']): v for k, v in meta.items()}
 
