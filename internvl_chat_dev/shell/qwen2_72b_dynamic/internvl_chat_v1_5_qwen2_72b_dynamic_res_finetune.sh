@@ -41,7 +41,7 @@ srun -p ${PARTITION} \
   --conv_style "Hermes-2" \
   --output_dir ${OUTPUT_DIR} \
   --meta_path "./shell/data/data_yi34b_finetune_v5_33.json" \
-  --overwrite_output_dir False \
+  --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \
   --drop_path_rate 0.4 \

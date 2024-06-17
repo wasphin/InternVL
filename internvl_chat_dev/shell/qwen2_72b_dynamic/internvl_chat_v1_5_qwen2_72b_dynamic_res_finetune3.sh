@@ -16,7 +16,7 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 export MASTER_PORT=34229
 export TF_CPP_MIN_LOG_LEVEL=3
 
-OUTPUT_DIR='work_dirs/internvl_chat_v1_5/internvl_chat_v1_5_qwen2_72b_dynamic_res_finetune2'
+OUTPUT_DIR='work_dirs/internvl_chat_v1_5/internvl_chat_v1_5_qwen2_72b_dynamic_res_finetune3'
 
 if [ ! -d "$OUTPUT_DIR" ]; then
   mkdir -p "$OUTPUT_DIR"
@@ -40,7 +40,7 @@ srun -p ${PARTITION} \
   --model_name_or_path "./work_dirs/internvl_chat_v1_5/internvl_chat_v1_5_qwen2_72b_dynamic_res_pretrain/checkpoint-3400" \
   --conv_style "Hermes-2" \
   --output_dir ${OUTPUT_DIR} \
-  --meta_path "./shell/data/data_yi34b_finetune_v5_44.json" \
+  --meta_path "./shell/data/data_yi34b_finetune_v5_46.json" \
   --overwrite_output_dir True \
   --force_image_size 448 \
   --down_sample_ratio 0.5 \

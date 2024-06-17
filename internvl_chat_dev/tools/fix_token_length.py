@@ -141,7 +141,7 @@ def tokenize_conversations(line):
 def process_file(file_path):
     basename = os.path.basename(file_path)
 
-    output_path = file_path.replace('.jsonl', '_out.jsonl')
+    output_path = file_path.replace('.jsonl', '_fix_hw.jsonl')
     print(output_path)
     writer = open(output_path, 'w')
 
