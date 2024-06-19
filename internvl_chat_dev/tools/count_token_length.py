@@ -12,8 +12,8 @@ tcs_loader = TCSLoader('~/petreloss.conf')
 
 # Set your path and output path here
 # This code will find all `.jsonl` files and count the token length
-path = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/data/chemistry_data/annotations'
-output = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/chemistry'
+path = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/grounding/temp'
+output = '/mnt/petrelfs/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/metas/stage3_v5_20240611_std/grounding/temp2'
 
 # Model path for the tokenizer
 model_path = '/mnt/hwfile/wangweiyun/workspace_cz/InternVL/internvl_chat_dev/work_dirs/internvl_chat_v1_5/' \
