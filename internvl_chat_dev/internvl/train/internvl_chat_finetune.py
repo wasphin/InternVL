@@ -323,6 +323,9 @@ class LazySupervisedDataset(Dataset):
                 image_path = self.root + image_path
             else:
                 image_path = os.path.join(self.root, image_path)
+            if 'langchao:s3://' in image_path:
+                random_idx = random.randint(1, 20)
+                image_path = image_path.replace('langchao:s3://', f'langchao{random_idx}:s3://')
             if self.tcs_loader is not None:
                 image = self.tcs_loader(image_path)
             else:
